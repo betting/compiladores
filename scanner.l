@@ -1,7 +1,7 @@
 %{
 #include "tokens.h"
 
-int lineNumber = 0;
+int lineNumber = 1;
 
 %}
 
@@ -62,7 +62,7 @@ return { return TK_PR_RETURN; }
      "*/"      BEGIN(INITIAL);
      [^*\n]+   
      "*"       
-     \n        yylineno++;
+     \n        yylineno++; lineNumber++;
 }
 
 

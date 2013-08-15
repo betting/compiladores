@@ -5,16 +5,18 @@
 #include "comp_graph.h"
 #include "tokens.h"
 
+extern int lineNumber;
+
 int getLineNumber (void)
 {
-  /* deve ser implementada */
-  return 0;
+  return lineNumber;
 }
 
 int main (int argc, char **argv)
 {
   int token = TOKEN_ERRO;
-  while (token = yylex()){
+  while (token = yylex())
+  {
     printf ("token <%d> at %d\n", token, getLineNumber());
   }
   return 0;
