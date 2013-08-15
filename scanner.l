@@ -1,12 +1,18 @@
 %{
 #include "tokens.h"
+
+int lineNumber = 0;
+
 %}
+
+%x IN_COMMENT
 
 letter [a-zA-Z_]
 digit [0-9]
 
 %%
 
+ /* Palavras Reservadas da Linguagem */
 int { return TK_PR_INT; }
 float { return TK_PR_FLOAT; }
 bool { return TK_PR_BOOL; }
@@ -22,8 +28,7 @@ output { return TK_PR_OUTPUT; }
 return { return TK_PR_RETURN; }
 
 
-","|";"|":"|"("|")"|"["|"]"|"{"|"}"|"+"|"-"|"*"|"/"|"<"|">"|"="|"!"|"&"|"$" { return yytext[0]; }
-
+ /* Operados Compostos */
 "<=" { return TK_OC_LE; }
 ">=" { return TK_OC_GE; }
 "==" { return TK_OC_EQ; }
@@ -31,6 +36,12 @@ return { return TK_PR_RETURN; }
 "&&" { return TK_OC_AND; }
 "||" { return TK_OC_OR; }
 
+
+ /* Caracteres Especiais */
+","|";"|":"|"("|")"|"["|"]"|"{"|"}"|"+"|"-"|"*"|"/"|"<"|">"|"="|"!"|"&"|"$" { return yytext[0]; }
+
+
+ /* Literais - Identificadores */
 "false" { return TK_LIT_FALSE; }
 "true" { return TK_LIT_TRUE; }
 
@@ -39,9 +50,23 @@ return { return TK_PR_RETURN; }
 "-"?{digit}+ { return TK_LIT_INT; }
 "-"?{digit}+"."{digit}+ { return TK_LIT_FLOAT; }
 \'.\' { return TK_LIT_CHAR; }
-\"*\" { return TK_LIT_STRING; }
+\"[^"]*\" { return TK_LIT_STRING; }
 
+ /* Comentarios */
 "//".* {}
 
+<INITIAL>{
+   "/*"        BEGIN(IN_COMMENT); 
+}
+<IN_COMMENT>{
+     "*/"      BEGIN(INITIAL);
+     [^*\n]+   
+     "*"       
+     \n        yylineno++;
+}
+
+
+\n { lineNumber++; }
+[ \t] { }
 . { return TOKEN_ERRO; }
 %%
