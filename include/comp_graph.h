@@ -24,7 +24,7 @@ struct node
 }*head;
 
 //prototipos das funcoes
-void create(struct node *h);
+void create(struct node *h, int item);
 
 
 #endif
