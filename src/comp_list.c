@@ -40,8 +40,8 @@ void removeItem(List *node)
 
 struct List *concatList(struct List **l0, struct List **l1)
 {
-	struct List *L01 = createList();
-	struct List *L;
+	List *L01 = createList();
+	List *L;
 
 	if (*l0 == NULL)
    {
@@ -53,14 +53,14 @@ struct List *concatList(struct List **l0, struct List **l1)
 	   if (*l1 != NULL)
 	   {
 	       L = *l0;
-/*          
+          
 	       while (L->next != NULL)
           {
              L = L->next;
           }
 
 	       L->next = *l1;
-*/          
+          
 	   }
 	}
 	*l0 = NULL;
