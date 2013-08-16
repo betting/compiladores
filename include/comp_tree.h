@@ -6,8 +6,9 @@
 #define _comp_tree_h
 
 #define MAX_CHILDREN 2
-#include <iostream>
 #include "comp_list.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 //definicao da estrutura do elemento LISTA
 struct _tree{
@@ -15,12 +16,13 @@ struct _tree{
 	struct _tree *child,*sibling;
 };
 	
-typedef struct _tree TREE;
+typedef struct _tree Tree;
 
 /* prototipos das funções */ 
-TREE* createTree();
-TREE* search(TREE* root,int data)
-void insertNode(int data, TREE *node);
-void removeNode(TREE *node);
+Tree* createTree();
+Tree* createTree(Tree* root,int data[]);
+Tree* search(Tree* root,int data);
+void insertNode(int data, Tree *node);
+void removeNode(Tree *node);
 
 #endif
