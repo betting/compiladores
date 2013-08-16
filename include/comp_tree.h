@@ -11,16 +11,16 @@
 
 //definicao da estrutura do elemento LISTA
 struct _tree{
-	int num;
-	LIST *children;
+	int data;
+	struct _tree *child,*sibling;
 };
 	
 typedef struct _tree TREE;
 
 /* prototipos das funções */ 
 TREE* createTree();
-void insertNode(int num, TREE *node);
+TREE* search(TREE* root,int data)
+void insertNode(int data, TREE *node);
 void removeNode(TREE *node);
-struct TREE *concatLista(struct TREE **l0, struct TREE **l1);
 
 #endif
