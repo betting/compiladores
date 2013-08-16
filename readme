@@ -1,0 +1,92 @@
+PASSOS PARA CRIAR E EXECUTAR O COMPILADOR
+------ ---- ----- - -------- - ----------
+
+1. Criar o arquivo MakeFile conforme mostrado em Ferramentas -> I. CMake
+Esse item deve ser rodado a cada nova etapa do projeto ou a cada modificacao 
+do arquivo CMakeLists.txt quando um novo arquivo eh adicionado ao projeto.
+
+2. Compilar todo o projeto conforme Ferramentas -> II. MakeFile
+
+3. Executar o compilador
+
+OU
+
+Executar o script build.sh para executar os passos 1 e 2 mencionados acima.
+   
+   ./build.sh
+
+
+-------------------------------------------------------------------------------------------------
+
+FERRAMENTAS
+-----------
+
+I. CMake
+========
+
+Para gerar o arquivo MakeFile eh necessario ter o cmake instalado:
+
+   cmake CMakeLists.txt
+
+
+II. MakeFile
+============
+
+Ira compilar todo o projeto, gerando como arquivo de saida (executavel) o "main":
+
+   make
+
+
+III. Git
+========
+
+a. Fazer commit local (para futuro push):
+
+   git commit -am "<mensagem_de_commit>"
+   ou
+   git gui (modo grafico)
+
+
+b. Fazer push / integracao de codigo comitado:
+
+   Se o branch local for o "master":
+      git push
+
+   Se o branch local for diferente de master:
+      git push origin <nome_branch_local>:master
+
+
+c. Atualizar o repositorio local:
+
+   git pull
+   ou
+   git fetch && git rebase origin/master
+
+
+d. Visualizar historico de pushes:
+
+   git log (linha de comando)
+   ou
+   gitk (modo grafico)
+
+
+-------------------------------------------------------------------------------------------------
+
+EXECUTAR O COMPILADOR
+-------- - ----------
+
+a. (Etapa 01) Para fornecer um arquivo de entrada ao compilador, utiliza-se pipe. 
+Dentro do diretorio raiz do compilador, executar:
+
+   cat <nome_arquivo> | ./main
+
+b. (Etapa 01) Fornecer um valor especifico ao compilador:
+
+   echo "<string_a_ser_avaliada>" | ./main
+
+c. (Etapa 0 e Etapa 1) Pode-se, tambem, entrar no compilador e digitar o conteudo a ser availado:
+   
+   ./make
+   Digitar o que quer que seja avaliado.
+
+
