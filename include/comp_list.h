@@ -5,21 +5,20 @@
 
 #ifndef _comp_list_h
 #define _comp_list_h
-#include <iostream>
+#include <stdio.h>
 
 //definicao da estrutura do elemento LISTA
-struct _list{
+typedef struct _list
+{
 	int num;
-	_list *next;
-};
+	struct List *next;
+} List;
 	
-typedef struct _list LIST;
-
 /* prototipos das funções */ 
-LIST* createList();
-void insert(int num, LIST *node);
-void remove(LIST *node);
-struct LIST *concatLista(struct LIST **l0, struct LIST **l1);
+List* createList();
+void addItem(int num, List *node);
+void removeItem(List *node);
+struct List *concatList(struct List **l0, struct List **l1);
 
 #endif
 

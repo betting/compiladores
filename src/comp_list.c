@@ -7,30 +7,30 @@
 
 
 //lista vazia
-/*LIST *begin = NULL; //inicio
-LIST *end = NULL;   //fim
-LIST *aux;
-LIST *previous; //anterior   
+/*List *begin = NULL; //inicio
+List *end = NULL;   //fim
+List *aux;
+List *previous; //anterior   
 */
 
-LIST* createList()
+List* createList()
 {
 	return NULL;	
 }
 
-//struct LIST *insertBegin(struct LIST *pList, int value)	
-void insert(int num, LIST *node)
+//struct List *insertBegin(struct List *pList, int value)	
+void addItem(int num, List *node)
 {
-	LIST *new;
-	new = malloc(sizeof(LIST));
+	List *new;
+	new = malloc(sizeof(List));
 	new->num = num;
 	new->next = node->next;
 	node->next = new;
 }
 
-void remove(LIST *node)
+void removeItem(List *node)
 {
-	LIST *dead;
+	List *dead;
 	dead = node->next;
 	node->next = dead->next;
 	free(dead);
@@ -38,19 +38,29 @@ void remove(LIST *node)
 
 
 
-struct LIST *concatLista(struct LIST **l0, struct LIST **l1)
+struct List *concatList(struct List **l0, struct List **l1)
 {
-	struct LIST *L01 = createlist();
-	struct LIST *L;
-	if (*l0 == NULL) L01 = *l1;
+	struct List *L01 = createList();
+	struct List *L;
+
+	if (*l0 == NULL)
+   {
+      L01 = *l1;
+   }
 	else
 	{
 	   L01 = *l0;
 	   if (*l1 != NULL)
 	   {
 	       L = *l0;
-	       while (L->next != NULL) L = L->next;
+/*          
+	       while (L->next != NULL)
+          {
+             L = L->next;
+          }
+
 	       L->next = *l1;
+*/          
 	   }
 	}
 	*l0 = NULL;
