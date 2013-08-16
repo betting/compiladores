@@ -21,5 +21,5 @@ void insert(int num, LIST *node);
 void remove(LIST *node);
 struct LIST *concatLista(struct LIST **l0, struct LIST **l1);
 
-
+#endif
 
