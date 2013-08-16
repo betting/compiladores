@@ -5,8 +5,6 @@
 #ifndef _comp_graph_h
 #define _comp_graph_h
 #include <stdio.h>
-#include <alloc.h>
-//#include <conio.h>
 
 //definicao da estrutura para o elemento GRAFO
 //ligações
