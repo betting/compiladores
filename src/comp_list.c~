@@ -1,0 +1,77 @@
+#include <iostream>
+using namespace std;
+ 
+class Node {
+    public:
+        int value; 
+        Node *next;
+        Node () {
+            next = NULL; 
+        }
+        Node (int _value) { 
+            value = _value;
+            next = NULL;
+        }
+};
+ 
+class List {
+    public:
+        Node *head; 
+        List () { 
+            head = NULL;
+        }
+ 
+        void addInTheEnd (int x) {
+            Node *novo = new Node;
+            novo->value = x;
+            if (head == NULL)
+                head = novo;
+            else {
+                Node *whereis = head;
+                while (whereis->next)
+                    whereis = whereis->next;
+                whereis->next = novo;
+            }
+        }
+ 
+        void printList(){ 
+            Node* aux = head;
+            while (aux) {
+                cout << aux->value << endl;
+                aux = aux->next;
+            }
+            return;
+        }
+ 
+        bool find (int x) { 
+            Node *pointer = new Node;
+            if (!head)
+                return false;
+            pointer = head;
+            for (; pointer; pointer = pointer->next)
+                if (pointer->value == x)
+                    return true;
+            return false;
+        }
+ 
+        bool remove (int x) { 
+            Node *pointer = new Node;
+            if (!find(x))
+                return false;
+            while (head->value == x)
+                head = head->next;
+            if (!head)
+                return false;
+            pointer = head;
+            while (pointer) {
+                if (pointer->next)
+                    if (pointer->next->value == x)
+                        pointer->next = pointer->next->next;
+                pointer = pointer->next;
+            }
+            return true;
+        }
+
+	//void concatList()
+ 
+};
