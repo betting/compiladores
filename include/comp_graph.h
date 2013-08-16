@@ -4,9 +4,9 @@
 ******************************************************/
 #ifndef _comp_graph_h
 #define _comp_graph_h
-#include <iostream.h>
+#include <stdio.h>
 #include <alloc.h>
-#include <conio.h>
+//#include <conio.h>
 
 //definicao da estrutura para o elemento GRAFO
 //ligações
@@ -24,7 +24,7 @@ struct node
 }*head;
 
 //prototipos das funcoes
-void create(struct node *h, int item);
+void createGraph(struct node *h, int item);
 
 
 #endif

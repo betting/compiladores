@@ -5,10 +5,10 @@
 //                Create Graph
 //---------------------------------------------------
 
-void create(struct node *h, int item)
+void createGraph(struct node *h, int item)
 {
 	h->item = item;
-	h->visit=0;
-	h->next=(node*)malloc(sizeof(node));
-	create(h->next);
+	h->visit = 0;
+	//aloca o espaço para o próximo
+	h->next = (node*)malloc(sizeof(node));
 }
