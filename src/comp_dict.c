@@ -1,73 +1,132 @@
+/**
+ * @file comp_dict.c 
+ * @version 1.0
+ *
+ * @section DESCRIPTION
+ * Dictionary
+ * A data type with a table (comp_dict_t) and one value/item (comp_dict_item_t).
+ */
+
 #include <stdlib.h>
 #include <string.h>
 #include "comp_dict.h"
 
 #define SIZE 997
 
-comp_dic_item_t *dicTable[SIZE];
+comp_dict_item_t *dicTable[SIZE];
 
-void dic_init()
+/**
+ * Dictionary initalization.
+ *
+ * Perform a dictionary initialization following the size set in a constant.
+ */
+void initDict()
 {
-        int i;
-        for(i = 0; i < SIZE; ++i)
-                dicTable[i] = 0;
+   int i;
+   for(i = 0; i < SIZE; ++i)
+   {
+      dicTable[i] = 0;
+   }
 }
 
-comp_dic_item_t* dic_insert(int token, char *text)
+/**
+ * Add new item in a Dictionary.
+ *
+ * Add new key/value in the Dictionary, according to the value specified.
+ *
+ * @param token Dicitonary value/key (Unique value).
+ * @param *text String to be added.
+ * @return Dictionary item created (Key/Value).
+ */
+comp_dict_item_t* addDict(int token, char *text)
 {
-        int address;
-        comp_dic_item_t *element;
+   int address;
+   comp_dict_item_t *element;
 
-        if(element = dic_find(text))
-                return element;
+   // Since we should only have unique key in the dictionary, once the 
+   // key informed by the user is found, the previous (first) element
+   // created in the dicionary will be returned.
+   if(element = searchDict(text))
+   {
+      return element;
+   }
 
-        element = (comp_dic_item_t*)malloc(sizeof(comp_dic_item_t));
-        element->token = token;
-        element->text = (char*)calloc(strlen(text)+1,sizeof(char));
-        strcpy(element->text, text);
-        element->next = 0;
+   element = (comp_dict_item_t*)malloc(sizeof(comp_dict_item_t));
+   element->token = token;
+   element->text = (char*)calloc(strlen(text)+1,sizeof(char));
+   strcpy(element->text, text);
+   element->next = 0;
 
-        address = dic_address(text);
-        element->next = dicTable[address];
-        dicTable[address] = element;
+   address = getItemAddressDict(text);
+   element->next = dicTable[address];
+   dicTable[address] = element;
 
-        return element;
+   return element;
 }
 
-int dic_address(char *text)
+/**
+ * Get item address in the dictionary.
+ * 
+ * Search for the text informed by the user in the dictionary, return the 
+ * actual position of it.
+ *
+ * @param *text The content to searched.
+ * @return The position of the content in the dictionary.
+ */
+int getItemAddressDict(char *text)
 {
-        int i;
-        int address=1;
-        int textlen = strlen(text);
-        for(i = 0; i < textlen; ++i)
-        {
-                address = (address * text[i]) % SIZE + 1;
-        }
-        return address - 1;
+   int i;
+   int address=1;
+   int textlen = strlen(text);
+
+   for(i = 0; i < textlen; ++i)
+   {
+      address = (address * text[i]) % SIZE + 1;
+   }
+   return address - 1;
 }
 
-comp_dic_item_t* dic_find(char *text)
+/**
+ * Get an item from the dictionary.
+ *
+ * Search for the text informed by the user in the dictionary, returning
+ * dictionary item.
+ *
+ * @param *text The content to searched.
+ * @return The item content found.
+ */
+comp_dict_item_t* searchDict(char *text)
 {
-        int address;
-        comp_dic_item_t *ret;
+   int address;
+   comp_dict_item_t *ret;
 
-        address = dic_address(text);
+   address = getItemAddressDict(text);
 
-        ret = dicTable[address];
-        while(ret && strcmp(ret->text, text) != 0) ret = ret->next;
+   ret = dicTable[address];
+   while(ret && strcmp(ret->text, text) != 0) 
+   {
+      ret = ret->next;
+   }
 
-        return ret;
+   return ret;
 }
 
-void dic_print()
+/**
+ * Print Dictionary
+ *
+ * Print all elements added in the dictionary.
+ */
+void printDict()
 {
-        int i;
-        comp_dic_item_t *aux;
-        for(i = 0; i < SIZE; ++i){
-                aux = dicTable[i];
-                while(aux != 0) {
-                        printf("%d %s\n", aux->token, aux->text);
-                        aux = aux->next;
-                }
-        }
+   int i;
+   comp_dict_item_t *aux;
+   for(i = 0; i < SIZE; ++i)
+   {
+      aux = dicTable[i];
+      while(aux != 0) 
+      {
+         printf("%d %s\n", aux->token, aux->text);
+         aux = aux->next;
+      }
+   }
 }
