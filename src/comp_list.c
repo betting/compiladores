@@ -7,30 +7,30 @@
 
 
 //lista vazia
-/*List *begin = NULL; //inicio
-List *end = NULL;   //fim
-List *aux;
-List *previous; //anterior   
+/*comp_list_t* begin = NULL; //inicio
+comp_list_t* end = NULL;   //fim
+comp_list_t* aux;
+comp_list_t* previous; //anterior   
 */
 
-List* createList()
+comp_list_t* createList()
 {
 	return NULL;	
 }
 
-//struct List *insertBegin(struct List *pList, int value)	
-void addItem(int num, List *node)
+//struct comp_list_t* insertBegin(struct comp_list_t* pList, int value)	
+void addItem(int num, comp_list_t* node)
 {
-	List *new;
-	new = malloc(sizeof(List));
+	comp_list_t* new;
+	new = malloc(sizeof(comp_list_t*));
 	new->num = num;
 	new->next = node->next;
 	node->next = new;
 }
 
-void removeItem(List *node)
+void removeItem(comp_list_t* node)
 {
-	List *dead;
+	comp_list_t* dead;
 	dead = node->next;
 	node->next = dead->next;
 	free(dead);
@@ -38,10 +38,10 @@ void removeItem(List *node)
 
 
 
-struct List *concatList(struct List **l0, struct List **l1)
+struct comp_list_t* concatList(struct comp_list_t* *l0, struct comp_list_t* *l1)
 {
-	List *L01 = createList();
-	List *L;
+	comp_list_t* L01 = createList();
+	comp_list_t* L;
 
 	if (*l0 == NULL)
    {
