@@ -42,15 +42,15 @@ return { return TK_PR_RETURN; }
 
 
  /* Literais - Identificadores */
-"false" { addDict(TK_LIT_FALSE, yytext); return TK_LIT_FALSE; }
-"true" { addDict(TK_LIT_TRUE, yytext); return TK_LIT_TRUE; }
+"false" { addDict(yytext, lineNumber); return TK_LIT_FALSE; }
+"true" { addDict(yytext, lineNumber); return TK_LIT_TRUE; }
 
-{letter}({letter}|{digit})* { addDict(TK_IDENTIFICADOR, yytext); return TK_IDENTIFICADOR; }
+{letter}({letter}|{digit})* { addDict(yytext, lineNumber); return TK_IDENTIFICADOR; }
 
-"-"?{digit}+ { addDict(TK_LIT_INT, yytext); return TK_LIT_INT; }
-"-"?{digit}+"."{digit}+ { addDict(TK_LIT_FLOAT, yytext); return TK_LIT_FLOAT; }
-\'.\' { addDict(TK_LIT_CHAR, yytext); return TK_LIT_CHAR; }
-\"[^"]*\" { addDict(TK_LIT_STRING, yytext); return TK_LIT_STRING; }
+"-"?{digit}+ { addDict(yytext, lineNumber); return TK_LIT_INT; }
+"-"?{digit}+"."{digit}+ { addDict(yytext, lineNumber); return TK_LIT_FLOAT; }
+\'.\' { addDict(yytext, lineNumber); return TK_LIT_CHAR; }
+\"[^"]*\" { addDict(yytext, lineNumber); return TK_LIT_STRING; }
 
  /* Comentarios */
 "//".* {}
