@@ -1,10 +1,12 @@
 #include <stdio.h>
 
-typedef struct comp_dic_t {
+struct _dic {
         int token;
         char *text;
-        struct comp_dic_t *next;
-} comp_dic_item_t;
+        struct _dic *next;
+};
+
+typedef struct _dic comp_dic_item_t;
 
 void dic_init();
 comp_dic_item_t* dic_insert(int token, char *text);

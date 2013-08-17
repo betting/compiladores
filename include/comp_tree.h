@@ -15,14 +15,14 @@ struct _tree
 	struct _tree *child,*sibling;
 };
 	
-typedef struct _tree Tree;
+typedef struct _tree comp_tree_t;
 
 /* prototipos das funções */ 
-Tree* createTree();
-Tree* createTree(Tree* root,int data[]);
+comp_tree_t* createTree();
+comp_tree_t* createTree(comp_tree_t* root,int data[]);
 
-Tree* search(Tree* root,int data);
-void insertNode(int data, Tree *node);
-void removeNode(Tree *node);
+comp_tree_t* search(comp_tree_t* root,int data);
+void insertNode(int data, comp_tree_t *node);
+void removeNode(comp_tree_t *node);
 
 #endif

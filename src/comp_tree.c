@@ -1,6 +1,6 @@
 #include "comp_tree.h"
 
-void preorder(Tree* p)
+void preorder(comp_tree_t* p)
 {
     if(p==NULL)return;
     printf(" %d",p->data);
@@ -9,41 +9,41 @@ void preorder(Tree* p)
     preorder(p->sibling);
 }
 
-Tree* search(Tree* root,int data)
+comp_tree_t* search(comp_tree_t* root,int data)
 {
     if(root==NULL)
         return;
     if(data==root->data)
         return root;
-    Tree* t = search(root->child,data);
+    comp_tree_t* t = search(root->child,data);
     if(t==NULL)
          t = search(root->sibling,data);
     return t;
 
 }
 
-Tree* createNode(int data)
+comp_tree_t* createNode(int data)
 {
-    Tree* newnode= (Tree*)malloc(sizeof(Tree));
+    comp_tree_t* newnode= (comp_tree_t*)malloc(sizeof(comp_tree_t));
     newnode->child=NULL;
     newnode->sibling=NULL;
     newnode->data=data;
     return newnode;
 }
 
-Tree* createnary(Tree* root,int data[])
+comp_tree_t* createnary(comp_tree_t* root,int data[])
 {
 
     //check if node exist already
 
-   Tree* newnode = search(root,data[0]);
+   comp_tree_t* newnode = search(root,data[0]);
     //if node does not exist
     if(newnode==NULL)
     {
         newnode= createNode(data[0]);
     }
 
-    Tree* parent=newnode;
+    comp_tree_t* parent=newnode;
     /////now create node of its children
     int j;
     for(j=0;j<data[1];j++)
