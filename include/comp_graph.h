@@ -26,7 +26,7 @@ typedef struct node
 //prototipos das funcoes
 void createGraph(struct node *h, int item);
 comp_graph_t *searchGraph(comp_graph_t *h,int p);
-//void getAdjacent(struct node *h,link *l)
+void getAdjacent(struct node *h,link *l)
 
 
 

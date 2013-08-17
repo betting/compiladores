@@ -25,3 +25,28 @@ comp_graph_t *searchGraph(comp_graph_t *h,int p)
  return NULL;
 }
 
+void getAdjacent(node *h,link *l)
+{
+  if(h==NULL)return;
+  if(l==NULL)
+  {	
+	l =(struct link *)malloc(sizeof(struct link));
+	//l=(link*)malloc(sizeof(link));
+	h->adjacent=l;
+  }
+  //h->item é adjacente? se sim... senão...
+  if(????)
+  {
+
+    int t;
+    //t = valor
+    l->points=search(comp_graph_t,t);
+    l->next=(link*)malloc(sizeof(link));
+    getAdjacent(h,l->next);
+   }
+  else
+  {
+    l->next=NULL;
+    getAdjacent(h->next,l->next);
+  }
+}
