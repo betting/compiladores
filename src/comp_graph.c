@@ -13,7 +13,7 @@ void createGraph(struct node *h, int item)
 	h->next = (struct node *)malloc(sizeof(struct node));
 }
 
-node *searchGraph(struct node *h,int p)
+comp_graph_t *searchGraph(comp_graph_t *h,int p)
 {
  while(h!=NULL)
  {

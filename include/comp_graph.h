@@ -15,16 +15,17 @@ struct link
  struct link *next;
 };
 //nós
-struct node
+typedef struct node
 {
  int item,visit;
  struct link *adjacent;
- struct node *next;
-}*head;
+ struct comp_graph_t *next;
+} comp_graph_t;
+
 
 //prototipos das funcoes
 void createGraph(struct node *h, int item);
-node *searchGraph(struct node *h,int p)
+comp_graph_t *searchGraph(comp_graph_t *h,int p);
 //void getAdjacent(struct node *h,link *l)
 
 
