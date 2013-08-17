@@ -42,15 +42,15 @@ return { return TK_PR_RETURN; }
 
 
  /* Literais - Identificadores */
-"false" { return TK_LIT_FALSE; }
-"true" { return TK_LIT_TRUE; }
+"false" { addDict(TK_LIT_FALSE, yytext); return TK_LIT_FALSE; }
+"true" { addDict(TK_LIT_TRUE, yytext); return TK_LIT_TRUE; }
 
-{letter}({letter}|{digit})* { return TK_IDENTIFICADOR; }
+{letter}({letter}|{digit})* { addDict(TK_IDENTIFICADOR, yytext); return TK_IDENTIFICADOR; }
 
-"-"?{digit}+ { return TK_LIT_INT; }
-"-"?{digit}+"."{digit}+ { return TK_LIT_FLOAT; }
-\'.\' { return TK_LIT_CHAR; }
-\"[^"]*\" { return TK_LIT_STRING; }
+"-"?{digit}+ { addDict(TK_LIT_INT, yytext); return TK_LIT_INT; }
+"-"?{digit}+"."{digit}+ { addDict(TK_LIT_FLOAT, yytext); return TK_LIT_FLOAT; }
+\'.\' { addDict(TK_LIT_CHAR, yytext); return TK_LIT_CHAR; }
+\"[^"]*\" { addDict(TK_LIT_STRING, yytext); return TK_LIT_STRING; }
 
  /* Comentarios */
 "//".* {}
@@ -68,5 +68,5 @@ return { return TK_PR_RETURN; }
 
 \n { lineNumber++; }
 [ \t] { }
-. { return TOKEN_ERRO; }
+. { printf("Erro na linha %d: %s\n", lineNumber, yytext); return TOKEN_ERRO; }
 %%
