@@ -12,6 +12,15 @@ void preorder(comp_tree_t* p)
     preorder(p->sibling);
 }
 
+/**
+ * Search a node
+ *
+ * Search a node given a value
+ *
+ * @param int	data 
+ * @return comp_tree_t root
+ * @return comp_tree_t 
+ */
 comp_tree_t* search(comp_tree_t* root,int data)
 {
     if(root == NULL)
@@ -34,6 +43,14 @@ comp_tree_t* search(comp_tree_t* root,int data)
 
 }
 
+/**
+ * Create a node
+ *
+ * Create a node given a value
+ *
+ * @param int	data 
+ * @return comp_tree_t newNode
+ */
 comp_tree_t* createNode(int data)
 {
     comp_tree_t* newnode= (comp_tree_t*)malloc(sizeof(comp_tree_t));
@@ -43,7 +60,12 @@ comp_tree_t* createNode(int data)
     return newnode;
 }
 
-comp_tree_t* createnary(comp_tree_t* root,int data[])
+/**
+ * Tree initalization.
+ *
+ * Perform a tree initialization.
+ */
+comp_tree_t* initTree(comp_tree_t* root,int data[])
 {
     //check if node exist already
     comp_tree_t* newnode = search(root,data[0]);

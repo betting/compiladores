@@ -15,7 +15,7 @@ typedef struct _list
 } comp_list_t;
 	
 /* prototipos das funções */ 
-comp_list_t* createList();
+comp_list_t* initList();
 void addItem(int num, comp_list_t* node);
 void removeItem(comp_list_t* node);
 struct comp_list_t* concatList(struct comp_list_t **l0, struct comp_list_t **l1);
