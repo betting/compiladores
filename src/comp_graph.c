@@ -12,3 +12,16 @@ void createGraph(struct node *h, int item)
 	//aloca o espaço para o próximo
 	h->next = (struct node *)malloc(sizeof(struct node));
 }
+
+node *searchGraph(struct node *h,int p)
+{
+ while(h!=NULL)
+ {
+  if(h->item==p)
+  {return h;}
+  else
+  { h=h->next;}
+ }
+ return NULL;
+}
+

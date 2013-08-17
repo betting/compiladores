@@ -24,6 +24,10 @@ struct node
 
 //prototipos das funcoes
 void createGraph(struct node *h, int item);
+node *searchGraph(struct node *h,int p)
+//void getAdjacent(struct node *h,link *l)
+
+
 
 
 #endif
