@@ -20,6 +20,6 @@ typedef struct _tree comp_tree_t;
 /* prototipos das funções */ 
 comp_tree_t* search(comp_tree_t* root,int data);
 comp_tree_t* initTree(comp_tree_t* root,int data[]);
-void createNode(int data);
-
+//void createNode(int data);
+comp_tree_t* createNode(int data);
 #endif

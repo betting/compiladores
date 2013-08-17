@@ -4,15 +4,39 @@
 //---------------------------------------------------
 //                Create Graph
 //---------------------------------------------------
-
+/*
 void createGraph(struct node *h, int item)
 {
 	h->item = item;
 	h->visit = 0;
 	//aloca o espaço para o próximo
 	h->next = (struct node *)malloc(sizeof(struct node));
+}*/
+
+/**
+ * Create a Graph
+ *
+ * Initialization of a graph
+ * Allocation of memory
+ *
+ * @param int	item
+ */
+void createGraph(comp_graph_t *h, int item)
+{
+	h->item = item;
+	h->visit = 0;
+	//aloca o espaço para o próximo
+	h->next = (comp_graph_t*)malloc(sizeof(comp_graph_t));
 }
 
+/**
+ * Search a node in Graph
+ *
+ * Search a node given a value
+ *
+ * @param int p 
+ * @return comp_tree_t 
+ */
 comp_graph_t *searchGraph(comp_graph_t *h,int p)
 {
  while(h!=NULL)
@@ -25,28 +49,66 @@ comp_graph_t *searchGraph(comp_graph_t *h,int p)
  return NULL;
 }
 
-void getAdjacent(node *h,link *l)
+/**
+ * Connect a node and a link in certain Graph
+ *
+ * Search a node given a value
+ *
+ * @param int value 
+ * @return comp_graph_t
+ *  
+ */
+void connectNodeGraph(comp_graph_t *h,  link *l, int value)
 {
   if(h==NULL)return;
   if(l==NULL)
-  {	
-	l =(struct link *)malloc(sizeof(struct link));
-	//l=(link*)malloc(sizeof(link));
-	h->adjacent=l;
-  }
-  //h->item é adjacente? se sim... senão...
-  if(????)
   {
-
-    int t;
-    //t = valor
-    l->points=search(comp_graph_t,t);
-    l->next=(link*)malloc(sizeof(link));
-    getAdjacent(h,l->next);
-   }
-  else
-  {
-    l->next=NULL;
-    getAdjacent(h->next,l->next);
-  }
+	  l=(link*)malloc(sizeof(link));
+	  h->adjacent=l;
+	  l->points=searchGraph(h,value);
+	  l->next=(link*)malloc(sizeof(link));
+   }	
 }
+/**
+ * Remove a node
+ *
+ * Remove the first node it finds with value 'value' in l list
+ *
+ * @param int value
+ * @return link
+ * 
+ */
+
+link *removeLink (comp_graph_t *h, link *l, int value)
+{
+
+      if( !l ) return NULL;
+      l->points=searchGraph(h,value);
+	  if(l->points!=NULL)
+	  {
+		link *temp = l->next;  
+		free(l);
+		return temp;	
+	  }
+	  l->next = removeLink (h, l->next, value);
+	  return l;
+}		
+
+/**
+ * Alter node value
+ *
+ * Switch old value node for new value 
+ *
+ * @param int oldValue 
+ * @param int newValue 
+ * @return comp_graph_t
+ *  
+ */
+comp_graph_t *alterGraphNodeValue(comp_graph_t *h, int oldValue, int newValue){
+	h = searchGraph(h,oldValue);
+	if(h!=NULL){
+		h->item = newValue;
+		return h;
+	}
+}		
+
