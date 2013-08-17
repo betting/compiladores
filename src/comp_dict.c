@@ -21,7 +21,7 @@ comp_dic_item_t* dic_insert(int token, char *text)
         if(element = dic_find(text))
                 return element;
 
-        element = (HASH_ELEMENT*)malloc(sizeof(HASH_ELEMENT));
+        element = (comp_dic_item_t*)malloc(sizeof(comp_dic_item_t));
         element->token = token;
         element->text = (char*)calloc(strlen(text)+1,sizeof(char));
         strcpy(element->text, text);
