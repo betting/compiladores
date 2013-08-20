@@ -14,6 +14,7 @@ int getLineNumber (void)
 
 int main (int argc, char **argv)
 {
+  initDict();
   int token = TOKEN_ERRO;
   while (token = yylex())
   {

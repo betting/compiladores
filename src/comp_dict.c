@@ -34,11 +34,11 @@ void initDict()
  *
  * Add new key/value in the Dictionary, according to the value specified.
  *
- * @param token Dicitonary value/key (Unique value).
+ * @param key Dicitonary value/key (Unique value).
  * @param *text String to be added.
  * @return Dictionary item created (Key/Value).
  */
-comp_dict_item_t* addDict(int token, char *text)
+comp_dict_item_t* addDict(char *key, char *text)
 {
    int address;
    comp_dict_item_t *element;
@@ -52,7 +52,8 @@ comp_dict_item_t* addDict(int token, char *text)
    }
 
    element = (comp_dict_item_t*)malloc(sizeof(comp_dict_item_t));
-   element->token = token;
+   element->token = (char*)calloc(strlen(key)+1,sizeof(char));
+   strcpy(element->token, key);
    element->text = (char*)calloc(strlen(text)+1,sizeof(char));
    strcpy(element->text, text);
    element->next = 0;
@@ -125,7 +126,7 @@ void printDict()
       aux = dicTable[i];
       while(aux != 0) 
       {
-         printf("%d %s\n", aux->token, aux->text);
+         printf("%s %s\n", aux->token, aux->text);
          aux = aux->next;
       }
    }

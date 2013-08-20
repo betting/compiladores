@@ -3,6 +3,8 @@
 
 int lineNumber = 1;
 
+char str[1024];
+
 %}
 
 %x IN_COMMENT
@@ -42,15 +44,15 @@ return { return TK_PR_RETURN; }
 
 
  /* Literais - Identificadores */
-"false" { addDict(yytext, lineNumber); return TK_LIT_FALSE; }
-"true" { addDict(yytext, lineNumber); return TK_LIT_TRUE; }
+"false" { sprintf(str, "%d", lineNumber); addDict(yytext, str); return TK_LIT_FALSE; }
+"true" { sprintf(str, "%d", lineNumber); addDict(yytext, str); return TK_LIT_TRUE; }
 
-{letter}({letter}|{digit})* { addDict(yytext, lineNumber); return TK_IDENTIFICADOR; }
+{letter}({letter}|{digit})* { sprintf(str, "%d", lineNumber); addDict(yytext, str); return TK_IDENTIFICADOR; }
 
-"-"?{digit}+ { addDict(yytext, lineNumber); return TK_LIT_INT; }
-"-"?{digit}+"."{digit}+ { addDict(yytext, lineNumber); return TK_LIT_FLOAT; }
-\'.\' { addDict(yytext, lineNumber); return TK_LIT_CHAR; }
-\"[^"]*\" { addDict(yytext, lineNumber); return TK_LIT_STRING; }
+"-"?{digit}+ { sprintf(str, "%d", lineNumber); addDict(yytext, str); return TK_LIT_INT; }
+"-"?{digit}+"."{digit}+ { sprintf(str, "%d", lineNumber); addDict(yytext, str); return TK_LIT_FLOAT; }
+\'.\' { sprintf(str, "%d", lineNumber); addDict(yytext, str); return TK_LIT_CHAR; }
+\"[^"]*\" { sprintf(str, "%d", lineNumber); addDict(yytext, str); return TK_LIT_STRING; }
 
  /* Comentarios */
 "//".* {}
