@@ -1,5 +1,5 @@
 %{
-#include "tokens.h"
+#include "parser.h"
 
 int lineNumber = 1;
 
