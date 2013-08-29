@@ -31,10 +31,17 @@
 %token TK_IDENTIFICADOR
 %token TOKEN_ERRO
 
+
+%left TK_OC_OR TK_OC_AND
+%left '<' '>' TK_OC_LE TK_OC_GE TK_OC_EQ TK_OC_NE
+%left '+' '-'
+%left '*' '/'
+
 %%
  /* Regras (e ações) da gramática da Linguagem K */
 
 s: decl_global s
+  | def_funcao s
   |
   ;
 
@@ -46,6 +53,7 @@ decl_local: decl_var ';' decl_local
    |
    ;
 
+ /* Declaracao de variaveis e tipos*/
 decl_var: TK_IDENTIFICADOR ':' tipo_var
   ;
 
@@ -60,5 +68,95 @@ tipo_var: TK_PR_INT
         | TK_PR_STRING
         ;
 
+def_funcao: cabecalho decl_local bloco_comando
+  ;
+
+chamada_funcao: TK_IDENTIFICADOR '(' lista_expressoes ')'
+
+cabecalho: TK_IDENTIFICADOR ':' tipo_var '(' lista_parametros ')'
+  ;
+
+lista_parametros: lista_parametros_nao_vazia
+  |
+  ;
+
+lista_parametros_nao_vazia: parametro ',' lista_parametros_nao_vazia
+  | parametro
+  ;
+
+parametro: TK_IDENTIFICADOR ':' tipo_var
+  ;
+
+
+comando: bloco_comando
+  | controle_fluxo
+  | atribuicao
+  | entrada
+  | saida
+  | retorna
+  | decl_var ';'
+  | chamada_funcao ';'
+  ;
+
+bloco_comando: '{' seq_comando '}'
+  ;
+
+seq_comando: comando seq_comando
+   | ';'
+  |
+  ;
+
+atribuicao: TK_IDENTIFICADOR '=' expressao ';'
+  | TK_IDENTIFICADOR '[' expressao ']' '=' expressao ';'
+  ;
+
+entrada: TK_PR_INPUT TK_IDENTIFICADOR ';'
+  ;
+
+saida: TK_PR_OUTPUT lista_expressoes_nao_vazia ';'
+  ;
+
+lista_expressoes_nao_vazia: expressao ',' lista_expressoes_nao_vazia
+  | expressao
+  ;
+
+retorna: TK_PR_RETURN expressao ';'
+  ;
+
+
+controle_fluxo: TK_PR_IF '(' expressao ')' TK_PR_THEN comando
+  | TK_PR_IF '(' expressao ')' TK_PR_THEN comando TK_PR_ELSE comando
+  | TK_PR_WHILE '(' expressao ')' comando
+  ;
+
+expressao: TK_IDENTIFICADOR
+  | TK_IDENTIFICADOR '[' expressao ']'
+  | TK_LIT_INT
+  | TK_LIT_FLOAT
+  | TK_LIT_FALSE
+  | TK_LIT_TRUE
+  | TK_LIT_CHAR
+  | TK_LIT_STRING
+  | expressao '+' expressao
+  | expressao '-' expressao
+  | expressao '*' expressao
+  | expressao '/' expressao
+  | expressao '<' expressao
+  | expressao '>' expressao
+  | '+' expressao
+  | '-' expressao
+  | '(' expressao ')'
+  | expressao TK_OC_LE expressao
+  | expressao TK_OC_GE expressao
+  | expressao TK_OC_EQ expressao
+  | expressao TK_OC_NE expressao
+  | expressao TK_OC_AND expressao
+  | expressao TK_OC_OR expressao
+  | chamada_funcao
+  ;
+
+lista_expressoes: lista_expressoes_nao_vazia
+  |
+  ;
 
 %%
