@@ -1,0 +1,12 @@
+// ATRIBUICOES
+func:int ()
+{
+   a=0;
+   _tmp = "valor";
+   ______soma = a+ b;
+   wef123 = 'l';
+   _1 = 999;
+   1var = "comentario";
+   _var1 = 219;
+}
+

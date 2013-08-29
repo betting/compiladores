@@ -14,7 +14,8 @@ main:int (a:int, b:float )
 
 nome_Da_Funcao_DeUmaLinha:string (){palavra:string; caracter:char; palavra = "teste"; caracter  =   'a'; return palavra;}
 
-outraFuncao:int (t:string) 
+// ERRO: Falta tipo de retorno na funcao abaixo (linha 18)
+outraFuncao: (t:string) 
 {
    output "fim da funcao";
    /*comentario
