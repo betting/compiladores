@@ -1,1 +1,40 @@
 // FUNCOES
+
+main:int (a:int, b:float )
+{
+  i: int;
+  i=0;
+  output "Saida";
+  input a;
+  while (i<4)
+  {
+    i = i + 1;
+  }
+}
+
+nome_Da_Funcao_DeUmaLinha:string (){palavra:string; caracter:char; palavra = "teste"; caracter  =   'a'; return palavra;}
+
+outraFuncao:int (t:string)
+{
+   output "fim da funcao";
+   /*comentario
+   com
+   muitas
+   linhas
+   dentro
+   da
+   funcao
+   */
+   if (t> 4) then
+   {
+      // comentario 01
+      // comentario 02 /?€?€®←↓→øþ´ªº~ĸŋđðßæ«»©“”nµ·º§\}][{¬¢£³²¹
+      output "teste";
+   }
+   else
+   { //teste 
+      i=0;
+   }
+}
+
+}
