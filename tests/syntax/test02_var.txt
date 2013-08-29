@@ -1,0 +1,8 @@
+// VARIAVEIS
+nome_variavel01 : int;
+var02 : string[10];
+v3:   float  ;
+v4 :   bool;
+v5  :char     ;  
+v6   : string;
+v7:int; v8:char;v9:string[1000];
