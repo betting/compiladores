@@ -34,6 +34,31 @@
 %%
  /* Regras (e ações) da gramática da Linguagem K */
 
-s:
+s: decl_global s
+  |
+  ;
+
+decl_global: decl_var ';'
+  | decl_vetor ';'
+  ;
+
+decl_local: decl_var ';' decl_local
+   |
+   ;
+
+decl_var: TK_IDENTIFICADOR ':' tipo_var
+  ;
+
+decl_vetor: TK_IDENTIFICADOR ':' tipo_var '[' TK_LIT_INT ']'
+   ;
+
+
+tipo_var: TK_PR_INT
+        | TK_PR_FLOAT
+        | TK_PR_BOOL
+        | TK_PR_CHAR
+        | TK_PR_STRING
+        ;
+
 
 %%
