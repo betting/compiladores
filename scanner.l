@@ -59,8 +59,8 @@ return { return TK_PR_RETURN; }
 
 {letter}({letter}|{digit})* { sprintf(str, "%d", lineNumber); yylval.symbol = addDict(yytext, str, IKS_SIMBOLO_IDENTIFICADOR); return TK_IDENTIFICADOR; }
 
-"-"?{digit}+ { sprintf(str, "%d", lineNumber); yylval.symbol = addDict(yytext, str, IKS_SIMBOLO_LITERAL_INT); return TK_LIT_INT; }
-"-"?{digit}+"."{digit}+ { sprintf(str, "%d", lineNumber); yylval.symbol = addDict(yytext, str, IKS_SIMBOLO_LITERAL_FLOAT); return TK_LIT_FLOAT; }
+{digit}+ { sprintf(str, "%d", lineNumber); yylval.symbol = addDict(yytext, str, IKS_SIMBOLO_LITERAL_INT); return TK_LIT_INT; }
+{digit}+"."{digit}+ { sprintf(str, "%d", lineNumber); yylval.symbol = addDict(yytext, str, IKS_SIMBOLO_LITERAL_FLOAT); return TK_LIT_FLOAT; }
 \'.\' { sprintf(str, "%d", lineNumber); yylval.symbol = addDict(yytext, str, IKS_SIMBOLO_LITERAL_CHAR); return TK_LIT_CHAR; }
 \"[^"]*\" { sprintf(str, "%d", lineNumber); yylval.symbol = addDict(yytext, str, IKS_SIMBOLO_LITERAL_STRING); return TK_LIT_STRING; }
 

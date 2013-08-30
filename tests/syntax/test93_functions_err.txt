@@ -6,7 +6,7 @@ int:main (int:a, float:b )
   i=0;
   output "Saida";
   input a;
-  while (i<4)
+  while (i<4) do
   {
     i = i + 1;
   }

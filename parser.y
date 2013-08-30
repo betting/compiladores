@@ -105,12 +105,20 @@ parametro: decl_var
 
 comando: bloco_comando
   | controle_fluxo
-  | atribuicao
+  | atribuicao ';'
+  | entrada ';'
+  | saida ';'
+  | retorna ';'
+  | decl_var ';'
+  | chamada_funcao ';'
+  ;
+
+comando_simples: atribuicao
   | entrada
   | saida
   | retorna
-  | decl_var ';'
-  | chamada_funcao ';'
+  | decl_var
+  | chamada_funcao
   ;
 
 bloco_comando: '{' seq_comando '}'
@@ -123,38 +131,33 @@ seq_comando: comando seq_comando
 
 
  /* Atribuicoes de variaveis */
-atribuicao: TK_IDENTIFICADOR '=' expressao ';'
-  | TK_IDENTIFICADOR '[' expressao ']' '=' expressao ';'
+atribuicao: TK_IDENTIFICADOR '=' expressao
+  | TK_IDENTIFICADOR '[' expressao ']' '=' expressao
   ;
 
  /* Entrada e Saida (Input e Output) */
-entrada: TK_PR_INPUT TK_IDENTIFICADOR ';'
+entrada: TK_PR_INPUT TK_IDENTIFICADOR
   ;
 
-saida: TK_PR_OUTPUT lista_expressoes_nao_vazia ';'
+saida: TK_PR_OUTPUT lista_expressoes_nao_vazia 
   ;
 
 lista_expressoes_nao_vazia: expressao ',' lista_expressoes_nao_vazia
   | expressao
   ;
 
-retorna: TK_PR_RETURN expressao ';'
+retorna: TK_PR_RETURN expressao
   ;
 
  /* Fluxo de Controle */
 controle_fluxo: TK_PR_IF '(' expressao ')' TK_PR_THEN comando %prec LOWER_THAN_ELSE
   | TK_PR_IF '(' expressao ')' TK_PR_THEN comando TK_PR_ELSE comando
-  | TK_PR_WHILE '(' expressao ')' comando
+  | TK_PR_IF '(' expressao ')' TK_PR_THEN comando_simples TK_PR_ELSE comando
+  | TK_PR_WHILE '(' expressao ')' TK_PR_DO comando
   ;
 
 expressao: TK_IDENTIFICADOR
   | TK_IDENTIFICADOR '[' expressao ']'
-  | TK_LIT_INT
-  | TK_LIT_FLOAT
-  | TK_LIT_FALSE
-  | TK_LIT_TRUE
-  | TK_LIT_CHAR
-  | TK_LIT_STRING
   | expressao '+' expressao
   | expressao '-' expressao
   | expressao '*' expressao
@@ -171,6 +174,12 @@ expressao: TK_IDENTIFICADOR
   | expressao TK_OC_AND expressao
   | expressao TK_OC_OR expressao
   | chamada_funcao
+  | TK_LIT_INT
+  | TK_LIT_FLOAT
+  | TK_LIT_FALSE
+  | TK_LIT_TRUE
+  | TK_LIT_CHAR
+  | TK_LIT_STRING
   ;
 
 lista_expressoes: lista_expressoes_nao_vazia
