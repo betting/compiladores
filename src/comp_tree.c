@@ -49,7 +49,7 @@ comp_tree_t* createNode(int type, comp_dict_item_t *symbol)
    newnode->sibling=NULL;
    newnode->type=type;
    newnode->symbol=symbol;
-    
+printf("Token: %s\n", newnode->symbol->token);    
    // Create new node in the graph
 //printf("Type: %d", type);
    if ((type == IKS_AST_FUNCAO)
@@ -57,11 +57,13 @@ comp_tree_t* createNode(int type, comp_dict_item_t *symbol)
          || (type == IKS_AST_LITERAL)
       )
    {
-      gv_declare(type, newnode, newnode->symbol->token);
+   printf(" - Token2: %s\n", newnode->symbol->token);
+   gv_declare(type, newnode, newnode->symbol->token);
 //printf("Token: %s\n", newnode->symbol->token);
    }
    else
    {
+      printf(" - Token3: %s\n", newnode->symbol->token);
       gv_declare(type, newnode, NULL);
    }
     
