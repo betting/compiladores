@@ -3,6 +3,7 @@
 ** funções de lista
 ******************************************************/
 
+#include <stdlib.h>
 #include "comp_list.h"
 
 
@@ -33,7 +34,7 @@ comp_list_t* initList()
 void addItem(int num, comp_list_t* node)
 {
 	comp_list_t* new;
-	new = malloc(sizeof(comp_list_t*));
+	new = (comp_list_t *)malloc(sizeof(comp_list_t));
 	new->num = num;
 	new->next = node->next;
 	node->next = new;
@@ -63,33 +64,36 @@ void removeItem(comp_list_t* node)
  * @param comp_list_t second list to be concat.
  * @return comp_list_t the list resulting from the two concat
  */
-struct comp_list_t* concatList(struct comp_list_t* *l0, struct comp_list_t* *l1)
+comp_list_t* concatList(comp_list_t *l0, comp_list_t *l1)
 {
-	comp_list_t* L01 = initList();
-	comp_list_t* L;
+	comp_list_t *L01;
+   L01 = (comp_list_t *)malloc(sizeof(comp_list_t));
 
-	if (*l0 == NULL)
+	comp_list_t *L;
+   L = (comp_list_t *)malloc(sizeof(comp_list_t));
+
+	if (l0 == NULL)
    {
-      L01 = *l1;
+      L01 = l1;
    }
 	else
 	{
-	   L01 = *l0;
-	   if (*l1 != NULL)
+	   L01 = l0;
+	   if (l1 != NULL)
 	   {
-	       L = *l0;
+	       L = l0;
           
 	       while (L->next != NULL)
           {
              L = L->next;
           }
 
-	       L->next = *l1;
+	       L->next = l1;
           
 	   }
 	}
-	*l0 = NULL;
-	*l1 = NULL;
+	l0 = NULL;
+	l1 = NULL;
 	return L01;
 }
 

@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "comp_graph.h"
 
 
@@ -26,7 +27,7 @@ void createGraph(comp_graph_t *h, int item)
 	h->item = item;
 	h->visit = 0;
 	//aloca o espaço para o próximo
-	h->next = (comp_graph_t*)malloc(sizeof(comp_graph_t));
+	h->next = (comp_graph_t *)malloc(sizeof(comp_graph_t));
 }
 
 /**

@@ -51,7 +51,7 @@ comp_dict_item_t* addDict(char *key, char *text)
       return element;
    }
 
-   element = (comp_dict_item_t*)malloc(sizeof(comp_dict_item_t));
+   element = (comp_dict_item_t *)malloc(sizeof(comp_dict_item_t));
    element->token = (char*)calloc(strlen(key)+1,sizeof(char));
    strcpy(element->token, key);
    element->text = (char*)calloc(strlen(text)+1,sizeof(char));

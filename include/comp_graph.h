@@ -15,12 +15,13 @@ typedef struct _link
  struct node *points;
  struct _link *next;
 } link;
+
 //nós
 typedef struct node
 {
  int item,visit;
- struct link *adjacent;
- struct comp_graph_t *next;
+ struct _link *adjacent;
+ struct node *next;
 } comp_graph_t;
 
 

@@ -11,14 +11,14 @@
 typedef struct _list
 {
 	int num;
-	struct comp_list_t *next;
+	struct _list *next;
 } comp_list_t;
 	
 /* prototipos das funções */ 
 comp_list_t* initList();
 void addItem(int num, comp_list_t* node);
 void removeItem(comp_list_t* node);
-struct comp_list_t* concatList(struct comp_list_t **l0, struct comp_list_t **l1);
+comp_list_t* concatList(comp_list_t *l0, comp_list_t *l1);
 
 #endif
 
