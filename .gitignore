@@ -10,3 +10,4 @@ main
 parser.c
 parser.h
 parser.output
+parser.tab.c
