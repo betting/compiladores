@@ -37,6 +37,7 @@
    /* Put the tokens into the symbol table, so that GDB and other debuggers
       know about them.  */
    enum yytokentype {
+     IKS_SIMBOLO_INDEFINIDO = 0,
      TK_PR_INT = 258,
      TK_PR_FLOAT = 259,
      TK_PR_BOOL = 260,
@@ -64,6 +65,12 @@
      TK_LIT_STRING = 282,
      TK_IDENTIFICADOR = 283,
      TOKEN_ERRO = 284,
+     IKS_SIMBOLO_LITERAL_INT = 1,
+     IKS_SIMBOLO_LITERAL_FLOAT = 2,
+     IKS_SIMBOLO_LITERAL_CHAR = 3,
+     IKS_SIMBOLO_LITERAL_STRING = 4,
+     IKS_SIMBOLO_LITERAL_BOOL = 5,
+     IKS_SIMBOLO_IDENTIFICADOR = 6,
      LOWER_THAN_ELSE = 285
    };
 #endif

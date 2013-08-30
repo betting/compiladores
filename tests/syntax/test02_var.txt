@@ -6,3 +6,4 @@ bool :   v4;
 char  :v5     ; /* Outro Comentario */ 
 string   : v6;
 int:v7; char:v8;string:v9[1000];
+int : a[5];
