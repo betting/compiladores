@@ -63,7 +63,8 @@
      TK_LIT_CHAR = 281,
      TK_LIT_STRING = 282,
      TK_IDENTIFICADOR = 283,
-     TOKEN_ERRO = 284
+     TOKEN_ERRO = 284,
+     LOWER_THAN_ELSE = 285
    };
 #endif
 

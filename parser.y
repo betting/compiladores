@@ -45,6 +45,9 @@
 %left '+' '-'
 %left '*' '/'
 
+%nonassoc LOWER_THAN_ELSE
+%nonassoc TK_PR_ELSE
+
 %%
  /* Regras (e ações) da gramática da Linguagem K */
 
@@ -137,7 +140,7 @@ retorna: TK_PR_RETURN expressao ';'
   ;
 
  /* Fluxo de Controle */
-controle_fluxo: TK_PR_IF '(' expressao ')' TK_PR_THEN comando
+controle_fluxo: TK_PR_IF '(' expressao ')' TK_PR_THEN comando %prec LOWER_THAN_ELSE
   | TK_PR_IF '(' expressao ')' TK_PR_THEN comando TK_PR_ELSE comando
   | TK_PR_WHILE '(' expressao ')' comando
   ;
