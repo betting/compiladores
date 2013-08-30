@@ -1,8 +1,8 @@
 // VARIAVEIS
-nome_variavel01 : int;
-var02 : string[10];
-v3:   float  ; // Comentario
-v4 :   bool;
-v5  :char     ; /* Outro Comentario */ 
-v6   : string;
-v7:int; v8:char;v9:string[1000];
+int : nome_variavel01;
+string:var02[10];
+float:   v3  ; // Comentario
+bool :   v4;
+char  :v5     ; /* Outro Comentario */ 
+string   : v6;
+int:v7; char:v8;string:v9[1000];

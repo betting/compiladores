@@ -1,8 +1,8 @@
 // FUNCOES
 
-main:int (a:int, b:float )
+int:main (int:a, float:b )
 {
-  i: int;
+  int: i;
   i=0;
   output "Saida";
   input a;
@@ -12,10 +12,10 @@ main:int (a:int, b:float )
   }
 }
 
-nome_Da_Funcao_DeUmaLinha:string (){palavra:string; caracter:char; palavra = "teste"; caracter  =   'a'; return palavra;}
+string:nome_Da_Funcao_DeUmaLinha (){string:palavra; char:caracter; palavra = "teste"; caracter  =   'a'; return palavra;}
 
 // ERRO: Falta tipo de retorno na funcao abaixo (linha 18)
-outraFuncao: (t:string) 
+:outraFuncao (string:t) 
 {
    output "fim da funcao";
    /*comentario

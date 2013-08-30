@@ -1,4 +1,5 @@
 #!/bin/bash
 
-cmake CMakeLists.txt
+cmake CMakeLists.txt --clean-first --build .
+make clean
 make

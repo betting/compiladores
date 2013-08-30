@@ -53,11 +53,12 @@ decl_local: decl_var ';' decl_local
    |
    ;
 
+
  /* Declaracao de variaveis e tipos*/
-decl_var: TK_IDENTIFICADOR ':' tipo_var
+decl_var: tipo_var ':' TK_IDENTIFICADOR
   ;
 
-decl_vetor: TK_IDENTIFICADOR ':' tipo_var '[' TK_LIT_INT ']'
+decl_vetor: tipo_var ':' TK_IDENTIFICADOR '[' TK_LIT_INT ']'
    ;
 
 
@@ -68,12 +69,14 @@ tipo_var: TK_PR_INT
         | TK_PR_STRING
         ;
 
+
+ /* Declaracao de funcao */
 def_funcao: cabecalho decl_local bloco_comando
   ;
 
 chamada_funcao: TK_IDENTIFICADOR '(' lista_expressoes ')'
 
-cabecalho: TK_IDENTIFICADOR ':' tipo_var '(' lista_parametros ')'
+cabecalho: decl_var '(' lista_parametros ')'
   ;
 
 lista_parametros: lista_parametros_nao_vazia
@@ -84,9 +87,8 @@ lista_parametros_nao_vazia: parametro ',' lista_parametros_nao_vazia
   | parametro
   ;
 
-parametro: TK_IDENTIFICADOR ':' tipo_var
+parametro: decl_var
   ;
-
 
 comando: bloco_comando
   | controle_fluxo
@@ -102,14 +104,17 @@ bloco_comando: '{' seq_comando '}'
   ;
 
 seq_comando: comando seq_comando
-   | ';'
+  | ';'
   |
   ;
 
+
+ /* Atribuicoes de variaveis */
 atribuicao: TK_IDENTIFICADOR '=' expressao ';'
   | TK_IDENTIFICADOR '[' expressao ']' '=' expressao ';'
   ;
 
+ /* Entrada e Saida (Input e Output) */
 entrada: TK_PR_INPUT TK_IDENTIFICADOR ';'
   ;
 
@@ -123,7 +128,7 @@ lista_expressoes_nao_vazia: expressao ',' lista_expressoes_nao_vazia
 retorna: TK_PR_RETURN expressao ';'
   ;
 
-
+ /* Fluxo de Controle */
 controle_fluxo: TK_PR_IF '(' expressao ')' TK_PR_THEN comando
   | TK_PR_IF '(' expressao ')' TK_PR_THEN comando TK_PR_ELSE comando
   | TK_PR_WHILE '(' expressao ')' comando

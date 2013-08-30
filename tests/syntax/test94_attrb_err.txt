@@ -1,5 +1,5 @@
 // ATRIBUICOES
-func:int ()
+int:func ()
 {
    a=0;
    _tmp = "valor";
