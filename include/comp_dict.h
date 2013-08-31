@@ -1,6 +1,7 @@
 #include <stdio.h>
 
 struct _dic {
+		int type;
         char *token;
         char *text;
         struct _dic *next;
@@ -24,7 +25,7 @@ void initDict();
  * @param *text String to be added.
  * @return Dictionary item created (Key/Value).
  */
-comp_dict_item_t* addDict(char *key, char *text);
+comp_dict_item_t* addDict(char *key, char *text, int type);
 
 /**
  * Get item address in the dictionary.

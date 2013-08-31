@@ -37,7 +37,6 @@
    /* Put the tokens into the symbol table, so that GDB and other debuggers
       know about them.  */
    enum yytokentype {
-     IKS_SIMBOLO_INDEFINIDO = 0,
      TK_PR_INT = 258,
      TK_PR_FLOAT = 259,
      TK_PR_BOOL = 260,
@@ -65,12 +64,6 @@
      TK_LIT_STRING = 282,
      TK_IDENTIFICADOR = 283,
      TOKEN_ERRO = 284,
-     IKS_SIMBOLO_LITERAL_INT = 1,
-     IKS_SIMBOLO_LITERAL_FLOAT = 2,
-     IKS_SIMBOLO_LITERAL_CHAR = 3,
-     IKS_SIMBOLO_LITERAL_STRING = 4,
-     IKS_SIMBOLO_LITERAL_BOOL = 5,
-     IKS_SIMBOLO_IDENTIFICADOR = 6,
      LOWER_THAN_ELSE = 285
    };
 #endif
@@ -78,7 +71,20 @@
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef int YYSTYPE;
+typedef union YYSTYPE
+{
+
+/* Line 2068 of yacc.c  */
+#line 11 "parser.y"
+
+        
+        comp_dict_item_t *symbol;
+
+
+
+/* Line 2068 of yacc.c  */
+#line 87 "/home/mauricio/faculdade/compiladores/parser.h"
+} YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

@@ -38,7 +38,7 @@ void initDict()
  * @param *text String to be added.
  * @return Dictionary item created (Key/Value).
  */
-comp_dict_item_t* addDict(char *key, char *text)
+comp_dict_item_t* addDict(char *key, char *text, int type)
 {
    int address;
    comp_dict_item_t *element;
@@ -56,6 +56,9 @@ comp_dict_item_t* addDict(char *key, char *text)
    strcpy(element->token, key);
    element->text = (char*)calloc(strlen(text)+1,sizeof(char));
    strcpy(element->text, text);
+   
+   element->type = type;
+   
    element->next = 0;
 
    address = getItemAddressDict(text);

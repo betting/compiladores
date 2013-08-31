@@ -1,6 +1,17 @@
 %{
+
+#include <stdlib.h>
 #include <stdio.h>
+#include "comp_dict.h"
+
+FILE *yyin;
+
 %}
+
+%union {
+        
+        comp_dict_item_t *symbol;
+}
 
 /* Declaração dos tokens da gramática da Linguagem K */
 %token TK_PR_INT
@@ -30,15 +41,6 @@
 %token TK_LIT_STRING
 %token TK_IDENTIFICADOR
 %token TOKEN_ERRO
-
-/* Declaração dos simbolos da gramática da Linguagem K */
-%token IKS_SIMBOLO_INDEFINIDO 0
-%token IKS_SIMBOLO_LITERAL_INT 1
-%token IKS_SIMBOLO_LITERAL_FLOAT 2
-%token IKS_SIMBOLO_LITERAL_CHAR 3
-%token IKS_SIMBOLO_LITERAL_STRING 4
-%token IKS_SIMBOLO_LITERAL_BOOL 5
-%token IKS_SIMBOLO_IDENTIFICADOR 6
 
 %left TK_OC_OR TK_OC_AND
 %left '<' '>' TK_OC_LE TK_OC_GE TK_OC_EQ TK_OC_NE
