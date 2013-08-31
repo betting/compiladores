@@ -258,7 +258,9 @@ chamada_funcao:
 atribuicao:
     TK_IDENTIFICADOR '=' expressao
       {
+         printf("Attr: %s\n", $1->token);
          $$ = createNode(IKS_AST_ATRIBUICAO, $1);
+         printf("Attr_depois: %s\n", $$->symbol->token);
          insertChild($$, $3);
       }
 
