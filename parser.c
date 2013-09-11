@@ -78,7 +78,7 @@ FILE *yyin;
 
 
 /* Line 268 of yacc.c  */
-#line 82 "/home/samuca/Desktop/ufrgs/compiladores/trabalho/compiladores/parser.c"
+#line 82 "/home/frederico/ufrgs/2013-compiladores/compiladores/parser.c"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -151,7 +151,7 @@ typedef union YYSTYPE
 
 
 /* Line 293 of yacc.c  */
-#line 155 "/home/samuca/Desktop/ufrgs/compiladores/trabalho/compiladores/parser.c"
+#line 155 "/home/frederico/ufrgs/2013-compiladores/compiladores/parser.c"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
@@ -163,7 +163,7 @@ typedef union YYSTYPE
 
 
 /* Line 343 of yacc.c  */
-#line 167 "/home/samuca/Desktop/ufrgs/compiladores/trabalho/compiladores/parser.c"
+#line 167 "/home/frederico/ufrgs/2013-compiladores/compiladores/parser.c"
 
 #ifdef short
 # undef short
@@ -1548,7 +1548,7 @@ yyreduce:
       
 
 /* Line 1806 of yacc.c  */
-#line 1552 "/home/samuca/Desktop/ufrgs/compiladores/trabalho/compiladores/parser.c"
+#line 1552 "/home/frederico/ufrgs/2013-compiladores/compiladores/parser.c"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires

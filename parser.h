@@ -83,7 +83,7 @@ typedef union YYSTYPE
 
 
 /* Line 2068 of yacc.c  */
-#line 87 "/home/samuca/Desktop/ufrgs/compiladores/trabalho/compiladores/parser.h"
+#line 87 "/home/frederico/ufrgs/2013-compiladores/compiladores/parser.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
