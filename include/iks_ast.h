@@ -41,9 +41,10 @@
 #define IKS_AST_CHAMADA_DE_FUNCAO   27
 #endif
 
-
+//definição da estrutura da árvore AST
 typedef struct IKS_AST{
-	int tipo, numFilhos;
+	int tipo;
+	comp_tree_t* filho;
 	comp_dict_item_t* simbolo;
 	struct IKS_AST** filhos; 
 } IKS_AST;

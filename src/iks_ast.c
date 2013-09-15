@@ -1,4 +1,5 @@
 #include "iks_ast.h"
+#include "comp_tree.h"
 
 
 /** 
