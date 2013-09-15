@@ -3,6 +3,12 @@
 
   Este arquivo contém as constantes para os tipos dos nós da AST.
 */
+#include "comp_dict.h"
+
+
+#define MAX_FILHOS 4 
+
+
 #ifndef __IKS_AST_H
 #define __IKS_AST_H
 #define IKS_AST_PROGRAMA             0
@@ -34,3 +40,14 @@
 #define IKS_AST_VETOR_INDEXADO      26 // para var[exp] quando o índice exp é acessado no vetor var
 #define IKS_AST_CHAMADA_DE_FUNCAO   27
 #endif
+
+
+typedef struct IKS_AST{
+	int tipo, numFilhos;
+	comp_dict_item_t* simbolo;
+	struct IKS_AST** filhos; 
+} IKS_AST;
+
+IKS_AST* criaIKS_AST(int tipo, comp_dict_item_t* simbolo, IKS_AST** filhos, int numFilhos);
+IKS_AST** criaNODOS(IKS_AST* f1, IKS_AST* f2, IKS_AST* f3, IKS_AST* f4, int numFilhos);
+void criaNodo(IKS_AST** filhos,IKS_AST* filho, int* index);
