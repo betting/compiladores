@@ -51,12 +51,13 @@ comp_tree_t* search(comp_tree_t* root,int data)
  * @param int	data 
  * @return comp_tree_t newNode
  */
-comp_tree_t* createNode(int data)
+comp_tree_t* createNode(int type, comp_dict_item_t* symbol)
 {
     comp_tree_t* newnode= (comp_tree_t*)malloc(sizeof(comp_tree_t));
     newnode->child=NULL;
     newnode->sibling=NULL;
-    newnode->data=data;
+    newnode->type=type;
+    newnode->symbol=symbol;
     return newnode;
 }
 
@@ -102,3 +103,25 @@ comp_tree_t* initTree(comp_tree_t* root,int data[])
     }
     return root;
 }
+
+/**
+ * Insert a node in a given parent node 
+ * 
+ **/
+ 
+ void insertChild(comp_tree_t* parent, comp_tree_t* child){
+	 if(parent->child == NULL){
+		 parent->child = child;
+	 } else {
+		 addSiblings(parent->child, child);
+	 }
+ }
+ 
+ void addSiblings(comp_tree_t* first, comp_tree_t* newNode){
+	 if(first->sibling == NULL){
+		 first->sibling = newNode;
+		 return 0;
+	 } else {
+		 addSiblings(first->sibling, newNode);
+	 }
+ }
