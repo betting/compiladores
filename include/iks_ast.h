@@ -4,7 +4,7 @@
   Este arquivo contém as constantes para os tipos dos nós da AST.
 */
 #include "comp_dict.h"
-
+#include "comp_tree.h"
 
 #define MAX_FILHOS 4 
 
@@ -49,6 +49,6 @@ typedef struct IKS_AST{
 	struct IKS_AST** filhos; 
 } IKS_AST;
 
-IKS_AST* criaIKS_AST(int tipo, comp_dict_item_t* simbolo, IKS_AST** filhos, int numFilhos);
-IKS_AST** criaNODOS(IKS_AST* f1, IKS_AST* f2, IKS_AST* f3, IKS_AST* f4, int numFilhos);
+IKS_AST* criaIKS_AST(int tipo, comp_dict_item_t* simbolo, IKS_AST** filhos);
+IKS_AST** criaNODOS(IKS_AST* f1, IKS_AST* f2, IKS_AST* f3, IKS_AST* f4);
 void criaNodo(IKS_AST** filhos,IKS_AST* filho, int* index);
