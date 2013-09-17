@@ -1,3 +1,6 @@
+#ifndef _comp_dict_h
+#define _comp_dict_h
+
 #include <stdio.h>
 
 struct _dic {
@@ -56,3 +59,5 @@ comp_dict_item_t* searchDict(char *text);
  * Print all elements added in the dictionary.
  */
 void printDict();
+
+#endif
