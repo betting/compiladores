@@ -29,6 +29,11 @@ nodo_"ponteiro_do_no"[label="+"] onde: o nó (label) que vai aparecer na imagem 
 
 
 gv_connect(nodo_"ponteiro_do_no1", nodo_"ponteiro_do_no2")
+
+
+Comando pra executar o DOT e gerar a imagem do grafo em formato png
+bash$ dot -Tpng nomedoarquivo -o output.png
+
 */
 
 
