@@ -16,6 +16,22 @@ FILE *yyin;
         comp_tree_t *tree;
 }
 
+
+/*
+#define IKS_AST_ARIM_SOMA           12
+pra uma expressão de soma
+
+TIPO = IKS_AST_ARIM_SOMA
+gv_declare(TIPO,ponteiro do nó, lexema que não sei qual é )
+
+o que gv_declare vai gerar
+nodo_"ponteiro_do_no"[label="+"] onde: o nó (label) que vai aparecer na imagem gerada é "+" e nodo_"ponteiro_do_no" vai ser usada no gv_connect
+
+
+gv_connect(nodo_"ponteiro_do_no1", nodo_"ponteiro_do_no2")
+*/
+
+
 /* Declaração dos tokens da gramática da Linguagem K */
 %token TK_PR_INT
 %token TK_PR_FLOAT
@@ -64,7 +80,7 @@ FILE *yyin;
  
  p : s	{ $$ = $1; /*PRINT AST PASSING $$*/ }
 
-s: decl_global s	{ $$ = createNode(IKS_AST_PROGRAMA,0); insertChild($$,$1); insertChild($$,$2); }
+s: decl_global s	{ $$ = createNode(IKS_AST_PROGRAMA,0); insertChild($$,$1); insertChild($$,$2); } /* gv_connect(gv_declare(IKS_AST_PROGRAMA,$$,NULL),gv_declare(IKS_AST_PROGRAMA,$$,NULL)); gv_connect(gv_declare(IKS_AST_PROGRAMA,$$,NULL),gv_declare(IKS_AST_PROGRAMA,$$,NULL)); */
   | def_funcao s	{ $$ = createNode(IKS_AST_PROGRAMA,0); insertChild($$,$1); insertChild($$,$2); }
   |					/* criar nodo para regra vazia???? */
   ;
