@@ -61,11 +61,11 @@ gv_connect(nodo_"ponteiro_do_no1", nodo_"ponteiro_do_no2")
 %token<symbol> TK_IDENTIFICADOR
 %token TOKEN_ERRO
 
-%type <tree> p s decl_global decl_local decl_var decl_vetor tipo_var def_funcao 
-				chamada_funcao cabecalho lista_parametros lista_parametros_nao_vazia
-				parametro comando comando_simples bloco_comando seq_comando
-				atribuicao entrada saida lista_expressoes_nao_vazia retorna
-				controle_fluxo expressao lista_expressoes
+%type <tree> p s decl_global decl_vetor  def_funcao 
+				chamada_funcao cabecalho  
+				parametro comando comando_simples bloco_comando 
+				atribuicao entrada saida 
+				controle_fluxo expressao retorna
 
 %left TK_OC_OR TK_OC_AND
 %left '<' '>' TK_OC_LE TK_OC_GE TK_OC_EQ TK_OC_NE
@@ -114,7 +114,7 @@ tipo_var: TK_PR_INT
 def_funcao: cabecalho decl_local bloco_comando	
   ;
 
-chamada_funcao: TK_IDENTIFICADOR '(' lista_expressoes ')'	{ $$ = createNode(IKS_AST_CHAMADA_DE_FUNCAO,$1); insertChild($$,$3); }
+chamada_funcao: TK_IDENTIFICADOR '(' lista_expressoes ')'	{ $$ = createNode(IKS_AST_CHAMADA_DE_FUNCAO,$1); }
 
 cabecalho: decl_var '(' lista_parametros ')'	
   ;
@@ -177,7 +177,7 @@ retorna: TK_PR_RETURN expressao	{ $$ = createNode(IKS_AST_RETURN,0); insertChild
   ;
 
  /* Fluxo de Controle */
-controle_fluxo: TK_PR_IF '(' expressao ')' TK_PR_THEN comando %prec LOWER_THAN_ELSE	
+controle_fluxo: TK_PR_IF '(' expressao ')' TK_PR_THEN comando %prec LOWER_THAN_ELSE	{ $$ = createNode(IKS_AST_IF_ELSE,0); insertChild($$,$3); insertChild($$,$6); }
   | TK_PR_IF '(' expressao ')' TK_PR_THEN comando TK_PR_ELSE comando				{ $$ = createNode(IKS_AST_IF_ELSE,0); insertChild($$,$3); insertChild($$,$6); insertChild($$,$8);}
   | TK_PR_IF '(' expressao ')' TK_PR_THEN comando_simples TK_PR_ELSE comando		{ $$ = createNode(IKS_AST_IF_ELSE,0); insertChild($$,$3);insertChild($$,$6); insertChild($$,$8);}
   | TK_PR_WHILE '(' expressao ')' TK_PR_DO comando									{ $$ = createNode(IKS_AST_WHILE_DO,0); insertChild($$,$3);insertChild($$,$6);}
