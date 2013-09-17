@@ -108,20 +108,28 @@ comp_tree_t* initTree(comp_tree_t* root,int data[])
  * Insert a node in a given parent node 
  * 
  **/
- 
- void insertChild(comp_tree_t* parent, comp_tree_t* child){
-	 if(parent->child == NULL){
+ void insertChild(comp_tree_t* parent, comp_tree_t* child)
+ {
+	 if(parent->child == NULL)
+    {
 		 parent->child = child;
-	 } else {
+	 }
+    else 
+    {
 		 addSiblings(parent->child, child);
 	 }
  }
  
- void addSiblings(comp_tree_t* first, comp_tree_t* newNode){
-	 if(first->sibling == NULL){
+
+ void addSiblings(comp_tree_t* first, comp_tree_t* newNode)
+ {
+	 if(first->sibling == NULL)
+    {
 		 first->sibling = newNode;
 		 return 0;
-	 } else {
+	 }
+    else
+    {
 		 addSiblings(first->sibling, newNode);
 	 }
  }
