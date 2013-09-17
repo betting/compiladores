@@ -6,7 +6,7 @@ void preorder(comp_tree_t* p)
     {
        return;
     }
-    printf(" %d",p->data);
+    printf(" %d",p->type);
     preorder(p->child);
 
     preorder(p->sibling);
@@ -17,27 +17,27 @@ void preorder(comp_tree_t* p)
  *
  * Search a node given a value
  *
- * @param int	data 
+ * @param int	type 
  * @return comp_tree_t root
  * @return comp_tree_t 
  */
-comp_tree_t* search(comp_tree_t* root,int data)
+comp_tree_t* search(comp_tree_t* root,int type)
 {
     if(root == NULL)
     {
       return;
     }
 
-    if(data == root->data)
+    if(type == root->type)
     {
       return root;
     }
 
-    comp_tree_t* t = search(root->child,data);
+    comp_tree_t* t = search(root->child,type);
 
     if(t == NULL)
     {
-      t = search(root->sibling,data);
+      t = search(root->sibling,type);
     }
     return t;
 
@@ -48,7 +48,7 @@ comp_tree_t* search(comp_tree_t* root,int data)
  *
  * Create a node given a value
  *
- * @param int	data 
+ * @param int	type 
  * @return comp_tree_t newNode
  */
 comp_tree_t* createNode(int type, comp_dict_item_t* symbol)
@@ -66,32 +66,32 @@ comp_tree_t* createNode(int type, comp_dict_item_t* symbol)
  *
  * Perform a tree initialization.
  */
-comp_tree_t* initTree(comp_tree_t* root,int data[])
+comp_tree_t* initTree(comp_tree_t* root,int type[])
 {
     //check if node exist already
-    comp_tree_t* newnode = search(root,data[0]);
+    comp_tree_t* newnode = search(root,type[0]);
 
     //if node does not exist
     if(newnode == NULL)
     {
-        newnode = createNode(data[0]);
+        newnode = createNode(type[0]);
     }
 
     comp_tree_t* parent = newnode;
     //now create node of its children
     int j;
-    for(j=0;j<data[1];j++)
+    for(j=0;j<type[1];j++)
     {
         //for first child
         if(j == 0)
         {
-           parent->child = createNode(data[j+2]);
+           parent->child = createNode(type[j+2]);
            parent = parent->child;
         }
         //for all other childs
         else
         {
-           parent->sibling = createNode(data[j+2]);
+           parent->sibling = createNode(type[j+2]);
            parent = parent->sibling;
         }
 

@@ -1584,119 +1584,14 @@ yyreduce:
 
 /* Line 1806 of yacc.c  */
 #line 101 "parser.y"
-    { (yyval.tree) = createNode(IKS_AST_CHAMADA_DE_FUNCAO,0); insertChild((yyval.tree),(yyvsp[(3) - (4)].tree)); }
-    break;
-
-  case 20:
-
-/* Line 1806 of yacc.c  */
-#line 106 "parser.y"
-    { (yyval.tree) = (yyvsp[(1) - (1)].tree); }
-    break;
-
-  case 25:
-
-/* Line 1806 of yacc.c  */
-#line 117 "parser.y"
-    { (yyval.tree) = createNode(IKS_AST_BLOCO,0); insertChild((yyval.tree),(yyvsp[(1) - (1)].tree)); }
-    break;
-
-  case 26:
-
-/* Line 1806 of yacc.c  */
-#line 118 "parser.y"
-    { (yyval.tree) = createNode(IKS_AST_BLOCO,0); insertChild((yyval.tree),(yyvsp[(1) - (1)].tree)); }
-    break;
-
-  case 27:
-
-/* Line 1806 of yacc.c  */
-#line 119 "parser.y"
-    { (yyval.tree) = createNode(IKS_AST_BLOCO,0); insertChild((yyval.tree),(yyvsp[(1) - (2)].tree)); }
-    break;
-
-  case 28:
-
-/* Line 1806 of yacc.c  */
-#line 120 "parser.y"
-    { (yyval.tree) = createNode(IKS_AST_BLOCO,0); insertChild((yyval.tree),(yyvsp[(1) - (2)].tree)); }
-    break;
-
-  case 29:
-
-/* Line 1806 of yacc.c  */
-#line 121 "parser.y"
-    { (yyval.tree) = createNode(IKS_AST_BLOCO,0); insertChild((yyval.tree),(yyvsp[(1) - (2)].tree)); }
-    break;
-
-  case 30:
-
-/* Line 1806 of yacc.c  */
-#line 122 "parser.y"
-    { (yyval.tree) = createNode(IKS_AST_BLOCO,0); insertChild((yyval.tree),(yyvsp[(1) - (2)].tree)); }
-    break;
-
-  case 31:
-
-/* Line 1806 of yacc.c  */
-#line 123 "parser.y"
-    { (yyval.tree) = createNode(IKS_AST_BLOCO,0); insertChild((yyval.tree),(yyvsp[(1) - (2)].tree)); }
-    break;
-
-  case 32:
-
-/* Line 1806 of yacc.c  */
-#line 124 "parser.y"
-    { (yyval.tree) = createNode(IKS_AST_BLOCO,0); insertChild((yyval.tree),(yyvsp[(1) - (2)].tree)); }
-    break;
-
-  case 33:
-
-/* Line 1806 of yacc.c  */
-#line 127 "parser.y"
-    { (yyval.tree) = createNode(IKS_AST_ATRIBUICAO,0); insertChild((yyval.tree),(yyvsp[(1) - (1)].tree)); }
-    break;
-
-  case 34:
-
-/* Line 1806 of yacc.c  */
-#line 128 "parser.y"
-    { (yyval.tree) = createNode(IKS_AST_INPUT,0); insertChild((yyval.tree),(yyvsp[(1) - (1)].tree)); }
-    break;
-
-  case 35:
-
-/* Line 1806 of yacc.c  */
-#line 129 "parser.y"
-    { (yyval.tree) = createNode(IKS_AST_OUTPUT,0); insertChild((yyval.tree),(yyvsp[(1) - (1)].tree)); }
-    break;
-
-  case 36:
-
-/* Line 1806 of yacc.c  */
-#line 130 "parser.y"
-    { (yyval.tree) = createNode(IKS_AST_RETURN,0); insertChild((yyval.tree),(yyvsp[(1) - (1)].tree)); }
-    break;
-
-  case 37:
-
-/* Line 1806 of yacc.c  */
-#line 131 "parser.y"
-    { (yyval.tree) = createNode(IKS_AST_BLOCO,0); insertChild((yyval.tree),(yyvsp[(1) - (1)].tree)); }
-    break;
-
-  case 38:
-
-/* Line 1806 of yacc.c  */
-#line 132 "parser.y"
-    { (yyval.tree) = createNode(IKS_AST_BLOCO,0); insertChild((yyval.tree),(yyvsp[(1) - (1)].tree)); }
+    { (yyval.tree) = createNode(IKS_AST_CHAMADA_DE_FUNCAO,(yyvsp[(1) - (4)].symbol)); insertChild((yyval.tree),(yyvsp[(3) - (4)].tree)); }
     break;
 
   case 39:
 
 /* Line 1806 of yacc.c  */
 #line 135 "parser.y"
-    { (yyval.tree) = createNode(IKS_AST_BLOCO,0); insertChild((yyval.tree),(yyvsp[(2) - (3)].tree)); }
+    { (yyval.tree) = createNode(IKS_AST_BLOCO,0); }
     break;
 
   case 43:
@@ -1717,14 +1612,14 @@ yyreduce:
 
 /* Line 1806 of yacc.c  */
 #line 150 "parser.y"
-    { (yyval.tree) = createNode(IKS_AST_INPUT,0); insertChild((yyval.tree),(yyvsp[(2) - (2)].symbol)); }
+    { (yyval.tree) = createNode(IKS_AST_INPUT,(yyvsp[(2) - (2)].symbol)); }
     break;
 
   case 46:
 
 /* Line 1806 of yacc.c  */
 #line 153 "parser.y"
-    { (yyval.tree) = createNode(IKS_AST_OUTPUT,0); insertChild((yyval.tree),(yyvsp[(2) - (2)].tree)); }
+    { (yyval.tree) = createNode(IKS_AST_OUTPUT,0); }
     break;
 
   case 49:
@@ -1881,17 +1776,10 @@ yyreduce:
     { (yyval.tree) =  (yyvsp[(1) - (1)].tree); }
     break;
 
-  case 79:
-
-/* Line 1806 of yacc.c  */
-#line 197 "parser.y"
-    { (yyval.tree) = (yyvsp[(1) - (1)].tree); }
-    break;
-
 
 
 /* Line 1806 of yacc.c  */
-#line 1895 "/home/frederico/ufrgs/2013-compiladores/compiladores/parser.c"
+#line 1783 "/home/frederico/ufrgs/2013-compiladores/compiladores/parser.c"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
