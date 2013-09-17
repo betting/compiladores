@@ -2,9 +2,6 @@
 ** comp_graph.h
 ** definições e constantes para as funções de grafo
 ******************************************************/
-#ifndef _comp_graph_h
-#define _comp_graph_h
-
 #include <stdio.h>
 #include <malloc.h>
 
@@ -33,8 +30,3 @@ void connectNodeGraph(comp_graph_t *h,  link *l, int value);
 link *removeLink (comp_graph_t *h, link *l, int value);
 comp_graph_t *alterGraphNodeValue(comp_graph_t *h, int oldValue, int newValue);
 //void getAdjacent(struct node *h,link *l)
-
-
-
-
-#endif
