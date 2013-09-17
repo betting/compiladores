@@ -4,6 +4,7 @@
 ******************************************************/
 #include <stdio.h>
 #include <stdlib.h>
+#include "comp_dict.h"
 
 #ifndef __IKS_AST_H
 #define __IKS_AST_H
