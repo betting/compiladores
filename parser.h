@@ -75,7 +75,7 @@ typedef union YYSTYPE
 {
 
 /* Line 2068 of yacc.c  */
-#line 12 "parser.y"
+#line 13 "parser.y"
 
         
         comp_dict_item_t *symbol;

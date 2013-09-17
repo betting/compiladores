@@ -3,10 +3,7 @@
 
   Este arquivo contém as constantes para os tipos dos nós da AST.
 */
-#include "comp_dict.h"
 #include "comp_tree.h"
-
-#define MAX_FILHOS 4 
 
 
 #ifndef __IKS_AST_H
