@@ -74,13 +74,14 @@
 #include "comp_dict.h"
 #include "comp_tree.h"
 #include "iks_ast.h"
+#include "gv.h"
 
 FILE *yyin;
 
 
 
 /* Line 268 of yacc.c  */
-#line 84 "/home/frederico/ufrgs/2013-compiladores/compiladores/parser.c"
+#line 85 "/home/mauricio/faculdade/compiladores/parser.c"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -145,7 +146,7 @@ typedef union YYSTYPE
 {
 
 /* Line 293 of yacc.c  */
-#line 13 "parser.y"
+#line 14 "parser.y"
 
         
         comp_dict_item_t *symbol;
@@ -154,7 +155,7 @@ typedef union YYSTYPE
 
 
 /* Line 293 of yacc.c  */
-#line 158 "/home/frederico/ufrgs/2013-compiladores/compiladores/parser.c"
+#line 159 "/home/mauricio/faculdade/compiladores/parser.c"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
@@ -166,7 +167,7 @@ typedef union YYSTYPE
 
 
 /* Line 343 of yacc.c  */
-#line 170 "/home/frederico/ufrgs/2013-compiladores/compiladores/parser.c"
+#line 171 "/home/mauricio/faculdade/compiladores/parser.c"
 
 #ifdef short
 # undef short
@@ -487,15 +488,15 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    88,    88,    90,    91,    92,    95,    96,    99,   100,
-     105,   108,   112,   113,   114,   115,   116,   121,   124,   126,
-     129,   130,   133,   134,   137,   140,   141,   142,   143,   144,
-     145,   146,   147,   150,   151,   152,   153,   154,   155,   158,
-     161,   162,   163,   168,   169,   173,   176,   179,   180,   183,
-     187,   188,   189,   190,   191,   194,   195,   196,   197,   198,
-     199,   200,   201,   202,   203,   204,   205,   206,   207,   208,
-     209,   210,   211,   212,   213,   214,   215,   216,   217,   220,
-     221
+       0,    89,    89,    91,    92,    93,    96,    97,   100,   101,
+     106,   109,   113,   114,   115,   116,   117,   122,   125,   127,
+     130,   131,   134,   135,   138,   141,   142,   143,   144,   145,
+     146,   147,   148,   151,   152,   153,   154,   155,   156,   159,
+     162,   163,   164,   169,   170,   174,   177,   180,   181,   184,
+     188,   189,   190,   191,   192,   195,   196,   197,   198,   199,
+     200,   201,   202,   203,   204,   205,   206,   207,   208,   209,
+     210,   211,   212,   213,   214,   215,   216,   217,   218,   221,
+     222
 };
 #endif
 
@@ -1562,406 +1563,406 @@ yyreduce:
         case 2:
 
 /* Line 1806 of yacc.c  */
-#line 88 "parser.y"
+#line 89 "parser.y"
     { (yyval.tree) = (yyvsp[(1) - (1)].tree); /*PRINT AST PASSING $$*/ }
     break;
 
   case 3:
 
 /* Line 1806 of yacc.c  */
-#line 90 "parser.y"
-    { (yyval.tree) = createNode(IKS_AST_PROGRAMA,0); insertChild((yyval.tree),(yyvsp[(2) - (2)].tree)); }
+#line 91 "parser.y"
+    { (yyval.tree) = createNode(IKS_AST_PROGRAMA,0); insertChild((yyval.tree),(yyvsp[(2) - (2)].tree)); gv_declare(IKS_AST_PROGRAMA,(yyval.tree),NULL); gv_connect((yyval.tree), (yyvsp[(2) - (2)].tree)); }
     break;
 
   case 4:
 
 /* Line 1806 of yacc.c  */
-#line 91 "parser.y"
-    { (yyval.tree) = createNode(IKS_AST_PROGRAMA,0); insertChild((yyval.tree),(yyvsp[(2) - (2)].tree)); }
+#line 92 "parser.y"
+    { (yyval.tree) = createNode(IKS_AST_PROGRAMA,0); insertChild((yyval.tree),(yyvsp[(2) - (2)].tree)); gv_declare(IKS_AST_PROGRAMA,(yyval.tree),NULL); gv_connect((yyval.tree), (yyvsp[(2) - (2)].tree));}
     break;
 
   case 10:
 
 /* Line 1806 of yacc.c  */
-#line 105 "parser.y"
+#line 106 "parser.y"
     { (yyval.symbol) =  (yyvsp[(3) - (3)].symbol); }
     break;
 
   case 17:
 
 /* Line 1806 of yacc.c  */
-#line 121 "parser.y"
-    { (yyval.tree) = createNode(IKS_AST_FUNCAO,(yyvsp[(1) - (3)].symbol)); insertChild((yyval.tree),(yyvsp[(3) - (3)].tree)); }
+#line 122 "parser.y"
+    { (yyval.tree) = createNode(IKS_AST_FUNCAO,(yyvsp[(1) - (3)].symbol)); insertChild((yyval.tree),(yyvsp[(3) - (3)].tree)); gv_declare(IKS_AST_FUNCAO,(yyval.tree),(yyvsp[(1) - (3)].symbol)->token); gv_connect((yyval.tree), (yyvsp[(3) - (3)].tree));}
     break;
 
   case 18:
 
 /* Line 1806 of yacc.c  */
-#line 124 "parser.y"
-    { (yyval.tree) = createNode(IKS_AST_CHAMADA_DE_FUNCAO,(yyvsp[(1) - (4)].symbol)); }
+#line 125 "parser.y"
+    { (yyval.tree) = createNode(IKS_AST_CHAMADA_DE_FUNCAO,(yyvsp[(1) - (4)].symbol)); gv_declare(IKS_AST_CHAMADA_DE_FUNCAO,(yyval.tree),NULL);}
     break;
 
   case 19:
 
 /* Line 1806 of yacc.c  */
-#line 126 "parser.y"
+#line 127 "parser.y"
     { (yyval.symbol) =  (yyvsp[(1) - (4)].symbol); }
     break;
 
   case 24:
 
 /* Line 1806 of yacc.c  */
-#line 137 "parser.y"
+#line 138 "parser.y"
     { (yyval.symbol) =  (yyvsp[(1) - (1)].symbol); }
     break;
 
   case 25:
 
 /* Line 1806 of yacc.c  */
-#line 140 "parser.y"
+#line 141 "parser.y"
     { (yyval.tree) =  (yyvsp[(1) - (1)].tree); }
     break;
 
   case 26:
 
 /* Line 1806 of yacc.c  */
-#line 141 "parser.y"
+#line 142 "parser.y"
     { (yyval.tree) =  (yyvsp[(1) - (1)].tree); }
     break;
 
   case 27:
 
 /* Line 1806 of yacc.c  */
-#line 142 "parser.y"
+#line 143 "parser.y"
     { (yyval.tree) =  (yyvsp[(1) - (2)].tree); }
     break;
 
   case 28:
 
 /* Line 1806 of yacc.c  */
-#line 143 "parser.y"
+#line 144 "parser.y"
     { (yyval.tree) =  (yyvsp[(1) - (2)].tree); }
     break;
 
   case 29:
 
 /* Line 1806 of yacc.c  */
-#line 144 "parser.y"
+#line 145 "parser.y"
     { (yyval.tree) =  (yyvsp[(1) - (2)].tree); }
     break;
 
   case 30:
 
 /* Line 1806 of yacc.c  */
-#line 145 "parser.y"
+#line 146 "parser.y"
     { (yyval.tree) =  (yyvsp[(1) - (2)].tree); }
     break;
 
   case 31:
 
 /* Line 1806 of yacc.c  */
-#line 146 "parser.y"
+#line 147 "parser.y"
     { (yyval.tree) =  (yyvsp[(1) - (2)].symbol); }
     break;
 
   case 32:
 
 /* Line 1806 of yacc.c  */
-#line 147 "parser.y"
+#line 148 "parser.y"
     { (yyval.tree) =  (yyvsp[(1) - (2)].tree); }
     break;
 
   case 33:
 
 /* Line 1806 of yacc.c  */
-#line 150 "parser.y"
+#line 151 "parser.y"
     { (yyval.tree) =  (yyvsp[(1) - (1)].tree); }
     break;
 
   case 34:
 
 /* Line 1806 of yacc.c  */
-#line 151 "parser.y"
+#line 152 "parser.y"
     { (yyval.tree) =  (yyvsp[(1) - (1)].tree); }
     break;
 
   case 35:
 
 /* Line 1806 of yacc.c  */
-#line 152 "parser.y"
+#line 153 "parser.y"
     { (yyval.tree) =  (yyvsp[(1) - (1)].tree); }
     break;
 
   case 36:
 
 /* Line 1806 of yacc.c  */
-#line 153 "parser.y"
+#line 154 "parser.y"
     { (yyval.tree) =  (yyvsp[(1) - (1)].tree); }
     break;
 
   case 37:
 
 /* Line 1806 of yacc.c  */
-#line 154 "parser.y"
+#line 155 "parser.y"
     { (yyval.tree) =  (yyvsp[(1) - (1)].symbol); }
     break;
 
   case 38:
 
 /* Line 1806 of yacc.c  */
-#line 155 "parser.y"
+#line 156 "parser.y"
     { (yyval.tree) =  (yyvsp[(1) - (1)].tree); }
     break;
 
   case 39:
 
 /* Line 1806 of yacc.c  */
-#line 158 "parser.y"
+#line 159 "parser.y"
     { (yyval.tree) = createNode(IKS_AST_BLOCO,0); }
     break;
 
   case 43:
 
 /* Line 1806 of yacc.c  */
-#line 168 "parser.y"
-    { (yyval.tree) = createNode(IKS_AST_ATRIBUICAO,(yyvsp[(1) - (3)].symbol)); insertChild((yyval.tree),(yyvsp[(3) - (3)].tree)); }
+#line 169 "parser.y"
+    { (yyval.tree) = createNode(IKS_AST_ATRIBUICAO,(yyvsp[(1) - (3)].symbol)); insertChild((yyval.tree),(yyvsp[(3) - (3)].tree)); gv_declare(IKS_AST_ATRIBUICAO,(yyval.tree),NULL); gv_connect((yyval.tree), (yyvsp[(3) - (3)].tree));}
     break;
 
   case 44:
 
 /* Line 1806 of yacc.c  */
-#line 169 "parser.y"
-    { (yyval.tree) = createNode(IKS_AST_ATRIBUICAO,(yyvsp[(1) - (6)].symbol)); insertChild((yyval.tree),(yyvsp[(3) - (6)].tree)); insertChild((yyval.tree),(yyvsp[(6) - (6)].tree)); }
+#line 170 "parser.y"
+    { (yyval.tree) = createNode(IKS_AST_ATRIBUICAO,(yyvsp[(1) - (6)].symbol)); insertChild((yyval.tree),(yyvsp[(3) - (6)].tree)); insertChild((yyval.tree),(yyvsp[(6) - (6)].tree)); gv_declare(IKS_AST_ATRIBUICAO,(yyval.tree),NULL); gv_connect((yyval.tree), (yyvsp[(3) - (6)].tree)); gv_connect((yyval.tree), (yyvsp[(6) - (6)].tree));}
     break;
 
   case 45:
 
 /* Line 1806 of yacc.c  */
-#line 173 "parser.y"
-    { (yyval.tree) = createNode(IKS_AST_INPUT,(yyvsp[(2) - (2)].symbol)); }
+#line 174 "parser.y"
+    { (yyval.tree) = createNode(IKS_AST_INPUT,(yyvsp[(2) - (2)].symbol)); gv_declare(IKS_AST_INPUT,(yyval.tree),NULL); }
     break;
 
   case 46:
 
 /* Line 1806 of yacc.c  */
-#line 176 "parser.y"
-    { (yyval.tree) = createNode(IKS_AST_OUTPUT,0); }
+#line 177 "parser.y"
+    { (yyval.tree) = createNode(IKS_AST_OUTPUT,0); gv_declare(IKS_AST_OUTPUT,(yyval.tree),NULL); }
     break;
 
   case 49:
 
 /* Line 1806 of yacc.c  */
-#line 183 "parser.y"
-    { (yyval.tree) = createNode(IKS_AST_RETURN,0); insertChild((yyval.tree),(yyvsp[(2) - (2)].tree)); }
+#line 184 "parser.y"
+    { (yyval.tree) = createNode(IKS_AST_RETURN,0); insertChild((yyval.tree),(yyvsp[(2) - (2)].tree)); gv_declare(IKS_AST_RETURN,(yyval.tree),NULL); gv_connect((yyval.tree), (yyvsp[(2) - (2)].tree));}
     break;
 
   case 50:
 
 /* Line 1806 of yacc.c  */
-#line 187 "parser.y"
-    { (yyval.tree) = createNode(IKS_AST_IF_ELSE,0); insertChild((yyval.tree),(yyvsp[(3) - (6)].tree)); insertChild((yyval.tree),(yyvsp[(6) - (6)].tree)); }
+#line 188 "parser.y"
+    { (yyval.tree) = createNode(IKS_AST_IF_ELSE,0); insertChild((yyval.tree),(yyvsp[(3) - (6)].tree)); insertChild((yyval.tree),(yyvsp[(6) - (6)].tree)); gv_declare(IKS_AST_IF_ELSE,(yyval.tree),NULL); gv_connect((yyval.tree), (yyvsp[(3) - (6)].tree)); gv_connect((yyval.tree), (yyvsp[(6) - (6)].tree));}
     break;
 
   case 51:
 
 /* Line 1806 of yacc.c  */
-#line 188 "parser.y"
-    { (yyval.tree) = createNode(IKS_AST_IF_ELSE,0); insertChild((yyval.tree),(yyvsp[(3) - (8)].tree)); insertChild((yyval.tree),(yyvsp[(6) - (8)].tree)); insertChild((yyval.tree),(yyvsp[(8) - (8)].tree));}
+#line 189 "parser.y"
+    { (yyval.tree) = createNode(IKS_AST_IF_ELSE,0); insertChild((yyval.tree),(yyvsp[(3) - (8)].tree)); insertChild((yyval.tree),(yyvsp[(6) - (8)].tree)); insertChild((yyval.tree),(yyvsp[(8) - (8)].tree)); gv_declare(IKS_AST_IF_ELSE,(yyval.tree),NULL); gv_connect((yyval.tree), (yyvsp[(3) - (8)].tree)); gv_connect((yyval.tree), (yyvsp[(6) - (8)].tree)); gv_connect((yyval.tree), (yyvsp[(8) - (8)].tree));}
     break;
 
   case 52:
 
 /* Line 1806 of yacc.c  */
-#line 189 "parser.y"
-    { (yyval.tree) = createNode(IKS_AST_IF_ELSE,0); insertChild((yyval.tree),(yyvsp[(3) - (8)].tree));insertChild((yyval.tree),(yyvsp[(6) - (8)].tree)); insertChild((yyval.tree),(yyvsp[(8) - (8)].tree));}
+#line 190 "parser.y"
+    { (yyval.tree) = createNode(IKS_AST_IF_ELSE,0); insertChild((yyval.tree),(yyvsp[(3) - (8)].tree));insertChild((yyval.tree),(yyvsp[(6) - (8)].tree)); insertChild((yyval.tree),(yyvsp[(8) - (8)].tree)); gv_declare(IKS_AST_IF_ELSE,(yyval.tree),NULL); gv_connect((yyval.tree), (yyvsp[(3) - (8)].tree)); gv_connect((yyval.tree), (yyvsp[(6) - (8)].tree)); gv_connect((yyval.tree), (yyvsp[(8) - (8)].tree));}
     break;
 
   case 53:
 
 /* Line 1806 of yacc.c  */
-#line 190 "parser.y"
-    { (yyval.tree) = createNode(IKS_AST_WHILE_DO,0); insertChild((yyval.tree),(yyvsp[(3) - (6)].tree));insertChild((yyval.tree),(yyvsp[(6) - (6)].tree));}
+#line 191 "parser.y"
+    { (yyval.tree) = createNode(IKS_AST_WHILE_DO,0); insertChild((yyval.tree),(yyvsp[(3) - (6)].tree));insertChild((yyval.tree),(yyvsp[(6) - (6)].tree)); gv_declare(IKS_AST_WHILE_DO,(yyval.tree),NULL); gv_connect((yyval.tree), (yyvsp[(3) - (6)].tree)); gv_connect((yyval.tree), (yyvsp[(6) - (6)].tree));}
     break;
 
   case 54:
 
 /* Line 1806 of yacc.c  */
-#line 191 "parser.y"
-    { (yyval.tree) = createNode(IKS_AST_WHILE_DO,0); insertChild((yyval.tree),(yyvsp[(2) - (6)].tree));insertChild((yyval.tree),(yyvsp[(5) - (6)].tree));}
+#line 192 "parser.y"
+    { (yyval.tree) = createNode(IKS_AST_DO_WHILE,0); insertChild((yyval.tree),(yyvsp[(2) - (6)].tree));insertChild((yyval.tree),(yyvsp[(5) - (6)].tree)); gv_declare(IKS_AST_DO_WHILE,(yyval.tree),NULL); gv_connect((yyval.tree), (yyvsp[(2) - (6)].tree)); gv_connect((yyval.tree), (yyvsp[(5) - (6)].tree));}
     break;
 
   case 55:
 
 /* Line 1806 of yacc.c  */
-#line 194 "parser.y"
-    { (yyval.tree) = createNode(IKS_AST_IDENTIFICADOR,(yyvsp[(1) - (1)].symbol)); }
+#line 195 "parser.y"
+    { (yyval.tree) = createNode(IKS_AST_IDENTIFICADOR,(yyvsp[(1) - (1)].symbol)); gv_declare(IKS_AST_IDENTIFICADOR,(yyval.tree),(yyvsp[(1) - (1)].symbol)->token); }
     break;
 
   case 56:
 
 /* Line 1806 of yacc.c  */
-#line 195 "parser.y"
-    { (yyval.tree) = createNode(IKS_AST_VETOR_INDEXADO,(yyvsp[(1) - (4)].symbol)); insertChild((yyval.tree),(yyvsp[(3) - (4)].tree));}
+#line 196 "parser.y"
+    { (yyval.tree) = createNode(IKS_AST_VETOR_INDEXADO,(yyvsp[(1) - (4)].symbol)); insertChild((yyval.tree),(yyvsp[(3) - (4)].tree)); gv_declare(IKS_AST_VETOR_INDEXADO,(yyval.tree),NULL); gv_connect((yyval.tree), (yyvsp[(3) - (4)].tree));}
     break;
 
   case 57:
 
 /* Line 1806 of yacc.c  */
-#line 196 "parser.y"
-    { (yyval.tree) = createNode(IKS_AST_ARIM_SOMA,0); insertChild((yyval.tree),(yyvsp[(1) - (3)].tree)); insertChild((yyval.tree),(yyvsp[(3) - (3)].tree)); }
+#line 197 "parser.y"
+    { (yyval.tree) = createNode(IKS_AST_ARIM_SOMA,0); insertChild((yyval.tree),(yyvsp[(1) - (3)].tree)); insertChild((yyval.tree),(yyvsp[(3) - (3)].tree)); gv_declare(IKS_AST_ARIM_SOMA,(yyval.tree),NULL); gv_connect((yyval.tree), (yyvsp[(1) - (3)].tree)); gv_connect((yyval.tree), (yyvsp[(3) - (3)].tree));}
     break;
 
   case 58:
 
 /* Line 1806 of yacc.c  */
-#line 197 "parser.y"
-    { (yyval.tree) = createNode(IKS_AST_ARIM_SUBTRACAO,0); insertChild((yyval.tree),(yyvsp[(1) - (3)].tree)); insertChild((yyval.tree),(yyvsp[(3) - (3)].tree)); }
+#line 198 "parser.y"
+    { (yyval.tree) = createNode(IKS_AST_ARIM_SUBTRACAO,0); insertChild((yyval.tree),(yyvsp[(1) - (3)].tree)); insertChild((yyval.tree),(yyvsp[(3) - (3)].tree)); gv_declare(IKS_AST_ARIM_SUBTRACAO,(yyval.tree),NULL); gv_connect((yyval.tree), (yyvsp[(1) - (3)].tree)); gv_connect((yyval.tree), (yyvsp[(3) - (3)].tree));}
     break;
 
   case 59:
 
 /* Line 1806 of yacc.c  */
-#line 198 "parser.y"
-    { (yyval.tree) = createNode(IKS_AST_ARIM_MULTIPLICACAO,0); insertChild((yyval.tree),(yyvsp[(1) - (3)].tree)); insertChild((yyval.tree),(yyvsp[(3) - (3)].tree)); }
+#line 199 "parser.y"
+    { (yyval.tree) = createNode(IKS_AST_ARIM_MULTIPLICACAO,0); insertChild((yyval.tree),(yyvsp[(1) - (3)].tree)); insertChild((yyval.tree),(yyvsp[(3) - (3)].tree)); gv_declare(IKS_AST_ARIM_MULTIPLICACAO,(yyval.tree),NULL); gv_connect((yyval.tree), (yyvsp[(1) - (3)].tree)); gv_connect((yyval.tree), (yyvsp[(3) - (3)].tree));}
     break;
 
   case 60:
 
 /* Line 1806 of yacc.c  */
-#line 199 "parser.y"
-    { (yyval.tree) = createNode(IKS_AST_ARIM_DIVISAO,0); insertChild((yyval.tree),(yyvsp[(1) - (3)].tree)); insertChild((yyval.tree),(yyvsp[(3) - (3)].tree)); }
+#line 200 "parser.y"
+    { (yyval.tree) = createNode(IKS_AST_ARIM_DIVISAO,0); insertChild((yyval.tree),(yyvsp[(1) - (3)].tree)); insertChild((yyval.tree),(yyvsp[(3) - (3)].tree)); gv_declare(IKS_AST_ARIM_DIVISAO,(yyval.tree),NULL); gv_connect((yyval.tree), (yyvsp[(1) - (3)].tree)); gv_connect((yyval.tree), (yyvsp[(3) - (3)].tree));}
     break;
 
   case 61:
 
 /* Line 1806 of yacc.c  */
-#line 200 "parser.y"
-    { (yyval.tree) = createNode(IKS_AST_LOGICO_COMP_L,0); insertChild((yyval.tree),(yyvsp[(1) - (3)].tree)); insertChild((yyval.tree),(yyvsp[(3) - (3)].tree)); }
+#line 201 "parser.y"
+    { (yyval.tree) = createNode(IKS_AST_LOGICO_COMP_L,0); insertChild((yyval.tree),(yyvsp[(1) - (3)].tree)); insertChild((yyval.tree),(yyvsp[(3) - (3)].tree)); gv_declare(IKS_AST_LOGICO_COMP_L,(yyval.tree),NULL); gv_connect((yyval.tree), (yyvsp[(1) - (3)].tree)); gv_connect((yyval.tree), (yyvsp[(3) - (3)].tree));}
     break;
 
   case 62:
 
 /* Line 1806 of yacc.c  */
-#line 201 "parser.y"
-    { (yyval.tree) = createNode(IKS_AST_LOGICO_COMP_G,0); insertChild((yyval.tree),(yyvsp[(1) - (3)].tree)); insertChild((yyval.tree),(yyvsp[(3) - (3)].tree)); }
+#line 202 "parser.y"
+    { (yyval.tree) = createNode(IKS_AST_LOGICO_COMP_G,0); insertChild((yyval.tree),(yyvsp[(1) - (3)].tree)); insertChild((yyval.tree),(yyvsp[(3) - (3)].tree)); gv_declare(IKS_AST_LOGICO_COMP_G,(yyval.tree),NULL); gv_connect((yyval.tree), (yyvsp[(1) - (3)].tree)); gv_connect((yyval.tree), (yyvsp[(3) - (3)].tree));}
     break;
 
   case 63:
 
 /* Line 1806 of yacc.c  */
-#line 202 "parser.y"
+#line 203 "parser.y"
     { (yyval.tree) = (yyvsp[(2) - (2)].tree); }
     break;
 
   case 64:
 
 /* Line 1806 of yacc.c  */
-#line 203 "parser.y"
-    { (yyval.tree) = createNode(IKS_AST_ARIM_INVERSAO,0); insertChild((yyval.tree),(yyvsp[(2) - (2)].tree)); }
+#line 204 "parser.y"
+    { (yyval.tree) = createNode(IKS_AST_ARIM_INVERSAO,0); insertChild((yyval.tree),(yyvsp[(2) - (2)].tree)); gv_declare(IKS_AST_ARIM_INVERSAO,(yyval.tree),NULL); gv_connect((yyval.tree), (yyvsp[(2) - (2)].tree));}
     break;
 
   case 65:
 
 /* Line 1806 of yacc.c  */
-#line 204 "parser.y"
+#line 205 "parser.y"
     { (yyval.tree) = (yyvsp[(2) - (3)].tree); }
     break;
 
   case 66:
 
 /* Line 1806 of yacc.c  */
-#line 205 "parser.y"
-    { (yyval.tree) = createNode(IKS_AST_LOGICO_COMP_LE,0); insertChild((yyval.tree),(yyvsp[(1) - (3)].tree)); insertChild((yyval.tree),(yyvsp[(3) - (3)].tree)); }
+#line 206 "parser.y"
+    { (yyval.tree) = createNode(IKS_AST_LOGICO_COMP_LE,0); insertChild((yyval.tree),(yyvsp[(1) - (3)].tree)); insertChild((yyval.tree),(yyvsp[(3) - (3)].tree)); gv_declare(IKS_AST_LOGICO_COMP_LE,(yyval.tree),NULL); gv_connect((yyval.tree), (yyvsp[(1) - (3)].tree)); gv_connect((yyval.tree), (yyvsp[(3) - (3)].tree));}
     break;
 
   case 67:
 
 /* Line 1806 of yacc.c  */
-#line 206 "parser.y"
-    { (yyval.tree) = createNode(IKS_AST_LOGICO_COMP_GE,0); insertChild((yyval.tree),(yyvsp[(1) - (3)].tree)); insertChild((yyval.tree),(yyvsp[(3) - (3)].tree)); }
+#line 207 "parser.y"
+    { (yyval.tree) = createNode(IKS_AST_LOGICO_COMP_GE,0); insertChild((yyval.tree),(yyvsp[(1) - (3)].tree)); insertChild((yyval.tree),(yyvsp[(3) - (3)].tree)); gv_declare(IKS_AST_LOGICO_COMP_GE,(yyval.tree),NULL); gv_connect((yyval.tree), (yyvsp[(1) - (3)].tree)); gv_connect((yyval.tree), (yyvsp[(3) - (3)].tree));}
     break;
 
   case 68:
 
 /* Line 1806 of yacc.c  */
-#line 207 "parser.y"
-    { (yyval.tree) = createNode(IKS_AST_LOGICO_COMP_IGUAL,0); insertChild((yyval.tree),(yyvsp[(1) - (3)].tree)); insertChild((yyval.tree),(yyvsp[(3) - (3)].tree)); }
+#line 208 "parser.y"
+    { (yyval.tree) = createNode(IKS_AST_LOGICO_COMP_IGUAL,0); insertChild((yyval.tree),(yyvsp[(1) - (3)].tree)); insertChild((yyval.tree),(yyvsp[(3) - (3)].tree)); gv_declare(IKS_AST_LOGICO_COMP_IGUAL,(yyval.tree),NULL); gv_connect((yyval.tree), (yyvsp[(1) - (3)].tree)); gv_connect((yyval.tree), (yyvsp[(3) - (3)].tree));}
     break;
 
   case 69:
 
 /* Line 1806 of yacc.c  */
-#line 208 "parser.y"
-    { (yyval.tree) = createNode(IKS_AST_LOGICO_COMP_DIF,0); insertChild((yyval.tree),(yyvsp[(1) - (3)].tree)); insertChild((yyval.tree),(yyvsp[(3) - (3)].tree)); }
+#line 209 "parser.y"
+    { (yyval.tree) = createNode(IKS_AST_LOGICO_COMP_DIF,0); insertChild((yyval.tree),(yyvsp[(1) - (3)].tree)); insertChild((yyval.tree),(yyvsp[(3) - (3)].tree)); gv_declare(IKS_AST_LOGICO_COMP_DIF,(yyval.tree),NULL); gv_connect((yyval.tree), (yyvsp[(1) - (3)].tree)); gv_connect((yyval.tree), (yyvsp[(3) - (3)].tree));}
     break;
 
   case 70:
 
 /* Line 1806 of yacc.c  */
-#line 209 "parser.y"
-    { (yyval.tree) = createNode(IKS_AST_LOGICO_E,0); insertChild((yyval.tree),(yyvsp[(1) - (3)].tree)); insertChild((yyval.tree),(yyvsp[(3) - (3)].tree)); }
+#line 210 "parser.y"
+    { (yyval.tree) = createNode(IKS_AST_LOGICO_E,0); insertChild((yyval.tree),(yyvsp[(1) - (3)].tree)); insertChild((yyval.tree),(yyvsp[(3) - (3)].tree)); gv_declare(IKS_AST_LOGICO_E,(yyval.tree),NULL); gv_connect((yyval.tree), (yyvsp[(1) - (3)].tree)); gv_connect((yyval.tree), (yyvsp[(3) - (3)].tree));}
     break;
 
   case 71:
 
 /* Line 1806 of yacc.c  */
-#line 210 "parser.y"
-    { (yyval.tree) = createNode(IKS_AST_LOGICO_OU,0); insertChild((yyval.tree),(yyvsp[(1) - (3)].tree)); insertChild((yyval.tree),(yyvsp[(3) - (3)].tree)); }
+#line 211 "parser.y"
+    { (yyval.tree) = createNode(IKS_AST_LOGICO_OU,0); insertChild((yyval.tree),(yyvsp[(1) - (3)].tree)); insertChild((yyval.tree),(yyvsp[(3) - (3)].tree)); gv_declare(IKS_AST_LOGICO_OU,(yyval.tree),NULL); gv_connect((yyval.tree), (yyvsp[(1) - (3)].tree)); gv_connect((yyval.tree), (yyvsp[(3) - (3)].tree));}
     break;
 
   case 72:
 
 /* Line 1806 of yacc.c  */
-#line 211 "parser.y"
+#line 212 "parser.y"
     { (yyval.tree) =  (yyvsp[(1) - (1)].tree); }
     break;
 
   case 73:
 
 /* Line 1806 of yacc.c  */
-#line 212 "parser.y"
-    { (yyval.tree) = createNode(IKS_AST_LITERAL,(yyvsp[(1) - (1)].symbol)); }
+#line 213 "parser.y"
+    { (yyval.tree) = createNode(IKS_AST_LITERAL,(yyvsp[(1) - (1)].symbol)); gv_declare(IKS_AST_LITERAL,(yyval.tree),(yyvsp[(1) - (1)].symbol)->token);}
     break;
 
   case 74:
 
 /* Line 1806 of yacc.c  */
-#line 213 "parser.y"
-    { (yyval.tree) = createNode(IKS_AST_LITERAL,(yyvsp[(1) - (1)].symbol)); }
+#line 214 "parser.y"
+    { (yyval.tree) = createNode(IKS_AST_LITERAL,(yyvsp[(1) - (1)].symbol)); gv_declare(IKS_AST_LITERAL,(yyval.tree),(yyvsp[(1) - (1)].symbol)->token);}
     break;
 
   case 75:
 
 /* Line 1806 of yacc.c  */
-#line 214 "parser.y"
-    { (yyval.tree) = createNode(IKS_AST_LITERAL,(yyvsp[(1) - (1)].symbol)); }
+#line 215 "parser.y"
+    { (yyval.tree) = createNode(IKS_AST_LITERAL,(yyvsp[(1) - (1)].symbol)); gv_declare(IKS_AST_LITERAL,(yyval.tree),(yyvsp[(1) - (1)].symbol)->token);}
     break;
 
   case 76:
 
 /* Line 1806 of yacc.c  */
-#line 215 "parser.y"
-    { (yyval.tree) = createNode(IKS_AST_LITERAL,(yyvsp[(1) - (1)].symbol)); }
+#line 216 "parser.y"
+    { (yyval.tree) = createNode(IKS_AST_LITERAL,(yyvsp[(1) - (1)].symbol)); gv_declare(IKS_AST_LITERAL,(yyval.tree),(yyvsp[(1) - (1)].symbol)->token);}
     break;
 
   case 77:
 
 /* Line 1806 of yacc.c  */
-#line 216 "parser.y"
-    { (yyval.tree) = createNode(IKS_AST_LITERAL,(yyvsp[(1) - (1)].symbol)); }
+#line 217 "parser.y"
+    { (yyval.tree) = createNode(IKS_AST_LITERAL,(yyvsp[(1) - (1)].symbol)); gv_declare(IKS_AST_LITERAL,(yyval.tree),(yyvsp[(1) - (1)].symbol)->token);}
     break;
 
   case 78:
 
 /* Line 1806 of yacc.c  */
-#line 217 "parser.y"
-    { (yyval.tree) = createNode(IKS_AST_LITERAL,(yyvsp[(1) - (1)].symbol)); }
+#line 218 "parser.y"
+    { (yyval.tree) = createNode(IKS_AST_LITERAL,(yyvsp[(1) - (1)].symbol)); gv_declare(IKS_AST_LITERAL,(yyval.tree),(yyvsp[(1) - (1)].symbol)->token);}
     break;
 
 
 
 /* Line 1806 of yacc.c  */
-#line 1965 "/home/frederico/ufrgs/2013-compiladores/compiladores/parser.c"
+#line 1966 "/home/mauricio/faculdade/compiladores/parser.c"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2192,6 +2193,6 @@ yyreturn:
 
 
 /* Line 2067 of yacc.c  */
-#line 224 "parser.y"
+#line 225 "parser.y"
 
 

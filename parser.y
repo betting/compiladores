@@ -5,6 +5,7 @@
 #include "comp_dict.h"
 #include "comp_tree.h"
 #include "iks_ast.h"
+#include "gv.h"
 
 FILE *yyin;
 
@@ -87,8 +88,8 @@ bash$ dot -Tpng nomedoarquivo -o output.png
  
  p : s	{ $$ = $1; /*PRINT AST PASSING $$*/ }
 
-s: decl_global s	{ $$ = createNode(IKS_AST_PROGRAMA,0); insertChild($$,$2); } /* gv_connect(gv_declare(IKS_AST_PROGRAMA,$$,NULL),gv_declare(IKS_AST_PROGRAMA,$$,NULL)); gv_connect(gv_declare(IKS_AST_PROGRAMA,$$,NULL),gv_declare(IKS_AST_PROGRAMA,$$,NULL)); */
-  | def_funcao s	{ $$ = createNode(IKS_AST_PROGRAMA,0); insertChild($$,$2); }
+s: decl_global s	{ $$ = createNode(IKS_AST_PROGRAMA,0); insertChild($$,$2); gv_declare(IKS_AST_PROGRAMA,$$,NULL); gv_connect($$, $2); }
+  | def_funcao s	{ $$ = createNode(IKS_AST_PROGRAMA,0); insertChild($$,$2); gv_declare(IKS_AST_PROGRAMA,$$,NULL); gv_connect($$, $2);}
   |					/* criar nodo para regra vazia???? */
   ;
 
@@ -118,10 +119,10 @@ tipo_var: TK_PR_INT
 
 
  /* Declaracao de funcao */
-def_funcao: cabecalho decl_local bloco_comando	{ $$ = createNode(IKS_AST_FUNCAO,$1); insertChild($$,$3); }
+def_funcao: cabecalho decl_local bloco_comando	{ $$ = createNode(IKS_AST_FUNCAO,$1); insertChild($$,$3); gv_declare(IKS_AST_FUNCAO,$$,$1->token); gv_connect($$, $3);}
   ;
 
-chamada_funcao: TK_IDENTIFICADOR '(' lista_expressoes ')'	{ $$ = createNode(IKS_AST_CHAMADA_DE_FUNCAO,$1); }
+chamada_funcao: TK_IDENTIFICADOR '(' lista_expressoes ')'	{ $$ = createNode(IKS_AST_CHAMADA_DE_FUNCAO,$1); gv_declare(IKS_AST_CHAMADA_DE_FUNCAO,$$,NULL);}
 
 cabecalho: decl_var '(' lista_parametros ')'	{ $$ =  $1; }
   ;
@@ -165,56 +166,56 @@ seq_comando: comando seq_comando
 
 
  /* Atribuicoes de variaveis */
-atribuicao: TK_IDENTIFICADOR '=' expressao				{ $$ = createNode(IKS_AST_ATRIBUICAO,$1); insertChild($$,$3); }
-  | TK_IDENTIFICADOR '[' expressao ']' '=' expressao	{ $$ = createNode(IKS_AST_ATRIBUICAO,$1); insertChild($$,$3); insertChild($$,$6); }
+atribuicao: TK_IDENTIFICADOR '=' expressao				{ $$ = createNode(IKS_AST_ATRIBUICAO,$1); insertChild($$,$3); gv_declare(IKS_AST_ATRIBUICAO,$$,NULL); gv_connect($$, $3);}
+  | TK_IDENTIFICADOR '[' expressao ']' '=' expressao	{ $$ = createNode(IKS_AST_ATRIBUICAO,$1); insertChild($$,$3); insertChild($$,$6); gv_declare(IKS_AST_ATRIBUICAO,$$,NULL); gv_connect($$, $3); gv_connect($$, $6);}
   ;
 
  /* Entrada e Saida (Input e Output) */
-entrada: TK_PR_INPUT TK_IDENTIFICADOR	{ $$ = createNode(IKS_AST_INPUT,$2); }
+entrada: TK_PR_INPUT TK_IDENTIFICADOR	{ $$ = createNode(IKS_AST_INPUT,$2); gv_declare(IKS_AST_INPUT,$$,NULL); }
   ;
 
-saida: TK_PR_OUTPUT lista_expressoes_nao_vazia 	{ $$ = createNode(IKS_AST_OUTPUT,0); }
+saida: TK_PR_OUTPUT lista_expressoes_nao_vazia 	{ $$ = createNode(IKS_AST_OUTPUT,0); gv_declare(IKS_AST_OUTPUT,$$,NULL); }
   ;
 
 lista_expressoes_nao_vazia: expressao ',' lista_expressoes_nao_vazia	
   | expressao															
   ;
 
-retorna: TK_PR_RETURN expressao	{ $$ = createNode(IKS_AST_RETURN,0); insertChild($$,$2); }
+retorna: TK_PR_RETURN expressao	{ $$ = createNode(IKS_AST_RETURN,0); insertChild($$,$2); gv_declare(IKS_AST_RETURN,$$,NULL); gv_connect($$, $2);}
   ;
 
  /* Fluxo de Controle */
-controle_fluxo: TK_PR_IF '(' expressao ')' TK_PR_THEN comando %prec LOWER_THAN_ELSE	{ $$ = createNode(IKS_AST_IF_ELSE,0); insertChild($$,$3); insertChild($$,$6); }
-  | TK_PR_IF '(' expressao ')' TK_PR_THEN comando TK_PR_ELSE comando				{ $$ = createNode(IKS_AST_IF_ELSE,0); insertChild($$,$3); insertChild($$,$6); insertChild($$,$8);}
-  | TK_PR_IF '(' expressao ')' TK_PR_THEN comando_simples TK_PR_ELSE comando		{ $$ = createNode(IKS_AST_IF_ELSE,0); insertChild($$,$3);insertChild($$,$6); insertChild($$,$8);}
-  | TK_PR_WHILE '(' expressao ')' TK_PR_DO comando									{ $$ = createNode(IKS_AST_WHILE_DO,0); insertChild($$,$3);insertChild($$,$6);}
-  | TK_PR_DO comando TK_PR_WHILE '(' expressao ')' 									{ $$ = createNode(IKS_AST_WHILE_DO,0); insertChild($$,$2);insertChild($$,$5);}
+controle_fluxo: TK_PR_IF '(' expressao ')' TK_PR_THEN comando %prec LOWER_THAN_ELSE	{ $$ = createNode(IKS_AST_IF_ELSE,0); insertChild($$,$3); insertChild($$,$6); gv_declare(IKS_AST_IF_ELSE,$$,NULL); gv_connect($$, $3); gv_connect($$, $6);}
+  | TK_PR_IF '(' expressao ')' TK_PR_THEN comando TK_PR_ELSE comando				{ $$ = createNode(IKS_AST_IF_ELSE,0); insertChild($$,$3); insertChild($$,$6); insertChild($$,$8); gv_declare(IKS_AST_IF_ELSE,$$,NULL); gv_connect($$, $3); gv_connect($$, $6); gv_connect($$, $8);}
+  | TK_PR_IF '(' expressao ')' TK_PR_THEN comando_simples TK_PR_ELSE comando		{ $$ = createNode(IKS_AST_IF_ELSE,0); insertChild($$,$3);insertChild($$,$6); insertChild($$,$8); gv_declare(IKS_AST_IF_ELSE,$$,NULL); gv_connect($$, $3); gv_connect($$, $6); gv_connect($$, $8);}
+  | TK_PR_WHILE '(' expressao ')' TK_PR_DO comando									{ $$ = createNode(IKS_AST_WHILE_DO,0); insertChild($$,$3);insertChild($$,$6); gv_declare(IKS_AST_WHILE_DO,$$,NULL); gv_connect($$, $3); gv_connect($$, $6);}
+  | TK_PR_DO comando TK_PR_WHILE '(' expressao ')' 									{ $$ = createNode(IKS_AST_DO_WHILE,0); insertChild($$,$2);insertChild($$,$5); gv_declare(IKS_AST_DO_WHILE,$$,NULL); gv_connect($$, $2); gv_connect($$, $5);}
   ;
 
-expressao: TK_IDENTIFICADOR				{ $$ = createNode(IKS_AST_IDENTIFICADOR,$1); }
-  | TK_IDENTIFICADOR '[' expressao ']'	{ $$ = createNode(IKS_AST_VETOR_INDEXADO,$1); insertChild($$,$3);}
-  | expressao '+' expressao				{ $$ = createNode(IKS_AST_ARIM_SOMA,0); insertChild($$,$1); insertChild($$,$3); }
-  | expressao '-' expressao				{ $$ = createNode(IKS_AST_ARIM_SUBTRACAO,0); insertChild($$,$1); insertChild($$,$3); }
-  | expressao '*' expressao				{ $$ = createNode(IKS_AST_ARIM_MULTIPLICACAO,0); insertChild($$,$1); insertChild($$,$3); }
-  | expressao '/' expressao				{ $$ = createNode(IKS_AST_ARIM_DIVISAO,0); insertChild($$,$1); insertChild($$,$3); }
-  | expressao '<' expressao				{ $$ = createNode(IKS_AST_LOGICO_COMP_L,0); insertChild($$,$1); insertChild($$,$3); }
-  | expressao '>' expressao				{ $$ = createNode(IKS_AST_LOGICO_COMP_G,0); insertChild($$,$1); insertChild($$,$3); }
+expressao: TK_IDENTIFICADOR				{ $$ = createNode(IKS_AST_IDENTIFICADOR,$1); gv_declare(IKS_AST_IDENTIFICADOR,$$,$1->token); }
+  | TK_IDENTIFICADOR '[' expressao ']'	{ $$ = createNode(IKS_AST_VETOR_INDEXADO,$1); insertChild($$,$3); gv_declare(IKS_AST_VETOR_INDEXADO,$$,NULL); gv_connect($$, $3);}
+  | expressao '+' expressao				{ $$ = createNode(IKS_AST_ARIM_SOMA,0); insertChild($$,$1); insertChild($$,$3); gv_declare(IKS_AST_ARIM_SOMA,$$,NULL); gv_connect($$, $1); gv_connect($$, $3);}
+  | expressao '-' expressao				{ $$ = createNode(IKS_AST_ARIM_SUBTRACAO,0); insertChild($$,$1); insertChild($$,$3); gv_declare(IKS_AST_ARIM_SUBTRACAO,$$,NULL); gv_connect($$, $1); gv_connect($$, $3);}
+  | expressao '*' expressao				{ $$ = createNode(IKS_AST_ARIM_MULTIPLICACAO,0); insertChild($$,$1); insertChild($$,$3); gv_declare(IKS_AST_ARIM_MULTIPLICACAO,$$,NULL); gv_connect($$, $1); gv_connect($$, $3);}
+  | expressao '/' expressao				{ $$ = createNode(IKS_AST_ARIM_DIVISAO,0); insertChild($$,$1); insertChild($$,$3); gv_declare(IKS_AST_ARIM_DIVISAO,$$,NULL); gv_connect($$, $1); gv_connect($$, $3);}
+  | expressao '<' expressao				{ $$ = createNode(IKS_AST_LOGICO_COMP_L,0); insertChild($$,$1); insertChild($$,$3); gv_declare(IKS_AST_LOGICO_COMP_L,$$,NULL); gv_connect($$, $1); gv_connect($$, $3);}
+  | expressao '>' expressao				{ $$ = createNode(IKS_AST_LOGICO_COMP_G,0); insertChild($$,$1); insertChild($$,$3); gv_declare(IKS_AST_LOGICO_COMP_G,$$,NULL); gv_connect($$, $1); gv_connect($$, $3);}
   | '+' expressao						{ $$ = $2; }
-  | '-' expressao						{ $$ = createNode(IKS_AST_ARIM_INVERSAO,0); insertChild($$,$2); }
+  | '-' expressao						{ $$ = createNode(IKS_AST_ARIM_INVERSAO,0); insertChild($$,$2); gv_declare(IKS_AST_ARIM_INVERSAO,$$,NULL); gv_connect($$, $2);}
   | '(' expressao ')'					{ $$ = $2; }
-  | expressao TK_OC_LE expressao		{ $$ = createNode(IKS_AST_LOGICO_COMP_LE,0); insertChild($$,$1); insertChild($$,$3); }
-  | expressao TK_OC_GE expressao		{ $$ = createNode(IKS_AST_LOGICO_COMP_GE,0); insertChild($$,$1); insertChild($$,$3); }
-  | expressao TK_OC_EQ expressao		{ $$ = createNode(IKS_AST_LOGICO_COMP_IGUAL,0); insertChild($$,$1); insertChild($$,$3); }
-  | expressao TK_OC_NE expressao		{ $$ = createNode(IKS_AST_LOGICO_COMP_DIF,0); insertChild($$,$1); insertChild($$,$3); }
-  | expressao TK_OC_AND expressao		{ $$ = createNode(IKS_AST_LOGICO_E,0); insertChild($$,$1); insertChild($$,$3); }
-  | expressao TK_OC_OR expressao		{ $$ = createNode(IKS_AST_LOGICO_OU,0); insertChild($$,$1); insertChild($$,$3); }
+  | expressao TK_OC_LE expressao		{ $$ = createNode(IKS_AST_LOGICO_COMP_LE,0); insertChild($$,$1); insertChild($$,$3); gv_declare(IKS_AST_LOGICO_COMP_LE,$$,NULL); gv_connect($$, $1); gv_connect($$, $3);}
+  | expressao TK_OC_GE expressao		{ $$ = createNode(IKS_AST_LOGICO_COMP_GE,0); insertChild($$,$1); insertChild($$,$3); gv_declare(IKS_AST_LOGICO_COMP_GE,$$,NULL); gv_connect($$, $1); gv_connect($$, $3);}
+  | expressao TK_OC_EQ expressao		{ $$ = createNode(IKS_AST_LOGICO_COMP_IGUAL,0); insertChild($$,$1); insertChild($$,$3); gv_declare(IKS_AST_LOGICO_COMP_IGUAL,$$,NULL); gv_connect($$, $1); gv_connect($$, $3);}
+  | expressao TK_OC_NE expressao		{ $$ = createNode(IKS_AST_LOGICO_COMP_DIF,0); insertChild($$,$1); insertChild($$,$3); gv_declare(IKS_AST_LOGICO_COMP_DIF,$$,NULL); gv_connect($$, $1); gv_connect($$, $3);}
+  | expressao TK_OC_AND expressao		{ $$ = createNode(IKS_AST_LOGICO_E,0); insertChild($$,$1); insertChild($$,$3); gv_declare(IKS_AST_LOGICO_E,$$,NULL); gv_connect($$, $1); gv_connect($$, $3);}
+  | expressao TK_OC_OR expressao		{ $$ = createNode(IKS_AST_LOGICO_OU,0); insertChild($$,$1); insertChild($$,$3); gv_declare(IKS_AST_LOGICO_OU,$$,NULL); gv_connect($$, $1); gv_connect($$, $3);}
   | chamada_funcao						{ $$ =  $1; }
-  | TK_LIT_INT							{ $$ = createNode(IKS_AST_LITERAL,$1); }
-  | TK_LIT_FLOAT						{ $$ = createNode(IKS_AST_LITERAL,$1); }
-  | TK_LIT_FALSE						{ $$ = createNode(IKS_AST_LITERAL,$1); }
-  | TK_LIT_TRUE							{ $$ = createNode(IKS_AST_LITERAL,$1); }
-  | TK_LIT_CHAR							{ $$ = createNode(IKS_AST_LITERAL,$1); }
-  | TK_LIT_STRING						{ $$ = createNode(IKS_AST_LITERAL,$1); }
+  | TK_LIT_INT							{ $$ = createNode(IKS_AST_LITERAL,$1); gv_declare(IKS_AST_LITERAL,$$,$1->token);}
+  | TK_LIT_FLOAT						{ $$ = createNode(IKS_AST_LITERAL,$1); gv_declare(IKS_AST_LITERAL,$$,$1->token);}
+  | TK_LIT_FALSE						{ $$ = createNode(IKS_AST_LITERAL,$1); gv_declare(IKS_AST_LITERAL,$$,$1->token);}
+  | TK_LIT_TRUE							{ $$ = createNode(IKS_AST_LITERAL,$1); gv_declare(IKS_AST_LITERAL,$$,$1->token);}
+  | TK_LIT_CHAR							{ $$ = createNode(IKS_AST_LITERAL,$1); gv_declare(IKS_AST_LITERAL,$$,$1->token);}
+  | TK_LIT_STRING						{ $$ = createNode(IKS_AST_LITERAL,$1); gv_declare(IKS_AST_LITERAL,$$,$1->token);}
   ;
 
 lista_expressoes: lista_expressoes_nao_vazia
