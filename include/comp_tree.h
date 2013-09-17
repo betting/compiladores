@@ -15,7 +15,7 @@ struct comp_dict_item_t;
 typedef struct _tree
 {
 	int type;
-	struct comp_dict_item_t* symbol;
+	comp_dict_item_t* symbol;
 	struct _tree *child,*sibling;
 } comp_tree_t;
 
