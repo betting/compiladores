@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include "comp_dict.h"
 #include "comp_tree.h"
-#include "iks_ast.h"
 
 FILE *yyin;
 
@@ -98,12 +97,12 @@ tipo_var: TK_PR_INT
 def_funcao: cabecalho decl_local bloco_comando	
   ;
 
-chamada_funcao: TK_IDENTIFICADOR '(' lista_expressoes ')'	{ $$ = createNode(IKS_AST_CHAMADA_DE_FUNCAO,0); insertChild($$,$3); }
+chamada_funcao: TK_IDENTIFICADOR '(' lista_expressoes ')'	{ $$ = createNode(IKS_AST_CHAMADA_DE_FUNCAO,$1); insertChild($$,$3); }
 
 cabecalho: decl_var '(' lista_parametros ')'	
   ;
 
-lista_parametros: lista_parametros_nao_vazia	{ $$ = $1; }
+lista_parametros: lista_parametros_nao_vazia
   |	
   ;
 
@@ -114,25 +113,25 @@ lista_parametros_nao_vazia: parametro ',' lista_parametros_nao_vazia
 parametro: decl_var	
   ;
 
-comando: bloco_comando	{ $$ = createNode(IKS_AST_BLOCO,0); insertChild($$,$1); }
-  | controle_fluxo		{ $$ = createNode(IKS_AST_BLOCO,0); insertChild($$,$1); }
-  | atribuicao ';'		{ $$ = createNode(IKS_AST_BLOCO,0); insertChild($$,$1); }
-  | entrada ';'			{ $$ = createNode(IKS_AST_BLOCO,0); insertChild($$,$1); }
-  | saida ';'			{ $$ = createNode(IKS_AST_BLOCO,0); insertChild($$,$1); }
-  | retorna ';'			{ $$ = createNode(IKS_AST_BLOCO,0); insertChild($$,$1); }
-  | decl_var ';'		{ $$ = createNode(IKS_AST_BLOCO,0); insertChild($$,$1); }
-  | chamada_funcao ';'	{ $$ = createNode(IKS_AST_BLOCO,0); insertChild($$,$1); }
+comando: bloco_comando	
+  | controle_fluxo		
+  | atribuicao ';'		
+  | entrada ';'			
+  | saida ';'			
+  | retorna ';'			
+  | decl_var ';'		
+  | chamada_funcao ';'	
   ;
 
-comando_simples: atribuicao	{ $$ = createNode(IKS_AST_ATRIBUICAO,0); insertChild($$,$1); }
-  | entrada					{ $$ = createNode(IKS_AST_INPUT,0); insertChild($$,$1); }
-  | saida					{ $$ = createNode(IKS_AST_OUTPUT,0); insertChild($$,$1); }
-  | retorna					{ $$ = createNode(IKS_AST_RETURN,0); insertChild($$,$1); }
-  | decl_var				{ $$ = createNode(IKS_AST_BLOCO,0); insertChild($$,$1); }
-  | chamada_funcao			{ $$ = createNode(IKS_AST_BLOCO,0); insertChild($$,$1); }
+comando_simples: atribuicao	
+  | entrada					
+  | saida					
+  | retorna					
+  | decl_var				
+  | chamada_funcao			
   ;
 
-bloco_comando: '{' seq_comando '}'	{ $$ = createNode(IKS_AST_BLOCO,0); insertChild($$,$2); }
+bloco_comando: '{' seq_comando '}'	{ $$ = createNode(IKS_AST_BLOCO,0); }
   ;
 
 seq_comando: comando seq_comando	
@@ -147,10 +146,10 @@ atribuicao: TK_IDENTIFICADOR '=' expressao				{ $$ = createNode(IKS_AST_ATRIBUIC
   ;
 
  /* Entrada e Saida (Input e Output) */
-entrada: TK_PR_INPUT TK_IDENTIFICADOR	{ $$ = createNode(IKS_AST_INPUT,0); insertChild($$,$2); }
+entrada: TK_PR_INPUT TK_IDENTIFICADOR	{ $$ = createNode(IKS_AST_INPUT,$2); }
   ;
 
-saida: TK_PR_OUTPUT lista_expressoes_nao_vazia 	{ $$ = createNode(IKS_AST_OUTPUT,0); insertChild($$,$2); }
+saida: TK_PR_OUTPUT lista_expressoes_nao_vazia 	{ $$ = createNode(IKS_AST_OUTPUT,0); }
   ;
 
 lista_expressoes_nao_vazia: expressao ',' lista_expressoes_nao_vazia	
@@ -194,7 +193,7 @@ expressao: TK_IDENTIFICADOR				{ $$ = createNode(IKS_AST_IDENTIFICADOR,$1); }
   | TK_LIT_STRING						
   ;
 
-lista_expressoes: lista_expressoes_nao_vazia	{ $$ = $1; }
+lista_expressoes: lista_expressoes_nao_vazia
   |	
   ;
 
