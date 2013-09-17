@@ -1,0 +1,30 @@
+int:main ()
+{
+  int: i;
+  
+  while (1 == 1) do
+  {
+     output "Digite o numero desejado: ";
+     input a;
+
+     i = imprimeConteudo(a);
+  }
+
+}
+
+int:imprimeConteudo(string:t) 
+{
+   if (t != "") then
+   {
+      // escreve a saida formatada
+      output t;
+   }
+   else
+   {
+      // escreve que nada foi encontrado
+      output "não consegui encontrar nada";
+      return 0;
+   }
+
+   return 1;
+}

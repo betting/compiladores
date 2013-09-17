@@ -1,0 +1,46 @@
+int:main (int:a, float:b )
+{
+  int: i;
+  i=0;
+  output "Saida";
+  input a;
+  while (i<4) do
+  {
+    i = i + 1;
+  }
+}
+
+int:outraFuncao (string:t) 
+{
+   output "fim da funcao";
+
+   /*
+      comentario com
+      muitas linhas
+      dentro da funcao
+   */
+   if (t> 4) then
+   {
+      if (t> 4) then
+      {
+         // comentario 01
+         output "teste";
+      }
+
+      // comentario 01
+      output "teste";
+   }
+
+   if (t> 4) then
+   {
+      // comentario 01
+      output "teste";
+   }
+   else
+   { 
+      //teste 
+      i=0;
+   }
+
+   return "temp";
+}
