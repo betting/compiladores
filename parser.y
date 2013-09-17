@@ -57,20 +57,22 @@ bash$ dot -Tpng nomedoarquivo -o output.png
 %token TK_OC_NE
 %token TK_OC_AND
 %token TK_OC_OR
-%token TK_LIT_INT
-%token TK_LIT_FLOAT
-%token TK_LIT_FALSE
-%token TK_LIT_TRUE
-%token TK_LIT_CHAR
-%token TK_LIT_STRING
+%token<symbol> TK_LIT_INT
+%token<symbol> TK_LIT_FLOAT
+%token<symbol> TK_LIT_FALSE
+%token<symbol> TK_LIT_TRUE
+%token<symbol> TK_LIT_CHAR
+%token<symbol> TK_LIT_STRING
 %token<symbol> TK_IDENTIFICADOR
 %token TOKEN_ERRO
 
-%type <tree> p s decl_global decl_vetor  def_funcao 
-				chamada_funcao cabecalho  
-				parametro comando comando_simples bloco_comando 
+%type <tree> p s def_funcao 
+				chamada_funcao   
+				comando comando_simples bloco_comando 
 				atribuicao entrada saida 
 				controle_fluxo expressao retorna
+				
+%type <symbol> decl_var cabecalho parametro
 
 %left TK_OC_OR TK_OC_AND
 %left '<' '>' TK_OC_LE TK_OC_GE TK_OC_EQ TK_OC_NE
@@ -85,8 +87,8 @@ bash$ dot -Tpng nomedoarquivo -o output.png
  
  p : s	{ $$ = $1; /*PRINT AST PASSING $$*/ }
 
-s: decl_global s	{ $$ = createNode(IKS_AST_PROGRAMA,0); insertChild($$,$1); insertChild($$,$2); } /* gv_connect(gv_declare(IKS_AST_PROGRAMA,$$,NULL),gv_declare(IKS_AST_PROGRAMA,$$,NULL)); gv_connect(gv_declare(IKS_AST_PROGRAMA,$$,NULL),gv_declare(IKS_AST_PROGRAMA,$$,NULL)); */
-  | def_funcao s	{ $$ = createNode(IKS_AST_PROGRAMA,0); insertChild($$,$1); insertChild($$,$2); }
+s: decl_global s	{ $$ = createNode(IKS_AST_PROGRAMA,0); insertChild($$,$2); } /* gv_connect(gv_declare(IKS_AST_PROGRAMA,$$,NULL),gv_declare(IKS_AST_PROGRAMA,$$,NULL)); gv_connect(gv_declare(IKS_AST_PROGRAMA,$$,NULL),gv_declare(IKS_AST_PROGRAMA,$$,NULL)); */
+  | def_funcao s	{ $$ = createNode(IKS_AST_PROGRAMA,0); insertChild($$,$2); }
   |					/* criar nodo para regra vazia???? */
   ;
 
@@ -100,7 +102,7 @@ decl_local: decl_var ';' decl_local
 
 
  /* Declaracao de variaveis e tipos*/
-decl_var: tipo_var ':' TK_IDENTIFICADOR	
+decl_var: tipo_var ':' TK_IDENTIFICADOR	{ $$ =  $3; }
   ;
 
 decl_vetor: tipo_var ':' TK_IDENTIFICADOR '[' TK_LIT_INT ']'	
@@ -116,12 +118,12 @@ tipo_var: TK_PR_INT
 
 
  /* Declaracao de funcao */
-def_funcao: cabecalho decl_local bloco_comando	
+def_funcao: cabecalho decl_local bloco_comando	{ $$ = createNode(IKS_AST_FUNCAO,$1); insertChild($$,$3); }
   ;
 
 chamada_funcao: TK_IDENTIFICADOR '(' lista_expressoes ')'	{ $$ = createNode(IKS_AST_CHAMADA_DE_FUNCAO,$1); }
 
-cabecalho: decl_var '(' lista_parametros ')'	
+cabecalho: decl_var '(' lista_parametros ')'	{ $$ =  $1; }
   ;
 
 lista_parametros: lista_parametros_nao_vazia
@@ -132,25 +134,25 @@ lista_parametros_nao_vazia: parametro ',' lista_parametros_nao_vazia
   | parametro															
   ;
 
-parametro: decl_var	
+parametro: decl_var	{ $$ =  $1; }
   ;
 
-comando: bloco_comando	
-  | controle_fluxo		
-  | atribuicao ';'		
-  | entrada ';'			
-  | saida ';'			
-  | retorna ';'			
-  | decl_var ';'		
-  | chamada_funcao ';'	
+comando: bloco_comando	{ $$ =  $1; }
+  | controle_fluxo		{ $$ =  $1; }
+  | atribuicao ';'		{ $$ =  $1; }
+  | entrada ';'			{ $$ =  $1; }
+  | saida ';'			{ $$ =  $1; }
+  | retorna ';'			{ $$ =  $1; }
+  | decl_var ';'		{ $$ =  $1; }
+  | chamada_funcao ';'	{ $$ =  $1; }
   ;
 
-comando_simples: atribuicao	
-  | entrada					
-  | saida					
-  | retorna					
-  | decl_var				
-  | chamada_funcao			
+comando_simples: atribuicao	{ $$ =  $1; }
+  | entrada					{ $$ =  $1; }
+  | saida					{ $$ =  $1; }
+  | retorna					{ $$ =  $1; }
+  | decl_var				{ $$ =  $1; }
+  | chamada_funcao			{ $$ =  $1; }
   ;
 
 bloco_comando: '{' seq_comando '}'	{ $$ = createNode(IKS_AST_BLOCO,0); }
@@ -197,7 +199,7 @@ expressao: TK_IDENTIFICADOR				{ $$ = createNode(IKS_AST_IDENTIFICADOR,$1); }
   | expressao '/' expressao				{ $$ = createNode(IKS_AST_ARIM_DIVISAO,0); insertChild($$,$1); insertChild($$,$3); }
   | expressao '<' expressao				{ $$ = createNode(IKS_AST_LOGICO_COMP_L,0); insertChild($$,$1); insertChild($$,$3); }
   | expressao '>' expressao				{ $$ = createNode(IKS_AST_LOGICO_COMP_G,0); insertChild($$,$1); insertChild($$,$3); }
-  | '+' expressao						
+  | '+' expressao						{ $$ = $2; }
   | '-' expressao						{ $$ = createNode(IKS_AST_ARIM_INVERSAO,0); insertChild($$,$2); }
   | '(' expressao ')'					{ $$ = $2; }
   | expressao TK_OC_LE expressao		{ $$ = createNode(IKS_AST_LOGICO_COMP_LE,0); insertChild($$,$1); insertChild($$,$3); }
@@ -207,12 +209,12 @@ expressao: TK_IDENTIFICADOR				{ $$ = createNode(IKS_AST_IDENTIFICADOR,$1); }
   | expressao TK_OC_AND expressao		{ $$ = createNode(IKS_AST_LOGICO_E,0); insertChild($$,$1); insertChild($$,$3); }
   | expressao TK_OC_OR expressao		{ $$ = createNode(IKS_AST_LOGICO_OU,0); insertChild($$,$1); insertChild($$,$3); }
   | chamada_funcao						{ $$ =  $1; }
-  | TK_LIT_INT							
-  | TK_LIT_FLOAT						
-  | TK_LIT_FALSE						
-  | TK_LIT_TRUE							
-  | TK_LIT_CHAR							
-  | TK_LIT_STRING						
+  | TK_LIT_INT							{ $$ = createNode(IKS_AST_LITERAL,$1); }
+  | TK_LIT_FLOAT						{ $$ = createNode(IKS_AST_LITERAL,$1); }
+  | TK_LIT_FALSE						{ $$ = createNode(IKS_AST_LITERAL,$1); }
+  | TK_LIT_TRUE							{ $$ = createNode(IKS_AST_LITERAL,$1); }
+  | TK_LIT_CHAR							{ $$ = createNode(IKS_AST_LITERAL,$1); }
+  | TK_LIT_STRING						{ $$ = createNode(IKS_AST_LITERAL,$1); }
   ;
 
 lista_expressoes: lista_expressoes_nao_vazia
