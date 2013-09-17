@@ -62,49 +62,6 @@ comp_tree_t* createNode(int type, struct comp_dict_item_t* symbol)
 }
 
 /**
- * Tree initalization.
- *
- * Perform a tree initialization.
- */
-comp_tree_t* initTree(comp_tree_t* root,int type[])
-{
-    //check if node exist already
-    comp_tree_t* newnode = search(root,type[0]);
-
-    //if node does not exist
-    if(newnode == NULL)
-    {
-        newnode = createNode(type[0]);
-    }
-
-    comp_tree_t* parent = newnode;
-    //now create node of its children
-    int j;
-    for(j=0;j<type[1];j++)
-    {
-        //for first child
-        if(j == 0)
-        {
-           parent->child = createNode(type[j+2]);
-           parent = parent->child;
-        }
-        //for all other childs
-        else
-        {
-           parent->sibling = createNode(type[j+2]);
-           parent = parent->sibling;
-        }
-
-    }
-
-    if(root == NULL)
-    {
-      root = newnode;
-    }
-    return root;
-}
-
-/**
  * Insert a node in a given parent node 
  * 
  **/
