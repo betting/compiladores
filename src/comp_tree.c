@@ -83,7 +83,6 @@ comp_tree_t* createNode(int type, struct comp_dict_item_t* symbol)
 	 if(first->sibling == NULL)
     {
 		 first->sibling = newNode;
-		 return 0;
 	 }
     else
     {
