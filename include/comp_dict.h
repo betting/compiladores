@@ -3,11 +3,12 @@
 
 #include <stdio.h>
 
-struct _dic {
-		int type;
-        char *token;
-        char *text;
-        struct _dic *next;
+struct _dic 
+{
+   int type;
+   char *token;
+   char *text;
+   struct _dic *next;
 };
 
 typedef struct _dic comp_dict_item_t;

@@ -51,7 +51,7 @@ comp_tree_t* search(comp_tree_t* root,int type)
  * @param int	type 
  * @return comp_tree_t newNode
  */
-comp_tree_t* createNode(int type, struct comp_dict_item_t* symbol)
+comp_tree_t* createNode(int type, comp_dict_item_t *symbol)
 {
     comp_tree_t* newnode= (comp_tree_t*)malloc(sizeof(comp_tree_t));
     newnode->child=NULL;
