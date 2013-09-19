@@ -1,4 +1,5 @@
 #include "comp_tree.h"
+#include "gv.h"
 
 void preorder(comp_tree_t* p)
 {
@@ -58,6 +59,10 @@ comp_tree_t* createNode(int type, comp_dict_item_t *symbol)
     newnode->sibling=NULL;
     newnode->type=type;
     newnode->symbol=symbol;
+    
+    //cria nodo no grafo
+    gv_declare(type,newnode,NULL);
+    
     return newnode;
 }
 
@@ -75,6 +80,9 @@ comp_tree_t* createNode(int type, comp_dict_item_t *symbol)
     {
 		 addSiblings(parent->child, child);
 	 }
+	 
+	 //conecta nodos no grafo
+	 gv_connect(parent, child);
  }
  
 

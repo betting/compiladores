@@ -31,4 +31,10 @@
 #define IKS_SIMBOLO_STRING 4
 #define IKS_SIMBOLO_BOOL   5
 
+/*
+ Variáveis globais
+*/
+
+void saveASTRoot(comp_tree_t* root);
+
 #endif
