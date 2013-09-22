@@ -5,7 +5,6 @@
 #include "comp_dict.h"
 #include "comp_tree.h"
 #include "iks_ast.h"
-#include "main.h"
 
 FILE *yyin;
 
@@ -59,9 +58,7 @@ FILE *yyin;
              def_funcao
              entrada
              expressao
-             lista_expressoes
              lista_expressoes_nao_vazia
-             s
 
 %type <symbol> cabecalho
                decl_var
@@ -153,6 +150,7 @@ bloco_comando: '{' seq_comando '}' { /*$$ = createNode(IKS_AST_BLOCO,$2);*/ }
 
 seq_comando: comando seq_comando
   | ';'
+  |
   ;
 
 
@@ -210,6 +208,7 @@ expressao: TK_IDENTIFICADOR { /*$$ = createNode(IKS_AST_IDENTIFICADOR, $1);*/ }
   ;
 
 lista_expressoes: lista_expressoes_nao_vazia { /*$$ = $1;*/ }
+  |
   ;
 
 %%
