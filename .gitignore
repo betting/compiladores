@@ -6,3 +6,7 @@ lexer.c
 main
 *.swp
 *~
+*.dot
+parser.c
+parser.h
+parser.output
