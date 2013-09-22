@@ -1,4 +1,5 @@
 #include "comp_tree.h"
+#include "iks_ast.h"
 #include "gv.h"
 
 /**
@@ -51,8 +52,18 @@ comp_tree_t* createNode(int type, comp_dict_item_t *symbol)
     
    // Create new node in the graph
 //printf("Type: %d", type);
+   if ((type == IKS_AST_FUNCAO)
+         || (type == IKS_AST_IDENTIFICADOR)
+         || (type == IKS_AST_LITERAL)
+      )
+   {
+      gv_declare(type, newnode, newnode->symbol->token);
 //printf("Token: %s", newnode->symbol->token);
-   gv_declare(type, newnode, newnode->symbol->token);
+   }
+   else
+   {
+      gv_declare(type, newnode, NULL);
+   }
     
    return newnode;
 }
@@ -76,7 +87,7 @@ void insertChild(comp_tree_t* parent, comp_tree_t* child)
       addSiblings(parent->child, child);
 
       // Connect nodes in the graph
-      gv_connect(parent, child);
+//      gv_connect(parent, child);
    }
 }
 
