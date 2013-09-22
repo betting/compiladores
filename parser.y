@@ -152,6 +152,7 @@ bloco_comando: '{' seq_comando '}' { /*$$ = createNode(IKS_AST_BLOCO,$2);*/ }
   ;
 
 seq_comando: comando seq_comando
+  | ';'
   ;
 
 
