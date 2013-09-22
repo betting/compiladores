@@ -34,8 +34,9 @@ void initDict()
  *
  * Add new key/value in the Dictionary, according to the value specified.
  *
- * @param key Dicitonary value/key (Unique value).
- * @param *text String to be added.
+ * @param  key    Dicitonary value/key (Unique value).
+ * @param  *text  String to be added.
+ * @param  type   Type of identifiers/literal 
  * @return Dictionary item created (Key/Value).
  */
 comp_dict_item_t* addDict(char *key, char *text, int type)
@@ -51,9 +52,13 @@ comp_dict_item_t* addDict(char *key, char *text, int type)
       return element;
    }
 
+   // Creating new dictionary item
    element = (comp_dict_item_t *)malloc(sizeof(comp_dict_item_t));
+
+   // Adding new elements to it.
    element->token = (char*)calloc(strlen(key)+1,sizeof(char));
    strcpy(element->token, key);
+
    element->text = (char*)calloc(strlen(text)+1,sizeof(char));
    strcpy(element->text, text);
    
@@ -61,6 +66,7 @@ comp_dict_item_t* addDict(char *key, char *text, int type)
    
    element->next = 0;
 
+   // Getting references from global dictionary to add new item to it.
    address = getItemAddressDict(text);
    element->next = dicTable[address];
    dicTable[address] = element;
