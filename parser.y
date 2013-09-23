@@ -108,8 +108,6 @@ s:
 
   | def_funcao s
       {
-         $$ = createNode(IKS_AST_FUNCAO, $1->symbol);
-         insertChild($$, $1);
          insertChild($$, $2);
       }
 
