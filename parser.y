@@ -63,6 +63,7 @@ FILE *yyin;
             comando
             comando_simples
             controle_fluxo
+            decl_func
             decl_var
             def_funcao
             entrada
@@ -136,11 +137,25 @@ tipo_var:
  /**** DECLARACAO DE FUNCAO ****/
 def_funcao:
     cabecalho decl_local bloco_comando
-      { /* $$ = createNode(IKS_AST_FUNCAO, 0); insertChild($$, $3); */ }
+      {
+//         $$ = createNode(IKS_AST_FUNCAO, 0);
+//         insertChild($$, $1);
+         insertChild($$, $3);
+      }
   ;
 
 cabecalho:
-    decl_var '(' lista_parametros ')'
+    decl_func '(' lista_parametros ')'
+      {
+         $$ = $1;
+      }
+  ;
+
+decl_func:
+    tipo_var ':' TK_IDENTIFICADOR
+      {
+         $$ = createNode(IKS_AST_IDENTIFICADOR, $3);
+      }
   ;
 
 lista_parametros:
@@ -161,7 +176,10 @@ bloco_comando:
     '{' comando_simples '}'
       { }
   | '{' seq_comando '}'
-      { /*$$ = createNode(IKS_AST_BLOCO,$2);*/ }
+      {
+//         $$ = createNode(IKS_AST_BLOCO, $2);
+         $$ = $2;
+      }
   ;
 
 seq_comando:

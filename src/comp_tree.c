@@ -49,21 +49,17 @@ comp_tree_t* createNode(int type, comp_dict_item_t *symbol)
    newnode->sibling=NULL;
    newnode->type=type;
    newnode->symbol=symbol;
-printf("Token: %s\n", newnode->symbol->token);    
+   
    // Create new node in the graph
-//printf("Type: %d", type);
    if ((type == IKS_AST_FUNCAO)
          || (type == IKS_AST_IDENTIFICADOR)
          || (type == IKS_AST_LITERAL)
       )
    {
-   printf(" - Token2: %s\n", newnode->symbol->token);
-   gv_declare(type, newnode, newnode->symbol->token);
-//printf("Token: %s\n", newnode->symbol->token);
+      gv_declare(type, newnode, newnode->symbol->token);
    }
    else
    {
-      printf(" - Token3: %s\n", newnode->symbol->token);
       gv_declare(type, newnode, NULL);
    }
     
@@ -92,8 +88,6 @@ void insertChild(comp_tree_t* parent, comp_tree_t* child)
 
    // Connect nodes in the graph
    gv_connect(parent, child);
-//printf("Parent: %s\n", parent->symbol->token);
-//printf("Child: %s\n", child->symbol->token);
 }
 
 /**
