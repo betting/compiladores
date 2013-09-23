@@ -153,11 +153,14 @@ parametro:
 bloco_comando:
     '{' seq_comando '}'
       { $$ = createNode(IKS_AST_BLOCO,$2); }
+  | '{' comando_simples '}'
   ;
 
 seq_comando:
     comando seq_comando
+  | comando ';'
   | bloco_comando
+  | bloco_comando ';' seq_comando
   | seq_comando comando_simples
   | seq_comando bloco_comando
   | ';'
@@ -247,7 +250,13 @@ controle_fluxo:
   | TK_PR_IF '(' expressao ')' TK_PR_THEN bloco_comando_fluxo_controle TK_PR_ELSE bloco_comando_fluxo_controle
       { /* $$ = createNode(IKS_AST_IF_ELSE, 0); insertChild($$, $3); insertChild($$, $6); insertChild($$, $8); */ }
 
+  | TK_PR_IF '(' expressao ')' TK_PR_THEN bloco_comando_fluxo_controle TK_PR_ELSE comando_simples ';'
+      { /* $$ = createNode(IKS_AST_IF_ELSE, 0); insertChild($$, $3); insertChild($$, $6); insertChild($$, $8); */ }
+
   | TK_PR_IF '(' expressao ')' TK_PR_THEN comando_simples TK_PR_ELSE bloco_comando_fluxo_controle
+      { /* $$ = createNode(IKS_AST_IF_ELSE, 0); insertChild($$, $3);insertChild($$, $6); insertChild($$, $8); */ }
+
+  | TK_PR_IF '(' expressao ')' TK_PR_THEN comando_simples TK_PR_ELSE comando_simples ';'
       { /* $$ = createNode(IKS_AST_IF_ELSE, 0); insertChild($$, $3);insertChild($$, $6); insertChild($$, $8); */ }
 
   | TK_PR_WHILE '(' expressao ')' TK_PR_DO bloco_comando_fluxo_controle
@@ -259,6 +268,7 @@ controle_fluxo:
 
 bloco_comando_fluxo_controle:
     bloco_comando
+  | bloco_comando ';'
   | comando
   ;
 
@@ -292,6 +302,9 @@ expressao:
 
   | '-' expressao
       { $$ = $2; /* $$ = createNode(IKS_AST_ARIM_INVERSAO, 0); insertChild($$, $2); */ }
+
+  | '!' expressao
+      { $$ = $2; }
 
   | '(' expressao ')'
       { $$ = $2; }
