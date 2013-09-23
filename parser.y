@@ -72,6 +72,7 @@ FILE *yyin;
             tipo_var
 
 %type<symbol> seq_comando
+              TK_IDENTIFICADOR
 
 %left TK_OC_OR TK_OC_AND
 %left '<' '>' TK_OC_LE TK_OC_GE TK_OC_EQ TK_OC_NE
@@ -208,27 +209,27 @@ comando_simples:
 
 chamada_funcao:
     TK_IDENTIFICADOR '(' lista_expressoes ')'
-      { /* $$ = createNode(IKS_AST_CHAMADA_DE_FUNCAO, $1); */ }
+      { $$ = createNode(IKS_AST_CHAMADA_DE_FUNCAO, $1); }
   ;
 
  /* Atribuicoes de variaveis */
 atribuicao:
     TK_IDENTIFICADOR '=' expressao
-      { /* $$ = createNode(IKS_AST_ATRIBUICAO, $1); insertChild($$, $3); */ }
+      { $$ = createNode(IKS_AST_ATRIBUICAO, $1); insertChild($$, $3); }
 
   | TK_IDENTIFICADOR '[' expressao ']' '=' expressao
-      { /* $$ = createNode(IKS_AST_ATRIBUICAO, $1); insertChild($$, $3); insertChild($$, $6); */ }
+      { $$ = createNode(IKS_AST_ATRIBUICAO, $1); insertChild($$, $3); insertChild($$, $6); }
   ;
 
  /* Entrada e Saida (Input e Output) */
 entrada:
     TK_PR_INPUT TK_IDENTIFICADOR
-      { /* $$ = createNode(IKS_AST_INPUT, $2); */ }
+      { $$ = createNode(IKS_AST_INPUT, $2); }
   ;
 
 saida:
     TK_PR_OUTPUT lista_expressoes_nao_vazia
-      { $$ = createNode(IKS_AST_OUTPUT, $2); }
+      { $$ = createNode(IKS_AST_OUTPUT, 0); }
   ;
 
 lista_expressoes_nao_vazia:
@@ -241,7 +242,7 @@ lista_expressoes_nao_vazia:
 
 retorna:
     TK_PR_RETURN expressao
-      { /* $$ = createNode(IKS_AST_RETURN,$2); insertChild($$,$2); */ }
+      { $$ = createNode(IKS_AST_RETURN, 0); insertChild($$, $2); }
   ;
 
  /* Fluxo de Controle */

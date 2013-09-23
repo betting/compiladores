@@ -87,7 +87,7 @@ void insertChild(comp_tree_t* parent, comp_tree_t* child)
       addSiblings(parent->child, child);
 
       // Connect nodes in the graph
-//      gv_connect(parent, child);
+      gv_connect(parent, child);
    }
 }
 

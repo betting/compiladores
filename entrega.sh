@@ -9,8 +9,9 @@ rm build.sh
 rm clean
 rm -rf docs/
 rm readme
-rm test_certo.sh
-rm test_errado.sh
+rm test_certo_e2.sh
+rm test_e3.sh
+rm test_errado_e2.sh
 rm test.sh
 
 tar -czf ~/Desktop/compilador.tar.gz *
