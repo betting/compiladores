@@ -174,10 +174,13 @@ parametro:
 
 bloco_comando:
     '{' comando_simples '}'
-      { }
+      {
+         $$ = $2;
+      }
   | '{' seq_comando '}'
       {
-//         $$ = createNode(IKS_AST_BLOCO, $2);
+         //$$ = createNode(IKS_AST_BLOCO, 0);
+         //insertChild($$, $2);
          $$ = $2;
       }
   ;
@@ -343,8 +346,21 @@ controle_fluxo:
 
 bloco_comando_fluxo_controle:
     bloco_comando
+      {
+         $$ = createNode(IKS_AST_BLOCO, 0);
+         insertChild($$, $1);
+      }
+
   | bloco_comando ';'
+      {
+         $$ = createNode(IKS_AST_BLOCO, 0);
+         insertChild($$, $1);
+      }
+
   | comando
+      {
+         $$ = $1;
+      }
   ;
 
 expressao:
