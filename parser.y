@@ -81,6 +81,8 @@ FILE *yyin;
 %nonassoc LOWER_THAN_ELSE
 %nonassoc TK_PR_ELSE
 
+%expect 70
+
 %start s
 %%
  /* Regras (e ações) da gramática da Linguagem IKS */
@@ -151,14 +153,13 @@ parametro:
   ;
 
 bloco_comando:
-    '{' seq_comando '}'
+    '{' comando_simples '}'
+  | '{' seq_comando '}'
       { $$ = createNode(IKS_AST_BLOCO,$2); }
-  | '{' comando_simples '}'
   ;
 
 seq_comando:
     comando seq_comando
-  | comando ';'
   | comando_simples
   | bloco_comando
   | bloco_comando ';' seq_comando
