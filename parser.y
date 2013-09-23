@@ -23,12 +23,12 @@ FILE *yyin;
              TK_PR_CHAR
              TK_PR_STRING
 
-%token TK_LIT_INT
-       TK_LIT_FLOAT
-       TK_LIT_FALSE
-       TK_LIT_TRUE
-       TK_LIT_CHAR
-       TK_LIT_STRING
+%token<symbol> TK_LIT_INT
+               TK_LIT_FLOAT
+               TK_LIT_FALSE
+               TK_LIT_TRUE
+               TK_LIT_CHAR
+               TK_LIT_STRING
 
 
 %token TK_PR_IF
@@ -76,12 +76,6 @@ FILE *yyin;
             tipo_var
 
 %type<symbol> TK_IDENTIFICADOR
-              TK_LIT_INT
-              TK_LIT_FLOAT
-              TK_LIT_FALSE
-              TK_LIT_TRUE
-              TK_LIT_CHAR
-              TK_LIT_STRING
 
 %left TK_OC_OR TK_OC_AND
 %left '<' '>' TK_OC_LE TK_OC_GE TK_OC_EQ TK_OC_NE
@@ -188,7 +182,9 @@ comando:
     controle_fluxo
       { $$ = $1; }
   | atribuicao ';'
-      { $$ = $1; }
+      {
+         $$ = $1;
+      }
   | entrada ';'
       { $$ = $1; }
   | saida ';'
@@ -203,7 +199,9 @@ comando:
 
 comando_simples:
     atribuicao
-      { $$ = $1; }
+      {
+         $$ = $1;
+      }
 
   | entrada
       { $$ = $1; }
@@ -332,12 +330,24 @@ bloco_comando_fluxo_controle:
   ;
 
 expressao:
-    TK_IDENTIFICADOR
-      { $$ = createNode(IKS_AST_IDENTIFICADOR, $1); }
+    TK_LIT_INT
+      { $$ = createNode(IKS_AST_LITERAL, $1); }
 
-  | TK_IDENTIFICADOR '[' expressao ']'
-      { $$ = createNode(IKS_AST_VETOR_INDEXADO, $1); insertChild($$, $3); }
+  | TK_LIT_FLOAT
+      { $$ = createNode(IKS_AST_LITERAL, $1); }
 
+  | TK_LIT_FALSE
+      { $$ = createNode(IKS_AST_LITERAL, $1); }
+
+  | TK_LIT_TRUE
+      { $$ = createNode(IKS_AST_LITERAL, $1); }
+
+  | TK_LIT_CHAR
+      { $$ = createNode(IKS_AST_LITERAL, $1); }
+
+  | TK_LIT_STRING
+      { $$ = createNode(IKS_AST_LITERAL, $1); }
+  
   | expressao '+' expressao
       { $$ = createNode(IKS_AST_ARIM_SOMA, 0); insertChild($$, $1); insertChild($$, $3); }
 
@@ -389,23 +399,12 @@ expressao:
   | chamada_funcao
       { $$ = createNode(IKS_AST_CHAMADA_DE_FUNCAO, 0); }
 
-  | TK_LIT_INT
-      { $$ = createNode(IKS_AST_LITERAL, $1); }
+  | TK_IDENTIFICADOR
+      { $$ = createNode(IKS_AST_IDENTIFICADOR, $1); }
 
-  | TK_LIT_FLOAT
-      { $$ = createNode(IKS_AST_LITERAL, $1); }
+  | TK_IDENTIFICADOR '[' expressao ']'
+      { $$ = createNode(IKS_AST_VETOR_INDEXADO, $1); insertChild($$, $3); }
 
-  | TK_LIT_FALSE
-      { $$ = createNode(IKS_AST_LITERAL, $1); }
-
-  | TK_LIT_TRUE
-      { $$ = createNode(IKS_AST_LITERAL, $1); }
-
-  | TK_LIT_CHAR
-      { $$ = createNode(IKS_AST_LITERAL, $1); }
-
-  | TK_LIT_STRING
-      { $$ = createNode(IKS_AST_LITERAL, $1); }
   ;
 
 lista_expressoes:

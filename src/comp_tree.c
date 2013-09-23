@@ -58,7 +58,7 @@ comp_tree_t* createNode(int type, comp_dict_item_t *symbol)
       )
    {
       gv_declare(type, newnode, newnode->symbol->token);
-//printf("Token: %s", newnode->symbol->token);
+//printf("Token: %s\n", newnode->symbol->token);
    }
    else
    {
@@ -86,9 +86,12 @@ void insertChild(comp_tree_t* parent, comp_tree_t* child)
    {
       addSiblings(parent->child, child);
 
-      // Connect nodes in the graph
-      gv_connect(parent, child);
    }
+
+   // Connect nodes in the graph
+   gv_connect(parent, child);
+//printf("Parent: %s\n", parent->symbol->token);
+//printf("Child: %s\n", child->symbol->token);
 }
 
 /**
