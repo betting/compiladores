@@ -47,10 +47,10 @@ comp_dict_item_t* addDict(char *key, char *text, int type)
    // Since we should only have unique key in the dictionary, once the 
    // key informed by the user is found, the previous (first) element
    // created in the dicionary will be returned.
-   if(element = searchDict(text))
-   {
-      return element;
-   }
+//   if(element = searchDict(text))
+//   {
+//      return element;
+//   }
 
    // Creating new dictionary item
    element = (comp_dict_item_t *)malloc(sizeof(comp_dict_item_t));
