@@ -159,6 +159,7 @@ bloco_comando:
 seq_comando:
     comando seq_comando
   | comando ';'
+  | comando_simples
   | bloco_comando
   | bloco_comando ';' seq_comando
   | seq_comando comando_simples
