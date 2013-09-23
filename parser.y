@@ -58,25 +58,27 @@ FILE *yyin;
 %type<tree> atribuicao
             bloco_comando
             bloco_comando_fluxo_controle
-            cabecalho
             chamada_funcao
             comando
             comando_simples
             controle_fluxo
-            decl_func
             decl_var
             def_funcao
             entrada
             expressao
             lista_expressoes
             lista_expressoes_nao_vazia
+            p
             parametro
             retorna
+            s
             saida
             seq_comando
             tipo_var
 
-%type<symbol> TK_IDENTIFICADOR
+%type<symbol> cabecalho
+              decl_func
+              TK_IDENTIFICADOR
 
 %left TK_OC_OR TK_OC_AND
 %left '<' '>' TK_OC_LE TK_OC_GE TK_OC_EQ TK_OC_NE
@@ -88,16 +90,28 @@ FILE *yyin;
 
 %expect 70
 
-%start s
+%start p
 %%
  /* Regras (e ações) da gramática da Linguagem IKS */
- 
+
+p: s
+      {
+         $$ = createNode(IKS_AST_PROGRAMA,0);
+         insertChild($$, $1);
+      }
+  ;
 s:
     decl_global s
-      { /*$$ = createNode(IKS_AST_PROGRAMA,0); insertChild($$, $2);*/ }
+      {
+         $$ = $2;
+      }
 
   | def_funcao s
-      { /*$$ = createNode(IKS_AST_PROGRAMA,0); insertChild($$, $2);*/ }
+      {
+         $$ = createNode(IKS_AST_FUNCAO, $1->symbol);
+         insertChild($$, $1);
+         insertChild($$, $2);
+      }
 
   |
       { }
@@ -138,8 +152,7 @@ tipo_var:
 def_funcao:
     cabecalho decl_local bloco_comando
       {
-//         $$ = createNode(IKS_AST_FUNCAO, 0);
-//         insertChild($$, $1);
+         $$ = createNode(IKS_AST_FUNCAO, $1);
          insertChild($$, $3);
       }
   ;
@@ -154,7 +167,7 @@ cabecalho:
 decl_func:
     tipo_var ':' TK_IDENTIFICADOR
       {
-         $$ = createNode(IKS_AST_IDENTIFICADOR, $3);
+         $$ = $3;
       }
   ;
 
@@ -179,8 +192,6 @@ bloco_comando:
       }
   | '{' seq_comando '}'
       {
-         //$$ = createNode(IKS_AST_BLOCO, 0);
-         //insertChild($$, $2);
          $$ = $2;
       }
   ;
@@ -404,7 +415,7 @@ expressao:
       { $$ = $2; }
 
   | '-' expressao
-      { $$ = $2; /* $$ = createNode(IKS_AST_ARIM_INVERSAO, 0); insertChild($$, $2); */ }
+      { $$ = createNode(IKS_AST_ARIM_INVERSAO, 0); insertChild($$, $2); }
 
   | '!' expressao
       { $$ = $2; }
