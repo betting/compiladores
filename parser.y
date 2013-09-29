@@ -108,6 +108,8 @@ s:
 
   | def_funcao s
       {
+//         $$ = $1;
+//         insertChild($$, $1);
          insertChild($$, $2);
       }
 
@@ -196,7 +198,10 @@ bloco_comando:
 
 seq_comando:
     comando seq_comando
-      { $$ = $1; }
+      {
+         $$ = $1;
+         insertChild($$, $2);
+      }
   | comando_simples
       { $$ = $1; }
   | bloco_comando
@@ -425,7 +430,11 @@ expressao:
       { $$ = $2; }
 
   | '-' expressao
-      { $$ = createNode(IKS_AST_ARIM_INVERSAO, 0); insertChild($$, $2); }
+      {
+         $$ = createNode(IKS_AST_ARIM_INVERSAO, 0);
+         insertChild($$, $2);
+         //$$ = $2;
+      }
 
   | '!' expressao
       { $$ = $2; }
