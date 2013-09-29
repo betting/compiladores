@@ -500,7 +500,7 @@ expressao:
       { $$ = createNode(IKS_AST_LOGICO_OU, 0); insertChild($$, $1); insertChild($$, $3); }
 
   | chamada_funcao
-      { $$ = createNode(IKS_AST_CHAMADA_DE_FUNCAO, 0); }
+      { $$ = $1; }
 
   | TK_IDENTIFICADOR
       {
