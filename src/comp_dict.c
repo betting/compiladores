@@ -140,3 +140,21 @@ void printDict()
       }
    }
 }
+
+
+/**
+ * Remove the characters \" and \' from a string type
+ *
+ * @param char* The value to remove the chars.
+ * @return char* New value without the chars.
+ */
+char* convertString(char* value)
+{
+   char * newString = (char*)calloc(strlen(value)+1,sizeof(char));
+
+   strncpy(newString, value + 1, strlen(value) - 2);
+//   printf("%s\n", value);
+//   printf("%s\n", newString);
+
+   return newString;
+}

@@ -61,4 +61,11 @@ comp_dict_item_t* searchDict(char *text);
  */
 void printDict();
 
+/**
+ * Remove the caracters \" and \' from a string type
+ *
+ * @param char* The value to remove the chars.
+ * @return char* New value without the chars.
+ */
+char* convertString(char* value);
 #endif

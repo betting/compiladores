@@ -77,6 +77,7 @@ FILE *yyin;
             saida
             seq_comando
             tipo_var
+            valor_entrada
 
 %type<symbol> cabecalho
               decl_func
@@ -321,13 +322,26 @@ nome_var:
 
  /* Entrada e Saida (Input e Output) */
 entrada:
-    TK_PR_INPUT TK_IDENTIFICADOR
-      { $$ = createNode(IKS_AST_INPUT, $2); }
+    TK_PR_INPUT valor_entrada
+      {
+         $$ = createNode(IKS_AST_INPUT, 0);
+         insertChild($$, $2);
+      }
+  ;
+
+valor_entrada:
+   TK_IDENTIFICADOR
+      {
+         $$ = createNode(IKS_AST_IDENTIFICADOR, $1);
+      }
   ;
 
 saida:
     TK_PR_OUTPUT lista_expressoes_nao_vazia
-      { $$ = createNode(IKS_AST_OUTPUT, 0); }
+      {
+         $$ = createNode(IKS_AST_OUTPUT, 0);
+         insertChild($$, $2);
+      }
   ;
 
 lista_expressoes_nao_vazia:
@@ -443,10 +457,16 @@ expressao:
       { $$ = createNode(IKS_AST_LITERAL, $1); }
 
   | TK_LIT_CHAR
-      { $$ = createNode(IKS_AST_LITERAL, $1); }
+      {
+         $1->token = (char *)convertString($1->token);
+         $$ = createNode(IKS_AST_LITERAL, $1);
+      }
 
   | TK_LIT_STRING
-      { $$ = createNode(IKS_AST_LITERAL, $1); }
+      {
+         $1->token = (char *)convertString($1->token);
+         $$ = createNode(IKS_AST_LITERAL, $1);
+      }
   
   | expressao '+' expressao
       { $$ = createNode(IKS_AST_ARIM_SOMA, 0); insertChild($$, $1); insertChild($$, $3); }
