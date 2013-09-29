@@ -68,6 +68,8 @@ FILE *yyin;
             expressao
             lista_expressoes
             lista_expressoes_nao_vazia
+            nome_func
+            nome_var
             p
             parametro
             retorna
@@ -199,19 +201,35 @@ bloco_comando:
 seq_comando:
     comando seq_comando
       {
-         $$ = $1;
          insertChild($$, $2);
       }
   | comando_simples
-      { $$ = $1; }
+      {
+         insertChild($$, $1);
+//         $$ = $1;
+      }
   | bloco_comando
-      { $$ = $1; }
+      {
+         insertChild($$, $1);
+//         $$ = $1;
+      }
   | bloco_comando ';' seq_comando
-      { $$ = $1; }
+      {
+//         $$ = $1;
+         insertChild($$, $3);
+      }
   | seq_comando comando_simples
-      { $$ = $2; }
+      {
+         insertChild($$, $1);
+         insertChild($$, $2);
+//         $$ = $2;
+      }
   | seq_comando bloco_comando
-      { $$ = $2; }
+      {
+         insertChild($$, $1);
+         insertChild($$, $2);
+//         $$ = $2;
+      }
   | ';'
       { }
   |
@@ -258,28 +276,48 @@ comando_simples:
   ;
 
 chamada_funcao:
-    TK_IDENTIFICADOR '(' lista_expressoes ')'
-      { $$ = createNode(IKS_AST_CHAMADA_DE_FUNCAO, $1); }
+    nome_func '(' lista_expressoes ')'
+      {
+
+         $$ = createNode(IKS_AST_CHAMADA_DE_FUNCAO, 0);
+         insertChild($$, $1);
+         insertChild($$, $3);
+      }
   ;
+
+nome_func:
+   TK_IDENTIFICADOR
+      {
+         $$ = createNode(IKS_AST_IDENTIFICADOR, $1);
+      }
+  ;
+
 
  /* Atribuicoes de variaveis */
 atribuicao:
-    TK_IDENTIFICADOR '=' expressao
+    nome_var '=' expressao
       {
-         $$ = createNode(IKS_AST_ATRIBUICAO, $1);
+         $$ = createNode(IKS_AST_ATRIBUICAO, 0);
+         insertChild($$, $1);
          insertChild($$, $3);
-
-//         printf("id: %s\n ", $1->token);
-//         printf("expressao: %s\n", $3->symbol->token);
       }
 
-  | TK_IDENTIFICADOR '[' expressao ']' '=' expressao
+  | nome_var '[' expressao ']' '=' expressao
       {
-         $$ = createNode(IKS_AST_ATRIBUICAO, $1);
+         $$ = createNode(IKS_AST_ATRIBUICAO, 0);
+         insertChild($$, $1);
          insertChild($$, $3);
          insertChild($$, $6);
       }
   ;
+
+nome_var:
+   TK_IDENTIFICADOR
+      {
+         $$ = createNode(IKS_AST_IDENTIFICADOR, $1);
+      }
+  ;
+
 
  /* Entrada e Saida (Input e Output) */
 entrada:
@@ -294,10 +332,17 @@ saida:
 
 lista_expressoes_nao_vazia:
     expressao ',' lista_expressoes_nao_vazia
-      { $$ = $1; }
+      {
+ //        $$ = $1;
+//         insertChild($$, $1);
+         insertChild($$, $3);
+      }
 
   | expressao
-      { $$ = $1; }
+      {
+         $$ = $1;
+ //        insertChild($$, $1);
+      }
   ;
 
 retorna:
@@ -380,15 +425,13 @@ bloco_comando_fluxo_controle:
   | comando
       {
          $$ = $1;
+         //insertChild($$, $1);
       }
   ;
 
 expressao:
     TK_LIT_INT
-      {
-//         printf("int: %s\n", $1->token);
-         $$ = createNode(IKS_AST_LITERAL, $1);
-      }
+      { $$ = createNode(IKS_AST_LITERAL, $1); }
 
   | TK_LIT_FLOAT
       { $$ = createNode(IKS_AST_LITERAL, $1); }
@@ -403,10 +446,7 @@ expressao:
       { $$ = createNode(IKS_AST_LITERAL, $1); }
 
   | TK_LIT_STRING
-      {
-//         printf("string: %s\n", $1->token);
-         $$ = createNode(IKS_AST_LITERAL, $1);
-      }
+      { $$ = createNode(IKS_AST_LITERAL, $1); }
   
   | expressao '+' expressao
       { $$ = createNode(IKS_AST_ARIM_SOMA, 0); insertChild($$, $1); insertChild($$, $3); }
@@ -433,7 +473,6 @@ expressao:
       {
          $$ = createNode(IKS_AST_ARIM_INVERSAO, 0);
          insertChild($$, $2);
-         //$$ = $2;
       }
 
   | '!' expressao
