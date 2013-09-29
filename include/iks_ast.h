@@ -3,8 +3,6 @@
 
   Este arquivo contém as constantes para os tipos dos nós da AST.
 */
-
-
 #ifndef __IKS_AST_H
 #define __IKS_AST_H
 #define IKS_AST_PROGRAMA             0

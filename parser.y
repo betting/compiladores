@@ -196,12 +196,17 @@ bloco_comando:
 
 seq_comando:
     comando seq_comando
+      { $$ = $1; }
   | comando_simples
+      { $$ = $1; }
   | bloco_comando
+      { $$ = $1; }
   | bloco_comando ';' seq_comando
+      { $$ = $1; }
   | seq_comando comando_simples
+      { $$ = $2; }
   | seq_comando bloco_comando
-      { }
+      { $$ = $2; }
   | ';'
       { }
   |
@@ -212,9 +217,7 @@ comando:
     controle_fluxo
       { $$ = $1; }
   | atribuicao ';'
-      {
-         $$ = $1;
-      }
+      { $$ = $1; }
   | entrada ';'
       { $$ = $1; }
   | saida ';'
@@ -260,6 +263,9 @@ atribuicao:
       {
          $$ = createNode(IKS_AST_ATRIBUICAO, $1);
          insertChild($$, $3);
+
+//         printf("id: %s\n ", $1->token);
+//         printf("expressao: %s\n", $3->symbol->token);
       }
 
   | TK_IDENTIFICADOR '[' expressao ']' '=' expressao
@@ -374,7 +380,10 @@ bloco_comando_fluxo_controle:
 
 expressao:
     TK_LIT_INT
-      { $$ = createNode(IKS_AST_LITERAL, $1); }
+      {
+//         printf("int: %s\n", $1->token);
+         $$ = createNode(IKS_AST_LITERAL, $1);
+      }
 
   | TK_LIT_FLOAT
       { $$ = createNode(IKS_AST_LITERAL, $1); }
@@ -389,7 +398,10 @@ expressao:
       { $$ = createNode(IKS_AST_LITERAL, $1); }
 
   | TK_LIT_STRING
-      { $$ = createNode(IKS_AST_LITERAL, $1); }
+      {
+//         printf("string: %s\n", $1->token);
+         $$ = createNode(IKS_AST_LITERAL, $1);
+      }
   
   | expressao '+' expressao
       { $$ = createNode(IKS_AST_ARIM_SOMA, 0); insertChild($$, $1); insertChild($$, $3); }
@@ -443,10 +455,15 @@ expressao:
       { $$ = createNode(IKS_AST_CHAMADA_DE_FUNCAO, 0); }
 
   | TK_IDENTIFICADOR
-      { $$ = createNode(IKS_AST_IDENTIFICADOR, $1); }
+      {
+         $$ = createNode(IKS_AST_IDENTIFICADOR, $1);
+      }
 
   | TK_IDENTIFICADOR '[' expressao ']'
-      { $$ = createNode(IKS_AST_VETOR_INDEXADO, $1); insertChild($$, $3); }
+      {
+         $$ = createNode(IKS_AST_VETOR_INDEXADO, $1);
+         insertChild($$, $3);
+      }
 
   ;
 

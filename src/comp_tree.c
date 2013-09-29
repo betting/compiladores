@@ -54,10 +54,13 @@ comp_tree_t* createNode(int type, comp_dict_item_t *symbol)
    {
       case IKS_AST_FUNCAO:
       case IKS_AST_LITERAL:
-      case IKS_AST_IDENTIFICADOR: 
- 		gv_declare(type, newnode, newnode->symbol->token);break;
+      case IKS_AST_IDENTIFICADOR:
+ //        printf("Token: %s\n", symbol->token);
+         gv_declare(type, newnode, newnode->symbol->token);
+         break;
+
       default:
-	      gv_declare(type, newnode, NULL);
+         gv_declare(type, newnode, NULL);
    } 
    return newnode;
 }
