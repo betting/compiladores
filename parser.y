@@ -496,7 +496,10 @@ expressao:
       }
 
   | '!' expressao
-      { $$ = $2; }
+      {
+         $$ = createNode(IKS_AST_LOGICO_COMP_NEGACAO, 0);
+         insertChild($$, $2);
+      }
 
   | '(' expressao ')'
       { $$ = $2; }
