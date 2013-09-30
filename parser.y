@@ -85,7 +85,10 @@ FILE *yyin;
               decl_func
               TK_IDENTIFICADOR
 
-%left TK_OC_OR TK_OC_AND
+%right
+   TK_OC_AND
+   TK_OC_OR
+
 %left '<' '>' TK_OC_LE TK_OC_GE TK_OC_EQ TK_OC_NE
 %left '+' '-'
 %left '*' '/'
@@ -372,6 +375,13 @@ controle_fluxo:
          insertChild($$, $6);
       }
 
+  | TK_PR_IF '(' expressao ')' TK_PR_THEN comando_simples ';' %prec LOWER_THAN_ELSE
+      { 
+         $$ = createNode(IKS_AST_IF_ELSE, 0);
+         insertChild($$, $3);
+         insertChild($$, $6);
+      }
+
   | TK_PR_IF '(' expressao ')' TK_PR_THEN bloco_comando_fluxo_controle TK_PR_ELSE bloco_comando_fluxo_controle
       {
          $$ = createNode(IKS_AST_IF_ELSE, 0);
@@ -434,8 +444,9 @@ bloco_comando_fluxo_controle:
 
   | comando
       {
-         $$ = createNode(IKS_AST_BLOCO, 0);
-         insertChild($$, $1);
+//         $$ = createNode(IKS_AST_BLOCO, 0);
+//         insertChild($$, $1);
+         $$ = $1;
       }
   ;
 
@@ -464,6 +475,16 @@ expressao:
          $$ = createNode(IKS_AST_LITERAL, $1);
       }
   
+  | chamada_funcao
+      { $$ = $1; }
+
+  | TK_IDENTIFICADOR
+      {
+         $$ = createNode(IKS_AST_IDENTIFICADOR, $1);
+      }
+  | vetor
+      { $$ = $1; }
+
   | expressao '+' expressao
       { $$ = createNode(IKS_AST_ARIM_SOMA, 0); insertChild($$, $1); insertChild($$, $3); }
 
@@ -512,21 +533,12 @@ expressao:
   | expressao TK_OC_NE expressao
       { $$ = createNode(IKS_AST_LOGICO_COMP_DIF, 0); insertChild($$, $1); insertChild($$, $3); }
 
-  | expressao TK_OC_AND expressao
-      { $$ = createNode(IKS_AST_LOGICO_E, 0); insertChild($$, $1); insertChild($$, $3); }
-
   | expressao TK_OC_OR expressao
       { $$ = createNode(IKS_AST_LOGICO_OU, 0); insertChild($$, $1); insertChild($$, $3); }
 
-  | chamada_funcao
-      { $$ = $1; }
+  | expressao TK_OC_AND expressao
+      { $$ = createNode(IKS_AST_LOGICO_E, 0); insertChild($$, $1); insertChild($$, $3); }
 
-  | TK_IDENTIFICADOR
-      {
-         $$ = createNode(IKS_AST_IDENTIFICADOR, $1);
-      }
-  | vetor
-      { $$ = $1; }
   ;
 
 
