@@ -562,7 +562,7 @@ lista_expressoes:
     lista_expressoes_nao_vazia
       { $$ = $1; }
   |
-      { }
+      { $$ = NULL; }
   ;
 
 %%
