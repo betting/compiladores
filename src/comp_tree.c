@@ -44,7 +44,7 @@ comp_tree_t* search(comp_tree_t* root,int type)
 comp_tree_t* createNode(int type, comp_dict_item_t *symbol)
 {
    // Creating new node
-   comp_tree_t* newnode= (comp_tree_t*)malloc(sizeof(comp_tree_t));
+   comp_tree_t* newnode = (comp_tree_t*)malloc(sizeof(comp_tree_t));
    newnode->child=NULL;
    newnode->sibling=NULL;
    newnode->type=type;
@@ -61,7 +61,7 @@ comp_tree_t* createNode(int type, comp_dict_item_t *symbol)
 
       default:
          gv_declare(type, newnode, NULL);
-   } 
+   }
    return newnode;
 }
 
@@ -75,17 +75,20 @@ comp_tree_t* createNode(int type, comp_dict_item_t *symbol)
  */
 void insertChild(comp_tree_t* parent, comp_tree_t* child)
 {
-   if(parent->child == NULL)
+   if (child != NULL)
    {
-      parent->child = child;
-	}
-   else
-   {
-      addSiblings(parent->child, child);
-   }
+      if(parent->child == NULL)
+      {
+         parent->child = child;
+      }
+      else
+      {
+         addSiblings(parent->child, child);
+      }
 
-   // Connect nodes in the graph
-   gv_connect(parent, child);
+      // Connect nodes in the graph
+      gv_connect(parent, child);
+   }
 }
 
 /**

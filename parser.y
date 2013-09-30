@@ -111,13 +111,11 @@ s:
 
   | def_funcao s
       {
-//         $$ = $1;
-//         insertChild($$, $1);
          insertChild($$, $2);
       }
 
   |
-      { }
+      { $$ = NULL; }
   ;
 
 decl_global:
@@ -155,6 +153,8 @@ tipo_var:
 def_funcao:
     cabecalho decl_local bloco_comando
       {
+//         printf("%s", $1->token);
+
          $$ = createNode(IKS_AST_FUNCAO, $1);
          insertChild($$, $3);
       }
@@ -232,9 +232,9 @@ seq_comando:
 //         $$ = $2;
       }
   | ';'
-      { }
+      { $$ = NULL; }
   |
-      { }
+      { $$ = NULL; }
   ;
 
 comando:
