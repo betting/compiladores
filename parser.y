@@ -70,6 +70,7 @@ FILE *yyin;
             lista_expressoes_nao_vazia
             nome_func
             nome_var
+            nome_vetor
             p
             parametro
             retorna
@@ -78,6 +79,7 @@ FILE *yyin;
             seq_comando
             tipo_var
             valor_entrada
+            vetor
 
 %type<symbol> cabecalho
               decl_func
@@ -301,12 +303,11 @@ atribuicao:
          insertChild($$, $3);
       }
 
-  | nome_var '[' expressao ']' '=' expressao
+  | vetor '=' expressao
       {
          $$ = createNode(IKS_AST_ATRIBUICAO, 0);
          insertChild($$, $1);
          insertChild($$, $3);
-         insertChild($$, $6);
       }
   ;
 
@@ -524,13 +525,25 @@ expressao:
       {
          $$ = createNode(IKS_AST_IDENTIFICADOR, $1);
       }
+  | vetor
+      { $$ = $1; }
+  ;
 
-  | TK_IDENTIFICADOR '[' expressao ']'
+
+vetor:
+    nome_vetor '[' expressao ']'
       {
-         $$ = createNode(IKS_AST_VETOR_INDEXADO, $1);
+         $$ = createNode(IKS_AST_VETOR_INDEXADO, 0);
+         insertChild($$, $1);
          insertChild($$, $3);
       }
+  ;
 
+nome_vetor:
+    TK_IDENTIFICADOR
+      {
+         $$ = createNode(IKS_AST_IDENTIFICADOR, $1);
+      }
   ;
 
 lista_expressoes:
