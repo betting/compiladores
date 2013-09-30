@@ -207,29 +207,27 @@ seq_comando:
   | comando_simples
       {
          insertChild($$, $1);
-//         $$ = $1;
       }
   | bloco_comando
       {
+         $$ = createNode(IKS_AST_BLOCO, 0);
          insertChild($$, $1);
-//         $$ = $1;
       }
   | bloco_comando ';' seq_comando
       {
-//         $$ = $1;
+         $$ = createNode(IKS_AST_BLOCO, 0);
+         insertChild($$, $1);
          insertChild($$, $3);
       }
   | seq_comando comando_simples
       {
          insertChild($$, $1);
          insertChild($$, $2);
-//         $$ = $2;
       }
   | seq_comando bloco_comando
       {
          insertChild($$, $1);
          insertChild($$, $2);
-//         $$ = $2;
       }
   | ';'
       { $$ = NULL; }
@@ -347,15 +345,12 @@ saida:
 lista_expressoes_nao_vazia:
     expressao ',' lista_expressoes_nao_vazia
       {
- //        $$ = $1;
-//         insertChild($$, $1);
          insertChild($$, $3);
       }
 
   | expressao
       {
          $$ = $1;
- //        insertChild($$, $1);
       }
   ;
 
@@ -438,8 +433,8 @@ bloco_comando_fluxo_controle:
 
   | comando
       {
-         $$ = $1;
-         //insertChild($$, $1);
+         $$ = createNode(IKS_AST_BLOCO, 0);
+         insertChild($$, $1);
       }
   ;
 
