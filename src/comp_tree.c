@@ -11,7 +11,7 @@
  * @return comp_tree_t root
  * @return comp_tree_t 
  */
-comp_tree_t* search(comp_tree_t* root,int type)
+comp_tree_t* search(comp_tree_t* root, int type)
 {
     if(root == NULL)
     {

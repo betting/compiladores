@@ -444,8 +444,6 @@ bloco_comando_fluxo_controle:
 
   | comando
       {
-//         $$ = createNode(IKS_AST_BLOCO, 0);
-//         insertChild($$, $1);
          $$ = $1;
       }
   ;

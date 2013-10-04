@@ -1,25 +1,42 @@
-#define IKS_SUCCESS              0 // caso não houver nenhum tipo de erro
+/**
+ * @file semantic.c
+ * @version 1.0
+ *
+ * @section DESCRIPTION
+ * Semantic Analisys
+ * Perform a semantic analisys in a code provided by the user
+ */
 
-/* Verificação de declarações */
-#define IKS_ERROR_UNDECLARED     1  // identificador não declarado
-#define IKS_ERROR_DECLARED       2  // identificador já declarado
+#include <stdlib.h>
+#include "comp_tree.h"
+#include "iks_ast.h"
+#include "semantic.h"
 
-/* Uso correto de identificadores */
-#define IKS_ERROR_VARIABLE       3  // identificador deve ser utilizado como variável
-#define IKS_ERROR_VECTOR         4  // identificador deve ser utilizado como vetor
-#define IKS_ERROR_FUNCTION       5  // identificador deve ser utilizado como função
-
-/* Tipos e tamanho de dados */
-#define IKS_ERROR_WRONG_TYPE     6  // tipos incompatíveis
-#define IKS_ERROR_STRING_TO_X    7  // coerção impossível do tipo string
-#define IKS_ERROR_CHAR_TO_X      8  // coerção impossível do tipo char
-
-/* Argumentos e parâmetros */
-#define IKS_ERROR_MISSING_ARGS      9  // faltam argumentos
-#define IKS_ERROR_EXCESS_ARGS       10 // sobram argumentos
-#define IKS_ERROR_WRONG_TYPE_ARGS   11 // argumentos incompatíveis
-
-/* Verificação de tipos em comandos */
-#define IKS_ERROR_WRONG_PAR_INPUT   12 // parâmetro não é identificador
-#define IKS_ERROR_WRONG_PAR_OUTPUT  13 // parâmetro não é literal string ou expressão
-#define IKS_ERROR_WRONG_PAR_RETURN  14 // parâmetro não é expressão compatível com tipo do retorno
+/**
+ * Check Declarations.
+ * 
+ * Check all variable and function declarations.
+ *
+ * @param *root   The tree with all elements found
+ * @return The return code (sucess or error)
+ */
+int checkDeclarations(comp_tree_t *root)
+{
+   // Checking if there are variable/vector declariation or function definition.
+   if(root->type == IKS_AST_FUNCAO)
+   {
+      if(root->symbol == 0)
+      {
+         // Identifier undeclared
+         return IKS_ERROR_UNDECLARED;
+      }
+      else
+      {
+         if (root->symbol->type != IKS_AST_IDENTIFICADOR)
+         {
+            // Symbol already definied
+            return IKS_ERROR_DECLARED;
+         }
+      }
+   }
+}
