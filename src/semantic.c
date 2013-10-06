@@ -62,19 +62,24 @@ int checkUtilization(comp_tree_t *root)
         int i;
 
         // Ter certeza que a variável está sendo declarada como variável
-        if(root->type == IKS_AST_SYMBOL || root->type == IKS_AST_ATR_VAR){
-                if (root->symbol->type == SYMBOL_VECTOR) { //se type igual a VETOR
+/*        if(root->type == IKS_AST_SYMBOL || root->type == IKS_AST_VAR){
+                if (root->symbol->type == ) 
+		{ //se type igual a VETOR
 			return IKS_ERROR_VARIABLE; //identificador deve ser utilizado como variável
-                } else if(root->symbol->type == SYMBOL_FUNCTION) {
+                } 
+		else if(root->symbol->type == ) 
+		{
 			return IKS_ERROR_VARIABLE; //identificador deve ser utilizado como variável
-                } else if (root->symbol->type != SYMBOL_VARIABLE && root->symbol->type != SYMBOL_PARAM){
+                } 
+		else if (root->symbol->type != )
+		{
 			return IKS_ERROR_UNDECLARED;
                 }
         }
-	else if(){}        // Ter certeza que o vetor está sendo declarado como vetor
-	else if(root->type == IKS_AST_CHAMADA_DE_FUNCAO){}        // Ter certeza que a função está sendo declarada como função
+//	else if(){}        // Ter certeza que o vetor está sendo declarado como vetor
+//	else if(root->type == IKS_AST_CHAMADA_DE_FUNCAO){}        // Ter certeza que a função está sendo declarada como função
 
-
+*/
 }
 
 

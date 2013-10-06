@@ -486,8 +486,8 @@ expressao:
       }
   
   | chamada_funcao
-      { //$$ = $1; 
-	 $$ = createNewNode(IKS_AST_CHAMADA_DE_FUNCAO,$1); 
+      { $$ = $1; 
+	 //$$ = createNewNode(IKS_AST_CHAMADA_DE_FUNCAO,$1); 
       }
 
   | TK_IDENTIFICADOR

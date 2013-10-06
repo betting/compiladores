@@ -57,6 +57,6 @@ int checkDeclarations(comp_tree_t *root);
  * @param *root   The tree with all elements found
  * @return The return code (sucess or error)
  */
-int checkUtilization(comp_tree_t *root)
+int checkUtilization(comp_tree_t *root);
 
 #endif
