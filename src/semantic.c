@@ -17,10 +17,10 @@
 
 void addList(listaVar *varDeclaration, int tipoVar, char *nomeVar)
 {
-   *varDeclaration = malloc(sizeof(listaVar));
-   (*varDeclaration)->tipoVar = tipoVar;
-   (*varDeclaration)->nomeVar = nomeVar;
-   (*varDeclaration)->nextList = *varDeclaration;
+   varDeclaration = malloc(sizeof(listaVar));
+   varDeclaration->tipoVar = tipoVar;
+   varDeclaration->nomeVar = nomeVar;
+   varDeclaration->nextList = varDeclaration;
 }
 
 
