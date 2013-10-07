@@ -24,7 +24,7 @@ void addList(listaVar **varDeclaration, int tipoVar, char *nomeVar)
 }
 
 
-void listar (listaVar *varDeclaration)
+void listar(listaVar *varDeclaration)
 {
     int i=0;
     while( varDeclaration != NULL)    /* Enquanto nao chega no fim da lista */

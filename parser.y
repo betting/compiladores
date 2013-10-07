@@ -5,7 +5,9 @@
 #include "comp_dict.h"
 #include "comp_tree.h"
 #include "iks_ast.h"
-	
+#include "semantic.h"
+
+listaVar *Declarations;	
 
 FILE *yyin;
 
@@ -139,7 +141,7 @@ decl_local:
 
  /* Declaracao de variaveis e tipos*/
 decl_var:
-    tipo_var ':' TK_IDENTIFICADOR {addList($1,$3);}
+    tipo_var ':' TK_IDENTIFICADOR {addList(Declarations,$1,$3);}
   ;
 
 decl_vetor:
@@ -566,3 +568,6 @@ lista_expressoes:
   ;
 
 %%
+
+
+//listar (Declarations);
