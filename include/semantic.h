@@ -32,6 +32,12 @@
 #define IKS_ERROR_WRONG_PAR_OUTPUT  13 // parâmetro não é literal string ou expressão
 #define IKS_ERROR_WRONG_PAR_RETURN  14 // parâmetro não é expressão compatível com tipo do retorno
 
+#define IKS_INT 	1
+#define IKS_FLOAT 	2
+#define IKS_CHAR 	3
+#define IKS_STRING 	4
+#define IKS_BOOL 	5
+
 typedef struct listaVariaveis{
  int tipoVar;
  char *nomeVar;

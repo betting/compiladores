@@ -17,6 +17,7 @@
 
 void addList(listaVar *varDeclaration, int tipoVar, char *nomeVar)
 {
+	printf("addList");
    varDeclaration = malloc(sizeof(listaVar));
    varDeclaration->tipoVar = tipoVar;
    varDeclaration->nomeVar = nomeVar;

@@ -142,7 +142,7 @@ decl_local:
 
  /* Declaracao de variaveis e tipos*/
 decl_var:
-    tipo_var ':' TK_IDENTIFICADOR {addList(Declarations,$1->type,$3->text);}
+    tipo_var ':' TK_IDENTIFICADOR {printf("regra decl_var");addList(Declarations,$1->type,$3->text);}
   ;
 
 decl_vetor:
@@ -151,11 +151,11 @@ decl_vetor:
 
 
 tipo_var:
-    TK_PR_INT
-  | TK_PR_FLOAT
-  | TK_PR_BOOL
-  | TK_PR_CHAR
-  | TK_PR_STRING
+    TK_PR_INT	{ $$->type = IKS_INT; }//antes não tinha nada aqui, precisamos retornar o tipo senão $1->type na linha 145 é vazio e quebra
+  | TK_PR_FLOAT	{ $$->type = IKS_FLOAT; }
+  | TK_PR_BOOL	{ $$->type = IKS_CHAR; }
+  | TK_PR_CHAR	{ $$->type = IKS_STRING; }
+  | TK_PR_STRING	{ $$->type = IKS_BOOL; }
   ;
 
 
