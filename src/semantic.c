@@ -23,6 +23,20 @@ void addList(listaVar **varDeclaration, int tipoVar, char *nomeVar)
    (*varDeclaration)->nextList = *varDeclaration;
 }
 
+
+void listar (listaVar *varDeclaration)
+{
+    int i=0;
+    while( varDeclaration != NULL)    /* Enquanto nao chega no fim da lista */
+    {
+        i++;
+        printf("\n\nTipoVar %d - NomeVar: %s \n", varDeclaration->tipoVar, varDeclaration->nomeVar);
+        varDeclaration = varDeclaration->nextList;     /* Faz noatual apontar para o proximo no */
+    }
+}
+
+
+
 /**
  * Check Declarations.
  * 
