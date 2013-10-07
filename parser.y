@@ -141,7 +141,7 @@ decl_local:
 
  /* Declaracao de variaveis e tipos*/
 decl_var:
-    tipo_var ':' TK_IDENTIFICADOR {addList(Declarations,$1,$3);}
+    tipo_var ':' TK_IDENTIFICADOR {addList(Declarations,$1->type,$3->text);}
   ;
 
 decl_vetor:
@@ -570,4 +570,4 @@ lista_expressoes:
 %%
 
 
-//listar (Declarations);
+listar (Declarations);

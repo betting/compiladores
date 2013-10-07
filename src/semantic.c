@@ -15,7 +15,7 @@
 
 
 
-void addList(listaVar **varDeclaration, int tipoVar, char *nomeVar)
+void addList(listaVar *varDeclaration, int tipoVar, char *nomeVar)
 {
    *varDeclaration = malloc(sizeof(listaVar));
    (*varDeclaration)->tipoVar = tipoVar;

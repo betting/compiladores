@@ -47,7 +47,7 @@ typedef struct listaVariaveis{
  * @param char nomeVar  name of variable
  */
 
-void addList(listaVar **varDeclaration, int tipoVar, char *nomeVar);
+void addList(listaVar *varDeclaration, int tipoVar, char *nomeVar);
 void listar (listaVar *varDeclaration);
 
 /**
