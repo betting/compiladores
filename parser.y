@@ -106,6 +106,7 @@ p: s
       {
          $$ = createNode(IKS_AST_PROGRAMA,0);
          insertChild($$, $1);
+	 //checkDeclarations($$);
       }
   ;
 s:
@@ -124,7 +125,7 @@ s:
   ;
 
 decl_global:
-    decl_var ';'
+    decl_var ';'// {adicionar na lista($$)}
   | decl_vetor ';'			
   ;
 
@@ -137,7 +138,7 @@ decl_local:
 
  /* Declaracao de variaveis e tipos*/
 decl_var:
-    tipo_var ':' TK_IDENTIFICADOR
+    tipo_var ':' TK_IDENTIFICADOR {addList($1,$3);}
   ;
 
 decl_vetor:

@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include "comp_tree.h"
 
+
 /** CÓDIGOS DE RETORNO DE SUCESSOS/ERROS SEMÂNTICOS **/
 #define IKS_SUCCESS              0 // caso não houver nenhum tipo de erro
 
@@ -31,6 +32,23 @@
 #define IKS_ERROR_WRONG_PAR_OUTPUT  13 // parâmetro não é literal string ou expressão
 #define IKS_ERROR_WRONG_PAR_RETURN  14 // parâmetro não é expressão compatível com tipo do retorno
 
+typedef struct listaVariaveis{
+ int tipoVar;
+ char *nomeVar;
+ struct listaVariaveis *nextList;
+} listaVar;
+
+/**
+ * Add List.
+ * 
+ * Add variables and your types in list.
+ *
+ * @param int tipoVar  type of variable
+ * @param char nomeVar  name of variable
+ */
+
+void addList(listaVar **varDeclaration, int tipoVar, char *nomeVar);
+
 
 /**
  * Check Declarations.
@@ -40,6 +58,7 @@
  * @param *root   The tree with all elements found
  * @return The return code (sucess or error)
  */
+
 int checkDeclarations(comp_tree_t *root);
 
 #endif

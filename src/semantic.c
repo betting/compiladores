@@ -12,6 +12,17 @@
 #include "iks_ast.h"
 #include "semantic.h"
 
+
+
+
+void addList(listaVar **varDeclaration, int tipoVar, char *nomeVar)
+{
+   *varDeclaration = malloc(sizeof(listaVar));
+   (*varDeclaration)->tipoVar = tipoVar;
+   (*varDeclaration)->nomeVar = nomeVar;
+   (*varDeclaration)->nextList = *varDeclaration;
+}
+
 /**
  * Check Declarations.
  * 
