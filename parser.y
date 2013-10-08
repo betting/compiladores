@@ -111,6 +111,7 @@ p: s
          $$ = createNode(IKS_AST_PROGRAMA,0);
          insertChild($$, $1);
          //checkDeclarations($$);
+         //checkUtilization($$);
          listar (Declarations);
       }
   ;
@@ -482,7 +483,9 @@ expressao:
       }
   
   | chamada_funcao
-      { $$ = $1; }
+      { //$$ = $1; 
+	 $$ = createNewNode(IKS_AST_CHAMADA_DE_FUNCAO,$1); 
+      }
 
   | TK_IDENTIFICADOR
       {

@@ -67,4 +67,14 @@ void listar (listaVar *varDeclaration);
 
 int checkDeclarations(comp_tree_t *root);
 
+/**
+ * Check Utilization.
+ * 
+ * Check all variable and function utilization.
+ *
+ * @param *root   The tree with all elements found
+ * @return The return code (sucess or error)
+ */
+int checkUtilization(comp_tree_t *root)
+
 #endif
