@@ -38,24 +38,6 @@
 #define IKS_STRING 	4
 #define IKS_BOOL 	5
 
-typedef struct listaVariaveis{
- int tipoVar;
- char *nomeVar;
- struct listaVariaveis *nextList;
-} listaVar;
-
-/**
- * Add List.
- * 
- * Add variables and your types in list.
- *
- * @param int tipoVar  type of variable
- * @param char nomeVar  name of variable
- */
-
-listaVar *addList(listaVar *varDeclaration, int tipoVar, char *nomeVar);
-void listar (listaVar *varDeclaration);
-
 /**
  * Check Declarations.
  * 
