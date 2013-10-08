@@ -13,18 +13,13 @@ FILE *yyin;
 
 %}
 
-%union {
-        
+%union 
+{
         comp_dict_item_t *symbol;
         comp_tree_t *tree;
 }
 
 /* Declaração dos tokens da gramática da Linguagem K */
-%token<tree> TK_PR_INT
-             TK_PR_FLOAT
-             TK_PR_BOOL
-             TK_PR_CHAR
-             TK_PR_STRING
 
 %token<symbol> TK_LIT_INT
                TK_LIT_FLOAT
@@ -56,6 +51,12 @@ FILE *yyin;
        '/'
        '<'
        '>'
+
+%token<tree> TK_PR_INT
+             TK_PR_FLOAT
+             TK_PR_BOOL
+             TK_PR_CHAR
+             TK_PR_STRING
 
 
 %type<tree> atribuicao
@@ -109,8 +110,8 @@ p: s
       {
          $$ = createNode(IKS_AST_PROGRAMA,0);
          insertChild($$, $1);
-	 //checkDeclarations($$);
-	 listar (Declarations);
+         //checkDeclarations($$);
+         //listar (Declarations);
       }
   ;
 s:
@@ -129,7 +130,7 @@ s:
   ;
 
 decl_global:
-    decl_var ';'// {adicionar na lista($$)}
+    decl_var ';' {/*adicionar na lista($$)*/}
   | decl_vetor ';'			
   ;
 
@@ -142,7 +143,11 @@ decl_local:
 
  /* Declaracao de variaveis e tipos*/
 decl_var:
-    tipo_var ':' TK_IDENTIFICADOR {printf("regra decl_var");addList(Declarations,$1->type,$3->text);}
+    tipo_var ':' TK_IDENTIFICADOR
+    {
+       printf("tipo: %d id: %s\n", $1->type, $3->token);
+       //addList(Declarations,$1->type,$3->text);
+    }
   ;
 
 decl_vetor:
@@ -151,11 +156,11 @@ decl_vetor:
 
 
 tipo_var:
-    TK_PR_INT	{ $$->type = IKS_INT; }//antes não tinha nada aqui, precisamos retornar o tipo senão $1->type na linha 145 é vazio e quebra
-  | TK_PR_FLOAT	{ $$->type = IKS_FLOAT; }
-  | TK_PR_BOOL	{ $$->type = IKS_CHAR; }
-  | TK_PR_CHAR	{ $$->type = IKS_STRING; }
-  | TK_PR_STRING	{ $$->type = IKS_BOOL; }
+    TK_PR_INT { $$ = createNewNode(IKS_INT, 0); }
+  | TK_PR_FLOAT	{/* $$->type = IKS_FLOAT;*/ }
+  | TK_PR_BOOL	{/* $$->type = IKS_CHAR;*/ }
+  | TK_PR_CHAR	{/* $$->type = IKS_STRING;*/ }
+  | TK_PR_STRING	{/* $$->type = IKS_BOOL;*/ }
   ;
 
 
@@ -163,8 +168,6 @@ tipo_var:
 def_funcao:
     cabecalho decl_local bloco_comando
       {
-//         printf("%s", $1->token);
-
          $$ = createNode(IKS_AST_FUNCAO, $1);
          insertChild($$, $3);
       }

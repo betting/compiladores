@@ -65,6 +65,28 @@ comp_tree_t* createNode(int type, comp_dict_item_t *symbol)
    return newnode;
 }
 
+
+/**
+ * Create a single node
+ *
+ * Create a node given a value
+ *
+ * @param   type     Type of the element given (IKS_AST)
+ * @param   *symbol  Dictionary item to be added in the tree
+ * @return  newNode  New element (node) of the tree
+ */
+comp_tree_t* createNewNode(int type, comp_dict_item_t *symbol)
+{
+   // Creating new node
+   comp_tree_t* newnode = (comp_tree_t*)malloc(sizeof(comp_tree_t));
+   newnode->child=NULL;
+   newnode->sibling=NULL;
+   newnode->type=type;
+   newnode->symbol=symbol;
+   
+   return newnode;
+}
+
 /**
  * Insert child in the tree
  *
