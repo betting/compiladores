@@ -27,15 +27,15 @@ void saveASTRoot(comp_tree_t* root)
 	astRoot = root;
 }
 
-void saveDeclarationsList(comp_list_t* first)
-{
-	declarations = first;
-}
+//void saveDeclarationsList(comp_list_t* first)
+//{
+	//declarations = first;
+//}
 
-comp_list_t* getListHead()
-{
-	return declarations;
-}
+//comp_list_t* getListHead()
+//{
+	//return declarations;
+//}
 
 int main (int argc, char **argv)
 {
