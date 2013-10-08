@@ -157,10 +157,10 @@ decl_vetor:
 
 tipo_var:
     TK_PR_INT { $$ = createNewNode(IKS_INT, 0); }
-  | TK_PR_FLOAT	{/* $$->type = IKS_FLOAT;*/ }
-  | TK_PR_BOOL	{/* $$->type = IKS_CHAR;*/ }
-  | TK_PR_CHAR	{/* $$->type = IKS_STRING;*/ }
-  | TK_PR_STRING	{/* $$->type = IKS_BOOL;*/ }
+  | TK_PR_FLOAT	{ $$ = createNewNode(IKS_FLOAT, 0); }
+  | TK_PR_BOOL	{ $$ = createNewNode(IKS_BOOL, 0); }
+  | TK_PR_CHAR	{ $$ = createNewNode(IKS_CHAR, 0); }
+  | TK_PR_STRING	{ $$ = createNewNode(IKS_STRING, 0); }
   ;
 
 
