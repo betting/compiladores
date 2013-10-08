@@ -8,8 +8,6 @@
 #include "iks_ast.h"
 #include "semantic.h"
 
-comp_list_t *declarations;	
-
 FILE *yyin;
 
 %}
@@ -111,10 +109,9 @@ p: s
       {
          $$ = createNode(IKS_AST_PROGRAMA,0);
          insertChild($$, $1);
+         saveASTRoot($$);
          //checkDeclarations($$);
          //checkUtilization($$);
-         printList(declarations);
-
       }
   ;
 s:
@@ -133,7 +130,13 @@ s:
   ;
 
 decl_global:
-    decl_var ';' {/*adicionar na lista($$)*/}
+    decl_var ';' 
+    {       /* 
+       
+       INSERÇÃO NA TABELA DE SÍMBOLOS GLOBAL
+       
+       */
+    }
   | decl_vetor ';'			
   ;
 
@@ -148,9 +151,11 @@ decl_local:
 decl_var:
     tipo_var ':' TK_IDENTIFICADOR
     {
-       printf("tipo: %d id: %s\n", $1->type, $3->token);
-       addItem($1->type,$3->text,declarations);
-        printf("\n\ndepois do add no declarations TipoVar %d - NomeVar: %s \n", declarations->tipoVar, declarations->nomeVar);
+       /* 
+       
+       INSERÇÃO NA TABELA DE SÍMBOLOS LOCAL
+       
+       */
     }
   ;
 

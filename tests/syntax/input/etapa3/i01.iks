@@ -1,2 +1,4 @@
 /* programa vazio com declaração de variável */
 int:x;
+int:y;
+int:z;
