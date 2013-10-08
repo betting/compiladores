@@ -36,5 +36,7 @@
 */
 
 void saveASTRoot(comp_tree_t* root);
+void saveDeclarationsList(comp_list_t* first);
+comp_list_t* getListHead();
 
 #endif

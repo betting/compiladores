@@ -6,14 +6,6 @@
 #include <stdlib.h>
 #include "comp_list.h"
 
-
-//lista vazia
-/*comp_list_t* begin = NULL; //inicio
-comp_list_t* end = NULL;   //fim
-comp_list_t* aux;
-comp_list_t* previous; //anterior   
-*/
-
 /**
  * List initalization.
  *
@@ -31,13 +23,21 @@ comp_list_t* initList()
  * @param num value to be inserted.
  * @param *node list.
  */
-void addItem(int num, comp_list_t* node)
+void addItem(int tipoVar, char *nomeVar, comp_list_t* node)
 {
 	comp_list_t* new;
 	new = (comp_list_t *)malloc(sizeof(comp_list_t));
-	new->num = num;
-	new->next = node->next;
-	node->next = new;
+	new->tipoVar = tipoVar;
+	new->nomeVar = nomeVar;
+	
+	if(node == NULL){
+		printf("\n add primeiro nodo da lista\n");
+		node = new;
+	} else {
+		printf("\n add nodo lista\n");
+		new->next = node->next;
+		node->next = new;
+	}
 }
 
 /**
@@ -95,6 +95,20 @@ comp_list_t* concatList(comp_list_t *l0, comp_list_t *l1)
 	l0 = NULL;
 	l1 = NULL;
 	return L01;
+}
+
+void printList(comp_list_t *list)
+{
+   printf("\nLISTAR\n");
+    
+    int i=0;
+    while( list != NULL)    /* Enquanto nao chega no fim da lista */
+    {
+        i++;
+		printf("DENTRO DO WHILE\n");
+        printf("\n\nTipoVar %d - NomeVar: %s \n", list->tipoVar, list->nomeVar);
+        list = list->next;     /* Faz noatual apontar para o proximo no */
+    }
 }
 
 

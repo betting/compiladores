@@ -4,10 +4,11 @@
 #include <stdio.h>
 #include "comp_dict.h"
 #include "comp_tree.h"
+#include "comp_list.h"
 #include "iks_ast.h"
 #include "semantic.h"
 
-listaVar *Declarations;	
+comp_list_t *declarations;	
 
 FILE *yyin;
 
@@ -112,7 +113,8 @@ p: s
          insertChild($$, $1);
          //checkDeclarations($$);
          //checkUtilization($$);
-         listar (Declarations);
+         printList(declarations);
+
       }
   ;
 s:
@@ -147,7 +149,8 @@ decl_var:
     tipo_var ':' TK_IDENTIFICADOR
     {
        printf("tipo: %d id: %s\n", $1->type, $3->token);
-       addList(Declarations,$1->type,$3->text);
+       addItem($1->type,$3->text,declarations);
+        printf("\n\ndepois do add no declarations TipoVar %d - NomeVar: %s \n", declarations->tipoVar, declarations->nomeVar);
     }
   ;
 
