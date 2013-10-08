@@ -15,22 +15,28 @@
 
 
 
-void addList(listaVar *varDeclaration, int tipoVar, char *nomeVar)
+listaVar *addList(listaVar *varDeclaration, int tipoVar, char *nomeVar)
 {
-	printf("addList");
+   printf("addList");
    varDeclaration = malloc(sizeof(listaVar));
    varDeclaration->tipoVar = tipoVar;
    varDeclaration->nomeVar = nomeVar;
-   varDeclaration->nextList = varDeclaration;
+   printf("\ntipo: %d id: %s\n", varDeclaration->tipoVar, varDeclaration->nomeVar);
+   
+   varDeclaration->nextList = NULL;
+   return varDeclaration;
 }
 
 
 void listar(listaVar *varDeclaration)
 {
+   printf("\n\nLISTAR");
+    
     int i=0;
     while( varDeclaration != NULL)    /* Enquanto nao chega no fim da lista */
     {
         i++;
+	printf("DENTRO DO WHILE");
         printf("\n\nTipoVar %d - NomeVar: %s \n", varDeclaration->tipoVar, varDeclaration->nomeVar);
         varDeclaration = varDeclaration->nextList;     /* Faz noatual apontar para o proximo no */
     }

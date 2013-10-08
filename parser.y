@@ -111,7 +111,7 @@ p: s
          $$ = createNode(IKS_AST_PROGRAMA,0);
          insertChild($$, $1);
          //checkDeclarations($$);
-         //listar (Declarations);
+         listar (Declarations);
       }
   ;
 s:
@@ -146,7 +146,7 @@ decl_var:
     tipo_var ':' TK_IDENTIFICADOR
     {
        printf("tipo: %d id: %s\n", $1->type, $3->token);
-       //addList(Declarations,$1->type,$3->text);
+       addList(Declarations,$1->type,$3->text);
     }
   ;
 
