@@ -42,7 +42,24 @@ STACK* sPush(STACK* pointer, comp_tree_t* nodoAST)
 
 	return pointer;
 }
+/*
+int insertGlobalDeclarations()
+{
 
+}
+*/
+
+int insertLocalDeclarations(int type, comp_dict_item_t* dictNode)
+{
+	/*
+	 * Verificar se declaração já está na lista:
+	 * Não -> inserir nodo
+	 * Sim -> retornar erro
+	 */
+	 
+	printf("LOCAL DECLARATIONS");
+	printf("\nTYPE: %s -> %d",dictNode->token,type);
+}
 
 
 /**

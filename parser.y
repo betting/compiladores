@@ -151,6 +151,9 @@ decl_local:
 decl_var:
     tipo_var ':' TK_IDENTIFICADOR
     {
+		//nameVar = $3->token;
+		//printf("\nTYPE: %d -> %s",type,nameVar);
+		insertLocalDeclarations(type,$3);
        /* 
        
        INSERÇÃO NA TABELA DE SÍMBOLOS LOCAL
@@ -163,13 +166,22 @@ decl_vetor:
     tipo_var ':' TK_IDENTIFICADOR '[' TK_LIT_INT ']'
   ;
 
-
+/*
 tipo_var:
     TK_PR_INT { $$ = createNewNode(IKS_INT, 0); }
   | TK_PR_FLOAT	{ $$ = createNewNode(IKS_FLOAT, 0); }
   | TK_PR_BOOL	{ $$ = createNewNode(IKS_BOOL, 0); }
   | TK_PR_CHAR	{ $$ = createNewNode(IKS_CHAR, 0); }
   | TK_PR_STRING	{ $$ = createNewNode(IKS_STRING, 0); }
+  ;
+*/
+
+tipo_var:
+    TK_PR_INT { type = 1; }
+  | TK_PR_FLOAT	{ type = 2; }
+  | TK_PR_BOOL	{ type = 5; }
+  | TK_PR_CHAR	{ type = 3; }
+  | TK_PR_STRING	{ type = 4; }
   ;
 
 

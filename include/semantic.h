@@ -49,6 +49,10 @@ typedef struct stack
   struct stack* next;
 }STACK;
 
+int type;
+char *nameVar;
+int insertLocalDeclarations(int type, comp_dict_item_t* dictNode);
+
 
 
 STACK* initStack(void);

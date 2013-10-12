@@ -13,7 +13,9 @@
  */
 comp_list_t* initList()
 {
-	return NULL;	
+	comp_list_t* list = malloc(sizeof(comp_list_t*));
+	list = NULL;
+	return list;
 }
 /**
  * Add new item in a list
@@ -29,6 +31,7 @@ void addItem(int tipoVar, char *nomeVar, comp_list_t* node)
 	new = (comp_list_t *)malloc(sizeof(comp_list_t));
 	new->tipoVar = tipoVar;
 	new->nomeVar = nomeVar;
+	new->next = NULL;
 	
 	if(node == NULL){
 		printf("\n add primeiro nodo da lista\n");
