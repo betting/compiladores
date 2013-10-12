@@ -13,6 +13,39 @@
 #include "semantic.h"
 
 /**
+ *  Initiate Stack
+ *  
+ * 
+ */
+STACK* initStack(void)
+{
+	STACK* stack = malloc(sizeof(STACK*));
+	stack = NULL;
+	return stack;
+}
+
+STACK* sPush(STACK* pointer, comp_tree_t* nodoAST)
+{
+
+	STACK* new = malloc(sizeof(STACK*));
+	new->disc = nodoAST;
+	new->next = NULL;
+	new->previous = NULL;
+
+
+	if(pointer != NULL){ 
+		new->previous = pointer;
+		pointer->next = new;
+	}
+		
+	pointer = new;
+
+	return pointer;
+}
+
+
+
+/**
  * Check Declarations.
  * 
  * Check all variable and function declarations.

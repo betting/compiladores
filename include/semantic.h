@@ -39,6 +39,24 @@
 #define IKS_BOOL 	5
 
 /**
+ * Stack for organize 
+ */ 
+ 
+typedef struct stack
+{
+  comp_tree_t* disc;
+  struct stack* previous;
+  struct stack* next;
+}STACK;
+
+
+
+STACK* initStack(void);
+
+STACK* sPush(STACK* pointer, comp_tree_t* nodoAST);
+
+
+/**
  * Check Declarations.
  * 
  * Check all variable and function declarations.
