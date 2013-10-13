@@ -195,6 +195,7 @@ def_funcao:
 cabecalho:
     decl_func '(' lista_parametros ')'
       {
+         insertDeclarations($1, IKS_FUNCTION);
          $$ = $1;
       }
   ;

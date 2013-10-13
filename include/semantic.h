@@ -71,6 +71,8 @@ char *nameVar;
 
 comp_list_t* listLocal;
 comp_list_t* listGlobal;
+L_function* listFunction;
+
 comp_dict_item_t* tk_var;
 
 
@@ -103,5 +105,10 @@ int checkDeclarations(comp_tree_t *root);
  * @return The return code (sucess or error)
  */
 int checkUtilization(comp_tree_t *root);
+
+
+L_function* searchFunction(L_function* list, char* text);
+L_function* addFunction(int type, char *nameFunction, L_function* node, int tipoGlobal);
+L_function* addNodeFunction(L_function* list, L_function* node);
 
 #endif
