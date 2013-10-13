@@ -96,29 +96,15 @@ L_function* addNodeFunction(L_function* list, L_function* node)
    return list;
 }
 
-int insertGlobalDeclarations()
-{
-	/*
-	 * Verificar se declaração já está na lista:
-	 * Não -> inserir nodo
-	 * Sim -> retornar erro
-	 * 
-	 * TODO LIST:
-	 * 
-	 * 
-	 */
-
-}
-
 int sizeDeclarations(int type)
 {
 	switch(type)
 	{
-		case IKS_INT:    return 4;break;
-		case IKS_FLOAT:  return 8;break;
-		case IKS_BOOL:   return 1;break;
-		case IKS_CHAR:   return 1;break;
-		case IKS_STRING: return 1;break;
+      case IKS_INT: return 4; break;
+      case IKS_FLOAT: return 8; break;
+      case IKS_BOOL: return 1; break;
+      case IKS_CHAR: return 1; break;
+      case IKS_STRING: return 1; break;
 	}
 }
 
@@ -263,28 +249,46 @@ int checkUtilization(comp_tree_t *root)
  */
 int inference(int type1, int type2)
 {
-
-	if( ((type1 == IKS_INT)||(type1 == IKS_FLOAT)||(type1 == IKS_BOOL))&&((type2 == IKS_INT)||(type2 == IKS_FLOAT)||(type2 == IKS_BOOL)))
+   /*
+    * Type 01: Int/Float/Bool
+    * Type 02: Int/Float/Bool
+    */
+	if(
+      ( (type1 == IKS_INT)
+            || (type1 == IKS_FLOAT)
+            || (type1 == IKS_BOOL)
+      ) && (
+        (type2 == IKS_INT)
+            || (type2 == IKS_FLOAT)
+            || (type2 == IKS_BOOL)
+        )
+     )
 	{
-		if(type1==IKS_INT && type2==IKS_INT) return IKS_INT;
-		if(type1==IKS_FLOAT && type2==IKS_FLOAT) return IKS_FLOAT;
-		if(type1==IKS_BOOL && type2==IKS_BOOL) return IKS_BOOL;
-		if((type1==IKS_INT && type2==IKS_FLOAT) || (type2==IKS_INT && type1==IKS_FLOAT)) return IKS_FLOAT;
-		if((type1==IKS_INT && type2==IKS_BOOL) || (type2==IKS_INT && type1==IKS_BOOL)) return IKS_INT;
-		if((type1==IKS_BOOL && type2==IKS_FLOAT) || (type2==IKS_BOOL && type1==IKS_FLOAT))	return IKS_FLOAT;
+      // Int
+      if(type1 == IKS_INT && type2 == IKS_INT) return IKS_INT;
+      if((type1 == IKS_INT && type2 == IKS_BOOL) || (type1 == IKS_BOOL && type2 == IKS_INT)) return IKS_INT;
+
+      // Float
+      if(type1 == IKS_FLOAT && type2 == IKS_FLOAT) return IKS_FLOAT;
+      if((type1 == IKS_INT && type2 == IKS_FLOAT) || (type1 == IKS_FLOAT && type2 == IKS_INT)) return IKS_FLOAT;
+      if((type1 == IKS_BOOL && type2 == IKS_FLOAT) || (type1 == IKS_FLOAT && type2 == IKS_BOOL))	return IKS_FLOAT;
+
+      // Bool
+      if(type1 == IKS_BOOL && type2 == IKS_BOOL) return IKS_BOOL;
 	}
 	else
 	{
-		if(((type1 == IKS_INT)||(type1 == IKS_FLOAT)||(type1 == IKS_BOOL)))	
-		{
-			return type1;
-		}
-		else
-		{	
-			return type2;
-		}
-	}
-
+      if((type1 == IKS_INT)
+            || (type1 == IKS_FLOAT)
+            || (type1 == IKS_BOOL))
+      {
+         return type1;
+      }
+      else
+      {	
+         return type2;
+      }
+   }
 }
 
 

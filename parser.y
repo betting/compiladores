@@ -109,18 +109,15 @@ FILE *yyin;
  /* Regras (e ações) da gramática da Linguagem IKS */
 
 p: s
-      {  pointer=invert(pointer);
-		 sPop(pointer, listFunction, listGlobal,listLocal,0);
-		 
-		 
+      {
+         //pointer=invert(pointer);
+         //sPop(pointer, listFunction, listGlobal,listLocal,0);
+
          $$ = createNode(IKS_AST_PROGRAMA,0);
          insertChild($$, $1);
          saveASTRoot($$);
          //checkDeclarations($$);
          //checkUtilization($$);
-         
-         
-         
       }
   ;
 s:
@@ -204,6 +201,7 @@ cabecalho:
     decl_func '(' lista_parametros ')'
       {
          insertDeclarations($1, IKS_FUNCTION);
+printf("Func:%d:%s\n", $1->type, $1->token);
          $$ = $1;
       }
   ;
@@ -213,7 +211,6 @@ decl_func:
       {
          $3->type = $1; 
          $$ = $3;         
-         printf("Func:%d:%s\n", $1, $3->token);
 
       }
   ;
@@ -516,8 +513,8 @@ expressao:
       }
   
   | chamada_funcao
-      { $$ = $1; 
-	 //$$ = createNewNode(IKS_AST_CHAMADA_DE_FUNCAO,$1); 
+      {
+         $$ = $1; 
       }
 
   | TK_IDENTIFICADOR
@@ -528,7 +525,12 @@ expressao:
       { $$ = $1; }
 
   | expressao '+' expressao
-      { $$ = createNode(IKS_AST_ARIM_SOMA, 0); insertChild($$, $1); insertChild($$, $3); pointer=sPush(pointer,$$); }
+      {
+         $$ = createNode(IKS_AST_ARIM_SOMA, 0);
+         insertChild($$, $1);
+         insertChild($$, $3);
+         //pointer=sPush(pointer,$$);
+      }
 
   | expressao '-' expressao
       { $$ = createNode(IKS_AST_ARIM_SUBTRACAO, 0); insertChild($$, $1); insertChild($$, $3); }
