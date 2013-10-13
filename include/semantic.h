@@ -61,7 +61,7 @@ comp_list_t* listGlobal;
 comp_dict_item_t* tk_var;
 
 
-int insertDeclarations(int type, comp_dict_item_t* dictNode, int escopo);
+int insertDeclarations(comp_dict_item_t* dictNode, int escopo);
 
 
 

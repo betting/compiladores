@@ -58,7 +58,7 @@ int insertGlobalDeclarations()
 }
 
 
-int insertDeclarations(int type, comp_dict_item_t* dictNode, int escopo)
+int insertDeclarations(comp_dict_item_t* dictNode, int escopo)
 {
 	/*
 	 * Verificar se declaração já está na lista:
@@ -69,10 +69,10 @@ int insertDeclarations(int type, comp_dict_item_t* dictNode, int escopo)
 	{
 		case 1: //local 
 			printf("LOCAL DECLARATIONS");
-			printf("\nTYPE: %s -> %d",dictNode->token,type);
+			printf("\nTYPE: %s -> %d", dictNode->token, dictNode->type);
 			if(searchToken(listLocal, dictNode->token)==NULL)
 			{
-				listLocal = addItem(type, dictNode->token, listLocal);
+				listLocal = addItem(dictNode->type, dictNode->token, listLocal);
 			}
 			else
 			{
@@ -84,7 +84,7 @@ int insertDeclarations(int type, comp_dict_item_t* dictNode, int escopo)
 		case 2: //variavel global
 			if(searchToken(listGlobal, dictNode->token)==NULL)
 			{
-				listGlobal = addItem(type, dictNode->token, listGlobal);
+				listGlobal = addItem(dictNode->type, dictNode->token, listGlobal);
 			}
 			else
 			{

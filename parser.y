@@ -16,6 +16,7 @@ FILE *yyin;
 {
         comp_dict_item_t *symbol;
         comp_tree_t *tree;
+        int integer;
 }
 
 /* Declaração dos tokens da gramática da Linguagem K */
@@ -78,7 +79,6 @@ FILE *yyin;
             s
             saida
             seq_comando
-            tipo_var
             valor_entrada
             vetor
 
@@ -88,6 +88,8 @@ FILE *yyin;
               decl_vetor
               parametro
               TK_IDENTIFICADOR
+
+%type<integer> tipo_var
 
 %right
    TK_OC_AND
@@ -134,11 +136,11 @@ decl_global:
     decl_var ';'
       {
          printf("%d: %s\n", $1->type, $1->token);
-         insertDeclarations($1->type, $1, IKS_GLOBAL_VAR);
+         insertDeclarations($1, IKS_GLOBAL_VAR);
       }
   | decl_vetor ';'
       {
-         insertDeclarations($1->type, $1, IKS_GLOBAL_VET);
+         insertDeclarations($1, IKS_GLOBAL_VET);
       }
   ;
 
@@ -146,7 +148,7 @@ decl_global:
 decl_local:
     decl_var ';' decl_local
       {
-         insertDeclarations($1->type, $1, IKS_LOCAL);
+         insertDeclarations($1, IKS_LOCAL);
       }
    |
    ;
@@ -156,7 +158,7 @@ decl_local:
 decl_var:
     tipo_var ':' TK_IDENTIFICADOR
       {
-         $3->type = type;
+         $3->type = $1;
          $$ = $3;
          /*
             INSERÇÃO NA TABELA DE SÍMBOLOS LOCAL
@@ -167,17 +169,17 @@ decl_var:
 decl_vetor:
     tipo_var ':' TK_IDENTIFICADOR '[' TK_LIT_INT ']'
       {
-         $3->type = type;
+         $3->type = $1;
          $$ = $3;
       }
   ;
 
 tipo_var:
-    TK_PR_INT { type = IKS_INT; }
-  | TK_PR_FLOAT { type = IKS_FLOAT; }
-  | TK_PR_BOOL { type = IKS_BOOL; }
-  | TK_PR_CHAR { type = IKS_CHAR; }
-  | TK_PR_STRING { type = IKS_STRING; }
+    TK_PR_INT { $$ = IKS_INT; }
+  | TK_PR_FLOAT { $$ = IKS_FLOAT; }
+  | TK_PR_BOOL { $$ = IKS_BOOL; }
+  | TK_PR_CHAR { $$ = IKS_CHAR; }
+  | TK_PR_STRING { $$ = IKS_STRING; }
   ;
 
 
