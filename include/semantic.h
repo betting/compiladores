@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 #include "comp_tree.h"
-
+#include "comp_list.h"
 
 /** CÓDIGOS DE RETORNO DE SUCESSOS/ERROS SEMÂNTICOS **/
 #define IKS_SUCCESS              0 // caso não houver nenhum tipo de erro
@@ -51,6 +51,10 @@ typedef struct stack
 
 int type;
 char *nameVar;
+
+comp_list_t* listLocal;
+comp_list_t* listGlobal;
+
 int insertLocalDeclarations(int type, comp_dict_item_t* dictNode);
 
 

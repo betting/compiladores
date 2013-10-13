@@ -59,6 +59,14 @@ int insertLocalDeclarations(int type, comp_dict_item_t* dictNode)
 	 
 	printf("LOCAL DECLARATIONS");
 	printf("\nTYPE: %s -> %d",dictNode->token,type);
+	if(searchToken(listLocal, dictNode->token)==NULL)
+	{
+		addItem(type, dictNode->token, listLocal);
+	}
+	else
+	{
+		exit(IKS_ERROR_DECLARED);
+	}
 }
 
 

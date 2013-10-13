@@ -114,4 +114,17 @@ void printList(comp_list_t *list)
     }
 }
 
+comp_list_t* searchToken(comp_list_t* list, char* text)
+{
+		comp_list_t* aux = list;
+
+		while(aux != NULL)
+		{	
+			if(strcmp(aux->nomeVar, text) == 0)
+				return aux;
+			aux = aux->next;
+		}
+
+		return NULL;
+}
 
