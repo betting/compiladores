@@ -65,7 +65,6 @@ FILE *yyin;
             comando
             comando_simples
             controle_fluxo
-            decl_var
             def_funcao
             entrada
             expressao
@@ -75,7 +74,6 @@ FILE *yyin;
             nome_var
             nome_vetor
             p
-            parametro
             retorna
             s
             saida
@@ -86,6 +84,9 @@ FILE *yyin;
 
 %type<symbol> cabecalho
               decl_func
+              decl_var
+              decl_vetor
+              parametro
               TK_IDENTIFICADOR
 
 %right
@@ -130,13 +131,23 @@ s:
   ;
 
 decl_global:
-    decl_var ';' {	insertDeclarations(type,tk_var,IKS_GLOBAL_VAR); }
-  | decl_vetor ';' {	insertDeclarations(type,tk_var,IKS_GLOBAL_VET); }			
+    decl_var ';'
+      {
+         printf("%d: %s\n", $1->type, $1->token);
+         insertDeclarations($1->type, $1, IKS_GLOBAL_VAR);
+      }
+  | decl_vetor ';'
+      {
+         insertDeclarations($1->type, $1, IKS_GLOBAL_VET);
+      }
   ;
 
  /* Declaracao de variaveis locais em funcoes. Nenhuma variavel pode ser declarada.*/
 decl_local:
-    decl_var {	insertDeclarations(type,tk_var,IKS_LOCAL); } ';' decl_local  
+    decl_var ';' decl_local
+      {
+         insertDeclarations($1->type, $1, IKS_LOCAL);
+      }
    |
    ;
 
@@ -144,39 +155,29 @@ decl_local:
  /* Declaracao de variaveis e tipos*/
 decl_var:
     tipo_var ':' TK_IDENTIFICADOR
-    {
-		tk_var = $3;
-		//nameVar = $3->token;
-		//printf("\nTYPE: %d -> %s",type,nameVar);
-		//insertLocalDeclarations(type,$3);
-       /* 
-       
-       INSERÇÃO NA TABELA DE SÍMBOLOS LOCAL
-       
-       */
-    }
+      {
+         $3->type = type;
+         $$ = $3;
+         /*
+            INSERÇÃO NA TABELA DE SÍMBOLOS LOCAL
+         */
+      }
   ;
 
 decl_vetor:
-    tipo_var ':' TK_IDENTIFICADOR '[' TK_LIT_INT ']' {tk_var = $3;}
+    tipo_var ':' TK_IDENTIFICADOR '[' TK_LIT_INT ']'
+      {
+         $3->type = type;
+         $$ = $3;
+      }
   ;
 
-/*
 tipo_var:
-    TK_PR_INT { $$ = createNewNode(IKS_INT, 0); }
-  | TK_PR_FLOAT	{ $$ = createNewNode(IKS_FLOAT, 0); }
-  | TK_PR_BOOL	{ $$ = createNewNode(IKS_BOOL, 0); }
-  | TK_PR_CHAR	{ $$ = createNewNode(IKS_CHAR, 0); }
-  | TK_PR_STRING	{ $$ = createNewNode(IKS_STRING, 0); }
-  ;
-*/
-
-tipo_var:
-    TK_PR_INT { type = 1; }
-  | TK_PR_FLOAT	{ type = 2; }
-  | TK_PR_BOOL	{ type = 5; }
-  | TK_PR_CHAR	{ type = 3; }
-  | TK_PR_STRING	{ type = 4; }
+    TK_PR_INT { type = IKS_INT; }
+  | TK_PR_FLOAT { type = IKS_FLOAT; }
+  | TK_PR_BOOL { type = IKS_BOOL; }
+  | TK_PR_CHAR { type = IKS_CHAR; }
+  | TK_PR_STRING { type = IKS_STRING; }
   ;
 
 
@@ -276,7 +277,7 @@ comando:
   | retorna ';'
       { $$ = $1; }
   | decl_var ';'
-      { $$ = $1; }
+      { }
   | chamada_funcao ';'
       { $$ = $1; }
   ;
@@ -297,7 +298,7 @@ comando_simples:
       { $$ = $1; }
 
   | decl_var
-      { $$ = $1; }
+      { }
 
   | chamada_funcao
       { $$ = $1; }
@@ -306,7 +307,6 @@ comando_simples:
 chamada_funcao:
     nome_func '(' lista_expressoes ')'
       {
-
          $$ = createNode(IKS_AST_CHAMADA_DE_FUNCAO, 0);
          insertChild($$, $1);
          insertChild($$, $3);

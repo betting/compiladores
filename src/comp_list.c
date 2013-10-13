@@ -22,8 +22,10 @@ comp_list_t* initList()
  *
  * Add new element in the list, with the value specified.
  *
+ * @param tipoVar Type variable
  * @param num value to be inserted.
  * @param *node list.
+ * @return The list with the new element.
  */
 comp_list_t* addItem(int tipoVar, char *nomeVar, comp_list_t* node)
 {
@@ -32,22 +34,37 @@ comp_list_t* addItem(int tipoVar, char *nomeVar, comp_list_t* node)
 	new->tipoVar = tipoVar;
 	new->nomeVar = nomeVar;
 	new->next = NULL;
-	
-	if(node == NULL)
-	{
-		printf("\n add primeiro nodo da lista\n");
-		node = new;
-	} 
-	else 
-	{
-		comp_list_t* aux;
-		printf("\n add nodo lista\n");
-		while(aux->next != NULL)
-			aux = aux->next;
-		
-		aux->next = new;
-	}
+
+   node = add(node, new);
+
 	return node;
+}
+
+
+/**
+ * Adding new node to a list
+ *
+ * Add new element in the list, with the value specified.
+ *
+ * @param *list List with all elements.
+ * @param *node New node to be added.
+ * @return The list with the new element.
+ */
+comp_list_t* add(comp_list_t* list, comp_list_t* node)
+{
+   if (list == NULL)
+   {
+      list = node;
+   }
+   else if (list->next == NULL)
+   {
+      list->next = node;
+   }
+   else
+   {
+      add(list->next, node);
+   }
+   return list;
 }
 
 /**
