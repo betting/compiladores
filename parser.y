@@ -109,12 +109,18 @@ FILE *yyin;
  /* Regras (e ações) da gramática da Linguagem IKS */
 
 p: s
-      {
+      {  pointer=invert(pointer);
+		 sPop(pointer, listFunction, listGlobal,listLocal,0);
+		 
+		 
          $$ = createNode(IKS_AST_PROGRAMA,0);
          insertChild($$, $1);
          saveASTRoot($$);
          //checkDeclarations($$);
          //checkUtilization($$);
+         
+         
+         
       }
   ;
 s:
@@ -523,7 +529,7 @@ expressao:
       { $$ = $1; }
 
   | expressao '+' expressao
-      { $$ = createNode(IKS_AST_ARIM_SOMA, 0); insertChild($$, $1); insertChild($$, $3); }
+      { $$ = createNode(IKS_AST_ARIM_SOMA, 0); insertChild($$, $1); insertChild($$, $3); pointer=sPush(pointer,$$); }
 
   | expressao '-' expressao
       { $$ = createNode(IKS_AST_ARIM_SUBTRACAO, 0); insertChild($$, $1); insertChild($$, $3); }

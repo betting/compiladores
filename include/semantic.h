@@ -72,7 +72,7 @@ char *nameVar;
 comp_list_t* listLocal;
 comp_list_t* listGlobal;
 L_function* listFunction;
-
+STACK* pointer;
 comp_dict_item_t* tk_var;
 
 
@@ -111,4 +111,7 @@ L_function* searchFunction(L_function* list, char* text);
 L_function* addFunction(int type, char *nameFunction, L_function* node, int tipoGlobal);
 L_function* addNodeFunction(L_function* list, L_function* node);
 
+int sizeDeclarations(int type);
+//void sPop(STACK* pointer,comp_list_t* global,comp_list_t* global_vet, comp_list_t* local,int func_type);
+void sPop(STACK* pointer,L_function* function,comp_list_t* global, comp_list_t* local,int func_type);
 #endif

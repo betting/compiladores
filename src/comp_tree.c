@@ -82,6 +82,7 @@ comp_tree_t* createNewNode(int type, comp_dict_item_t *symbol)
    newnode->child=NULL;
    newnode->sibling=NULL;
    newnode->type=type;
+   newnode->size=0;
    newnode->symbol=symbol;
    
    return newnode;

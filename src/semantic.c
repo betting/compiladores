@@ -24,6 +24,14 @@ STACK* initStack(void)
 	return stack;
 }
 
+STACK* invert(STACK* stack)
+{
+	while(stack->previous != NULL)
+		stack = stack->previous;
+
+	return stack;
+}
+
 STACK* sPush(STACK* pointer, comp_tree_t* nodoAST)
 {
 
@@ -242,9 +250,167 @@ int checkUtilization(comp_tree_t *root)
                 }
         }
 //	else if(){}        // Ter certeza que o vetor está sendo declarado como vetor
-//	else if(root->type == IKS_AST_CHAMADA_DE_FUNCAO){}        // Ter certeza que a função está sendo declarada como função
+//	else if(root->type == IKS_AST_CHAMADA_DE_FUNCAO){}        // Ter certeza que a função está sendo declarada como função */
 
-*/
 }
 
 
+
+/*
+ * Regras de inferência
+ * @param type1
+ * @param type2 
+ */
+int inference(int type1, int type2)
+{
+
+	if( ((type1 == IKS_INT)||(type1 == IKS_FLOAT)||(type1 == IKS_BOOL))&&((type2 == IKS_INT)||(type2 == IKS_FLOAT)||(type2 == IKS_BOOL)))
+	{
+		if(type1==IKS_INT && type2==IKS_INT) return IKS_INT;
+		if(type1==IKS_FLOAT && type2==IKS_FLOAT) return IKS_FLOAT;
+		if(type1==IKS_BOOL && type2==IKS_BOOL) return IKS_BOOL;
+		if((type1==IKS_INT && type2==IKS_FLOAT) || (type2==IKS_INT && type1==IKS_FLOAT)) return IKS_FLOAT;
+		if((type1==IKS_INT && type2==IKS_BOOL) || (type2==IKS_INT && type1==IKS_BOOL)) return IKS_INT;
+		if((type1==IKS_BOOL && type2==IKS_FLOAT) || (type2==IKS_BOOL && type1==IKS_FLOAT))	return IKS_FLOAT;
+	}
+	else
+	{
+		if(((type1 == IKS_INT)||(type1 == IKS_FLOAT)||(type1 == IKS_BOOL)))	
+		{
+			return type1;
+		}
+		else
+		{	
+			return type2;
+		}
+	}
+
+}
+
+
+void sPop(STACK* pointer,L_function* function,comp_list_t* global, comp_list_t* local,int func_type)
+{
+
+	printf("$$$$$$$ TIPO DA FUNC = %d  $$$$$$$$$$", func_type);
+	int flag = 0;	// 1- global var ----- 2- global vector ------- 3- local var
+	comp_list_t* aux_list;
+
+	if(pointer!=NULL){ 
+		switch(pointer->disc->type){
+		
+		case IKS_AST_ARIM_SOMA:
+						pointer->disc->type = inference(pointer->disc->child->type,pointer->disc->sibling->type);
+						printf("\nInferencia: %d",pointer->disc->type);
+						pointer->disc->size = sizeDeclarations(pointer->disc->type);
+						printf("\nSIZE: %d",pointer->disc->type);						
+						break;
+/*
+		case IKS_AST_ARIM_SUBTRACAO:
+						stack_pointer->disc->node_type = inference(stack_pointer->disc->scc[0]->node_type,stack_pointer->disc->scc[1]->node_type);
+						stack_pointer->disc->size = var_size(stack_pointer->disc->node_type);break;
+
+		case IKS_AST_ARIM_MULTIPLICACAO:
+						stack_pointer->disc->node_type = inference(stack_pointer->disc->scc[0]->node_type,stack_pointer->disc->scc[1]->node_type);
+						stack_pointer->disc->size = var_size(stack_pointer->disc->node_type);break;
+
+		case  IKS_AST_LOGICO_E:
+						stack_pointer->disc->node_type = inference(stack_pointer->disc->scc[0]->node_type,stack_pointer->disc->scc[1]->node_type);
+						stack_pointer->disc->size = var_size(stack_pointer->disc->node_type);break;
+
+		case IKS_AST_LOGICO_OU:
+						stack_pointer->disc->node_type = inference(stack_pointer->disc->scc[0]->node_type,stack_pointer->disc->scc[1]->node_type);
+						stack_pointer->disc->size = var_size(stack_pointer->disc->node_type);break;
+
+		case IKS_AST_ARIM_DIVISAO: 	
+						stack_pointer->disc->node_type = inference(stack_pointer->disc->scc[0]->node_type,stack_pointer->disc->scc[1]->node_type);
+						stack_pointer->disc->size = var_size(stack_pointer->disc->node_type);break;
+
+		case IKS_AST_RETURN:            if(func_type == stack_pointer->disc->scc[0]->node_type){
+				
+						stack_pointer->disc->node_type = stack_pointer->disc->scc[0]->node_type;
+						stack_pointer->disc->size = var_size(stack_pointer->disc->node_type);
+						}
+						else
+						{
+				                printf("Return com tipo diferente da funcao");
+						exit(IKS_ERROR_WRONG_PAR_RETURN);
+						}
+								
+						break;
+		
+		case IKS_AST_ARIM_INVERSAO:	stack_pointer->disc->node_type = stack_pointer->disc->scc[0]->node_type;
+						stack_pointer->disc->size = var_size(stack_pointer->disc->node_type);
+
+						break;
+		case IKS_OUTPUT:		
+						
+						break;
+
+		case IKS_INPUT:		
+						
+						break;
+
+
+		case IKS_AST_CHAMADA_DE_FUNCAO:
+						break;
+
+
+		case IKS_AST_IDENTIFICADOR: 	
+						
+						aux_list=list_lookup(global,stack_pointer->disc->symbol->text);
+
+						if(aux_list!=NULL)
+						{
+								flag = 1;
+								stack_pointer->disc->node_type = aux_list->type;
+								stack_pointer->disc->size = var_size(stack_pointer->disc->node_type);
+								break;
+						}
+
+						else	
+						{	
+							aux_list=list_lookup(global_vet,stack_pointer->disc->symbol->text);
+
+							if(aux_list!=NULL)
+							{
+								flag = 2;
+								stack_pointer->disc->node_type = aux_list->type;
+								stack_pointer->disc->size = var_size(stack_pointer->disc->node_type);
+								break;
+							
+							}
+							else
+							{	
+
+								aux_list=list_lookup(local,stack_pointer->disc->symbol->text);
+
+								if(aux_list!=NULL)
+								{
+								flag = 3;
+								stack_pointer->disc->node_type = aux_list->type;
+								stack_pointer->disc->size = var_size(stack_pointer->disc->node_type);
+								break;
+								}
+								else
+								{
+									printf("Indentificador nao declarado");
+									exit(IKS_ERROR_UNDECLARED);
+		
+								}
+							}
+						}
+						break;
+						
+
+		case IKS_AST_LITERAL:
+						stack_pointer->disc->node_type = stack_pointer->disc->symbol->type;
+						stack_pointer->disc->size = var_size(stack_pointer->disc->symbol->type);break;
+
+*/		
+		}
+		
+
+		pointer= pointer->next;
+		return  sPop(pointer, listFunction, listGlobal,listLocal,0);
+	}
+}
