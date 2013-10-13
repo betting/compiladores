@@ -57,6 +57,18 @@ int insertGlobalDeclarations()
 
 }
 
+int sizeDeclarations(int type)
+{
+	switch(type)
+	{
+		case IKS_INT:    return 4;break;
+		case IKS_FLOAT:  return 8;break;
+		case IKS_BOOL:   return 1;break;
+		case IKS_CHAR:   return 1;break;
+		case IKS_STRING: return 1;break;
+	}
+}
+
 
 int insertDeclarations(comp_dict_item_t* dictNode, int escopo)
 {
@@ -67,12 +79,12 @@ int insertDeclarations(comp_dict_item_t* dictNode, int escopo)
 	 */
 	switch(escopo)
 	{
-		case 1: //local 
+		case -1: //local 
 			printf("LOCAL DECLARATIONS");
 			printf("\nTYPE: %s -> %d", dictNode->token, dictNode->type);
 			if(searchToken(listLocal, dictNode->token)==NULL)
 			{
-				listLocal = addItem(dictNode->type, dictNode->token, listLocal);
+				listLocal = addItem(dictNode->type, dictNode->token, listLocal,IKS_LOCAL);
 			}
 			else
 			{
@@ -81,10 +93,10 @@ int insertDeclarations(comp_dict_item_t* dictNode, int escopo)
 			}
 			break;
 			
-		case 2: //variavel global
+		case 0: //variavel global
 			if(searchToken(listGlobal, dictNode->token)==NULL)
 			{
-				listGlobal = addItem(dictNode->type, dictNode->token, listGlobal);
+				listGlobal = addItem(dictNode->type, dictNode->token, listGlobal,IKS_GLOBAL_VAR);
 			}
 			else
 			{
@@ -94,7 +106,16 @@ int insertDeclarations(comp_dict_item_t* dictNode, int escopo)
 		
 			break;
 			
-		case 3: //vetor global
+		case 1: //vetor global
+			if(searchToken(listGlobal, dictNode->token)==NULL)
+			{
+				listGlobal = addItem(dictNode->type, dictNode->token, listGlobal,IKS_GLOBAL_VET);
+			}
+			else
+			{
+				printf("Variavel global duplicada - linha %d\n", getLineNumber());
+				return IKS_ERROR_DECLARED;
+			}	
 			break;
 	}
 }

@@ -202,7 +202,10 @@ cabecalho:
 decl_func:
     tipo_var ':' TK_IDENTIFICADOR
       {
-         $$ = $3;
+		 $3->type = $1; 
+         $$ = $3;         
+         printf("\nFUNCAO: AQUI ->type  %d %s\n",$1,$3->token);
+
       }
   ;
 
@@ -312,6 +315,8 @@ chamada_funcao:
          $$ = createNode(IKS_AST_CHAMADA_DE_FUNCAO, 0);
          insertChild($$, $1);
          insertChild($$, $3);
+         printf("\nFUNCAO: AQUI 2");
+         
       }
   ;
 
@@ -319,6 +324,8 @@ nome_func:
    TK_IDENTIFICADOR
       {
          $$ = createNode(IKS_AST_IDENTIFICADOR, $1);
+         printf("\nFUNCAO: AQUI 3");
+
       }
   ;
 

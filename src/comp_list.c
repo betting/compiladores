@@ -27,12 +27,14 @@ comp_list_t* initList()
  * @param *node list.
  * @return The list with the new element.
  */
-comp_list_t* addItem(int tipoVar, char *nomeVar, comp_list_t* node)
+comp_list_t* addItem(int tipoVar, char *nomeVar, comp_list_t* node, int tipoGlobal)
 {
+	
 	comp_list_t* new;
 	new = (comp_list_t *)malloc(sizeof(comp_list_t));
 	new->tipoVar = tipoVar;
 	new->nomeVar = nomeVar;
+	new->tipoGlobal = tipoGlobal;
 	new->next = NULL;
 
    node = add(node, new);
