@@ -61,11 +61,12 @@ int insertLocalDeclarations(int type, comp_dict_item_t* dictNode)
 	printf("\nTYPE: %s -> %d",dictNode->token,type);
 	if(searchToken(listLocal, dictNode->token)==NULL)
 	{
-		addItem(type, dictNode->token, listLocal);
+		listLocal = addItem(type, dictNode->token, listLocal);
 	}
 	else
 	{
-		exit(IKS_ERROR_DECLARED);
+		printf("Variavel local duplicada - linha %d\n", getLineNumber());
+		return IKS_ERROR_DECLARED;
 	}
 }
 

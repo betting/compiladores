@@ -25,7 +25,7 @@ comp_list_t* initList()
  * @param num value to be inserted.
  * @param *node list.
  */
-void addItem(int tipoVar, char *nomeVar, comp_list_t* node)
+comp_list_t* addItem(int tipoVar, char *nomeVar, comp_list_t* node)
 {
 	comp_list_t* new;
 	new = (comp_list_t *)malloc(sizeof(comp_list_t));
@@ -33,14 +33,21 @@ void addItem(int tipoVar, char *nomeVar, comp_list_t* node)
 	new->nomeVar = nomeVar;
 	new->next = NULL;
 	
-	if(node == NULL){
+	if(node == NULL)
+	{
 		printf("\n add primeiro nodo da lista\n");
 		node = new;
-	} else {
+	} 
+	else 
+	{
+		comp_list_t* aux;
 		printf("\n add nodo lista\n");
-		new->next = node->next;
-		node->next = new;
+		while(aux->next != NULL)
+			aux = aux->next;
+		
+		aux->next = new;
 	}
+	return node;
 }
 
 /**
