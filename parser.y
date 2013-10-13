@@ -218,6 +218,9 @@ lista_parametros_nao_vazia:
 
 parametro:
     decl_var
+      {
+         insertDeclarations($1, IKS_LOCAL);
+      }
   ;
 
 bloco_comando:
