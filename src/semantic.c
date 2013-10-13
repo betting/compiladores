@@ -51,51 +51,6 @@ STACK* sPush(STACK* pointer, comp_tree_t* nodoAST)
 	return pointer;
 }
 
-L_function* searchFunction(L_function* list, char* text)
-{
-		L_function* aux = list;
-
-		while(aux != NULL)
-		{	
-			if(strcmp(aux->nameFunction, text) == 0)
-				return aux;
-			aux = aux->next;
-		}
-
-		return NULL;
-}
-
-L_function* addFunction(int type, char *nameFunction, L_function* node, int tipoGlobal)
-{
-	
-	L_function* new;
-	new = (L_function *)malloc(sizeof(L_function));
-	new->type = type;
-	new->nameFunction = nameFunction;
-	new->next = NULL;
-
-    node = addNodeFunction(node, new);
-
-	return node;
-}
-
-L_function* addNodeFunction(L_function* list, L_function* node)
-{
-   if (list == NULL)
-   {
-      list = node;
-   }
-   else if (list->next == NULL)
-   {
-      list->next = node;
-   }
-   else
-   {
-      addNodeFunction(list->next, node);
-   }
-   return list;
-}
-
 int sizeDeclarations(int type)
 {
 	switch(type)
@@ -296,7 +251,7 @@ int inference(int type1, int type2)
 }
 
 
-void sPop(STACK* pointer,L_function* function,comp_list_t* global, comp_list_t* local,int func_type)
+void sPop(STACK* pointer, comp_list_t* function, comp_list_t* global, comp_list_t* local, int func_type)
 {
 
 	printf("$$$$$$$ TIPO DA FUNC = %d  $$$$$$$$$$", func_type);

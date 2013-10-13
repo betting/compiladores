@@ -54,25 +54,9 @@ typedef struct stack
   struct stack* next;
 }STACK;
 
-/*
- * struct for a function
- * 
- */ 
-typedef struct _function
-{
-	int type;
-	char *nameFunction;
-	comp_list_t* listVarFunction; //lista de funções locais da variável
-	struct _function* next;    //proxima função da lista de funções
-}L_function;
-
-int type;
-char *nameVar;
-
 comp_list_t* declarationList;
 comp_list_t* listFunctions;
 comp_list_t* listGlobal;
-L_function* listFunction;
 STACK* pointer;
 comp_dict_item_t* tk_var;
 
@@ -108,11 +92,7 @@ int checkDeclarations(comp_tree_t *root);
 int checkUtilization(comp_tree_t *root);
 
 
-L_function* searchFunction(L_function* list, char* text);
-L_function* addFunction(int type, char *nameFunction, L_function* node, int tipoGlobal);
-L_function* addNodeFunction(L_function* list, L_function* node);
-
 int sizeDeclarations(int type);
 //void sPop(STACK* pointer,comp_list_t* global,comp_list_t* global_vet, comp_list_t* local,int func_type);
-void sPop(STACK* pointer,L_function* function,comp_list_t* global, comp_list_t* local,int func_type);
+void sPop(STACK* pointer, comp_list_t* function, comp_list_t* global, comp_list_t* local, int func_type);
 #endif
