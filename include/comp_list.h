@@ -12,7 +12,7 @@ typedef struct _list
 {
 	int tipoVar;
 	char *nomeVar;
-	float tipoGlobal;
+   int tipoGlobal;
 	struct _list *next;
 } comp_list_t;
 	

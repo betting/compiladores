@@ -69,7 +69,8 @@ typedef struct _function
 int type;
 char *nameVar;
 
-comp_list_t* listLocal;
+comp_list_t* declarationList;
+comp_list_t* listFunctions;
 comp_list_t* listGlobal;
 L_function* listFunction;
 STACK* pointer;

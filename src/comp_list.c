@@ -128,16 +128,13 @@ comp_list_t* concatList(comp_list_t *l0, comp_list_t *l1)
 
 void printList(comp_list_t *list)
 {
-   printf("\nLISTAR\n");
-    
-    int i=0;
-    while( list != NULL)    /* Enquanto nao chega no fim da lista */
-    {
-        i++;
-		printf("DENTRO DO WHILE\n");
-        printf("\n\nTipoVar %d - NomeVar: %s \n", list->tipoVar, list->nomeVar);
-        list = list->next;     /* Faz noatual apontar para o proximo no */
-    }
+   printf("Tipo Declaracao \t Tipo de Dados \t Nome \n");
+
+   while( list != NULL)
+   {
+      printf("%d \t %d \t %s \n", list->tipoGlobal, list->tipoVar, list->nomeVar);
+      list = list->next;
+   }
 }
 
 comp_list_t* searchToken(comp_list_t* list, char* text)
@@ -147,7 +144,9 @@ comp_list_t* searchToken(comp_list_t* list, char* text)
 		while(aux != NULL)
 		{	
 			if(strcmp(aux->nomeVar, text) == 0)
+         {
 				return aux;
+         }
 			aux = aux->next;
 		}
 

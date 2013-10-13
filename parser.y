@@ -118,6 +118,8 @@ p: s
          saveASTRoot($$);
          //checkDeclarations($$);
          //checkUtilization($$);
+         printList(declarationList);
+         printList(listFunctions);
       }
   ;
 s:
@@ -138,12 +140,12 @@ s:
 decl_global:
     decl_var ';'
       {
-printf("Global:%d:%s\n", $1->type, $1->token);
+//printf("Global:%d:%s\n", $1->type, $1->token);
          insertDeclarations($1, IKS_GLOBAL_VAR);
       }
   | decl_vetor ';'
       {
-printf("Vetor(Global):%d:%s\n", $1->type, $1->token);
+//printf("Vetor(Global):%d:%s\n", $1->type, $1->token);
          insertDeclarations($1, IKS_GLOBAL_VET);
       }
   ;
@@ -152,7 +154,7 @@ printf("Vetor(Global):%d:%s\n", $1->type, $1->token);
 decl_local:
     decl_var ';' decl_local
       {
-printf("Local:%d:%s\n", $1->type, $1->token);
+//printf("Local:%d:%s\n", $1->type, $1->token);
          insertDeclarations($1, IKS_LOCAL);
       }
    |
@@ -201,7 +203,7 @@ cabecalho:
     decl_func '(' lista_parametros ')'
       {
          insertDeclarations($1, IKS_FUNCTION);
-printf("Func:%d:%s\n", $1->type, $1->token);
+//printf("Func:%d:%s\n", $1->type, $1->token);
          $$ = $1;
       }
   ;
@@ -229,7 +231,7 @@ parametro:
     decl_var
       {
          insertDeclarations($1, IKS_LOCAL);
-printf("Local(Param):%d:%s\n", $1->type, $1->token);
+//printf("Local(Param):%d:%s\n", $1->type, $1->token);
       }
   ;
 

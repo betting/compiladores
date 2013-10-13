@@ -118,12 +118,12 @@ int insertDeclarations(comp_dict_item_t* dictNode, int escopo)
 	 */
 	switch(escopo)
 	{
-		case -1: //local 
-			//printf("LOCAL DECLARATIONS");
-			//printf("\nTYPE: %s -> %d", dictNode->token, dictNode->type);
-			if(searchToken(listLocal, dictNode->token)==NULL)
+		case IKS_LOCAL: //local
+
+         
+			if(searchToken(declarationList, dictNode->token) == NULL)
 			{
-				listLocal = addItem(dictNode->type, dictNode->token, listLocal,IKS_LOCAL);
+				declarationList = addItem(dictNode->type, dictNode->token, declarationList, IKS_LOCAL);
 			}
 			else
 			{
@@ -132,10 +132,10 @@ int insertDeclarations(comp_dict_item_t* dictNode, int escopo)
 			}
 			break;
 			
-		case 0: //variavel global
-			if(searchToken(listGlobal, dictNode->token)==NULL)
+		case IKS_GLOBAL_VAR: //variavel global
+			if(searchToken(declarationList, dictNode->token) == NULL)
 			{
-				listGlobal = addItem(dictNode->type, dictNode->token, listGlobal,IKS_GLOBAL_VAR);
+				declarationList = addItem(dictNode->type, dictNode->token, declarationList, IKS_GLOBAL_VAR);
 			}
 			else
 			{
@@ -145,25 +145,29 @@ int insertDeclarations(comp_dict_item_t* dictNode, int escopo)
 		
 			break;
 			
-		case 1: //vetor global
-			if(searchToken(listGlobal, dictNode->token)==NULL)
+		case IKS_GLOBAL_VET: //vetor global
+			if(searchToken(declarationList, dictNode->token) == NULL)
 			{
-				listGlobal = addItem(dictNode->type, dictNode->token, listGlobal,IKS_GLOBAL_VET);
+				declarationList = addItem(dictNode->type, dictNode->token, declarationList, IKS_GLOBAL_VET);
 			}
 			else
 			{
-				printf("Variavel global duplicada - linha %d\n", getLineNumber());
+				printf("Variavel (vetor) global duplicado - linha %d\n", getLineNumber());
 				return IKS_ERROR_DECLARED;
 			}	
 			break;
-		case 2: //function
-			if((searchFunction(listFunction,dictNode->token)==NULL)&&(searchToken(listGlobal, dictNode->token)==NULL)) //nome da função não pode estar na lista de globais nem de funcão
+
+		case IKS_FUNCTION: //function
+         // Function name could not be in global or function lists.
+			if((searchToken(listFunctions, dictNode->token) == NULL)
+            && (searchToken(declarationList, dictNode->token) == NULL)) 
 			{
-				listFunction = addFunction(dictNode->type, dictNode->token, listFunction,IKS_FUNCTION);
+				listFunctions = addItem(dictNode->type, dictNode->token, listFunctions, IKS_FUNCTION);
+				declarationList = addItem(dictNode->type, dictNode->token, declarationList, IKS_FUNCTION);
 			}
 			else
 			{
-				printf("Variavel global duplicada - linha %d\n", getLineNumber());
+				printf("Funcao com nome duplicado - linha %d\n", getLineNumber());
 				return IKS_ERROR_DECLARED;
 			}
 			break;
@@ -313,6 +317,6 @@ void sPop(STACK* pointer,L_function* function,comp_list_t* global, comp_list_t* 
 		
 
 		pointer= pointer->next;
-		return  sPop(pointer, listFunction, listGlobal,listLocal,0);
+//		return  sPop(pointer, listFunctions, listGlobal,declarations,0);
 	}
 }
