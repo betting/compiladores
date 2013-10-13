@@ -42,31 +42,60 @@ STACK* sPush(STACK* pointer, comp_tree_t* nodoAST)
 
 	return pointer;
 }
-/*
+
 int insertGlobalDeclarations()
 {
+	/*
+	 * Verificar se declaração já está na lista:
+	 * Não -> inserir nodo
+	 * Sim -> retornar erro
+	 * 
+	 * TODO LIST:
+	 * 
+	 * 
+	 */
 
 }
-*/
 
-int insertLocalDeclarations(int type, comp_dict_item_t* dictNode)
+
+int insertDeclarations(int type, comp_dict_item_t* dictNode, int escopo)
 {
 	/*
 	 * Verificar se declaração já está na lista:
 	 * Não -> inserir nodo
 	 * Sim -> retornar erro
 	 */
-	 
-	printf("LOCAL DECLARATIONS");
-	printf("\nTYPE: %s -> %d",dictNode->token,type);
-	if(searchToken(listLocal, dictNode->token)==NULL)
+	switch(escopo)
 	{
-		listLocal = addItem(type, dictNode->token, listLocal);
-	}
-	else
-	{
-		printf("Variavel local duplicada - linha %d\n", getLineNumber());
-		return IKS_ERROR_DECLARED;
+		case 1: //local 
+			printf("LOCAL DECLARATIONS");
+			printf("\nTYPE: %s -> %d",dictNode->token,type);
+			if(searchToken(listLocal, dictNode->token)==NULL)
+			{
+				listLocal = addItem(type, dictNode->token, listLocal);
+			}
+			else
+			{
+				printf("Variavel local duplicada - linha %d\n", getLineNumber());
+				return IKS_ERROR_DECLARED;
+			}
+			break;
+			
+		case 2: //variavel global
+			if(searchToken(listGlobal, dictNode->token)==NULL)
+			{
+				listGlobal = addItem(type, dictNode->token, listGlobal);
+			}
+			else
+			{
+				printf("Variavel global duplicada - linha %d\n", getLineNumber());
+				return IKS_ERROR_DECLARED;
+			}		
+		
+			break;
+			
+		case 3: //vetor global
+			break;
 	}
 }
 

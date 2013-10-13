@@ -130,19 +130,13 @@ s:
   ;
 
 decl_global:
-    decl_var ';' 
-    {       /* 
-       
-       INSERÇÃO NA TABELA DE SÍMBOLOS GLOBAL
-       
-       */
-    }
-  | decl_vetor ';'			
+    decl_var ';' {	insertDeclarations(type,tk_var,IKS_GLOBAL_VAR); }
+  | decl_vetor ';' {	insertDeclarations(type,tk_var,IKS_GLOBAL_VET); }			
   ;
 
  /* Declaracao de variaveis locais em funcoes. Nenhuma variavel pode ser declarada.*/
 decl_local:
-    decl_var ';' decl_local
+    decl_var {	insertDeclarations(type,tk_var,IKS_LOCAL); } ';' decl_local  
    |
    ;
 
@@ -151,9 +145,10 @@ decl_local:
 decl_var:
     tipo_var ':' TK_IDENTIFICADOR
     {
+		tk_var = $3;
 		//nameVar = $3->token;
 		//printf("\nTYPE: %d -> %s",type,nameVar);
-		insertLocalDeclarations(type,$3);
+		//insertLocalDeclarations(type,$3);
        /* 
        
        INSERÇÃO NA TABELA DE SÍMBOLOS LOCAL
@@ -163,7 +158,7 @@ decl_var:
   ;
 
 decl_vetor:
-    tipo_var ':' TK_IDENTIFICADOR '[' TK_LIT_INT ']'
+    tipo_var ':' TK_IDENTIFICADOR '[' TK_LIT_INT ']' {tk_var = $3;}
   ;
 
 /*

@@ -38,6 +38,10 @@
 #define IKS_STRING 	4
 #define IKS_BOOL 	5
 
+#define IKS_LOCAL  1 //PARAMETRO PRA DEFINIR VARIAVEL LOCAL
+#define IKS_GLOBAL_VAR 2 //PARAMETRO PRA DEFINIR VARIAVEL GLOBAL
+#define IKS_GLOBAL_VET 2 //PARAMETRO PRA DEFINIR VETOR GLOBAL
+
 /**
  * Stack for organize 
  */ 
@@ -54,8 +58,10 @@ char *nameVar;
 
 comp_list_t* listLocal;
 comp_list_t* listGlobal;
+comp_dict_item_t* tk_var;
 
-int insertLocalDeclarations(int type, comp_dict_item_t* dictNode);
+
+int insertDeclarations(int type, comp_dict_item_t* dictNode, int escopo);
 
 
 
