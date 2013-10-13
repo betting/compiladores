@@ -54,6 +54,18 @@ typedef struct stack
   struct stack* next;
 }STACK;
 
+/*
+ * struct for a function
+ * 
+ */ 
+typedef struct _function
+{
+	int type;
+	char *nameFunction;
+	comp_list_t* listVarFunction; //lista de funções locais da variável
+	struct _function* next;    //proxima função da lista de funções
+}L_function;
+
 int type;
 char *nameVar;
 

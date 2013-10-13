@@ -80,7 +80,7 @@ int insertDeclarations(comp_dict_item_t* dictNode, int escopo)
 	switch(escopo)
 	{
 		case -1: //local 
-			printf("LOCAL DECLARATIONS");
+			//printf("LOCAL DECLARATIONS");
 			printf("\nTYPE: %s -> %d", dictNode->token, dictNode->type);
 			if(searchToken(listLocal, dictNode->token)==NULL)
 			{
@@ -116,6 +116,8 @@ int insertDeclarations(comp_dict_item_t* dictNode, int escopo)
 				printf("Variavel global duplicada - linha %d\n", getLineNumber());
 				return IKS_ERROR_DECLARED;
 			}	
+			break;
+		case 2: 
 			break;
 	}
 }
