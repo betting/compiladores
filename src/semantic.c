@@ -227,16 +227,16 @@ int inference(int type1, int type2)
      )
 	{
       // Int
-      if(type1 == IKS_INT && type2 == IKS_INT) return IKS_INT;
-      if((type1 == IKS_INT && type2 == IKS_BOOL) || (type1 == IKS_BOOL && type2 == IKS_INT)) return IKS_INT;
+      if(type1 == IKS_INT && type2 == IKS_INT) {printf("\n tipoINT: %d",IKS_INT); return IKS_INT;};
+      if((type1 == IKS_INT && type2 == IKS_BOOL) || (type1 == IKS_BOOL && type2 == IKS_INT)) {printf("\n tipoINT: %d",IKS_INT); return IKS_INT;};
 
       // Float
-      if(type1 == IKS_FLOAT && type2 == IKS_FLOAT) return IKS_FLOAT;
-      if((type1 == IKS_INT && type2 == IKS_FLOAT) || (type1 == IKS_FLOAT && type2 == IKS_INT)) return IKS_FLOAT;
-      if((type1 == IKS_BOOL && type2 == IKS_FLOAT) || (type1 == IKS_FLOAT && type2 == IKS_BOOL))	return IKS_FLOAT;
+      if(type1 == IKS_FLOAT && type2 == IKS_FLOAT) {printf("\n tipoFLOAT: %d",IKS_FLOAT); return IKS_FLOAT; };
+      if((type1 == IKS_INT && type2 == IKS_FLOAT) || (type1 == IKS_FLOAT && type2 == IKS_INT)) {printf("\n tipoFLOAT: %d",IKS_FLOAT); return IKS_FLOAT; };
+      if((type1 == IKS_BOOL && type2 == IKS_FLOAT) || (type1 == IKS_FLOAT && type2 == IKS_BOOL))	{printf("\n tipoFLOAT: %d",IKS_FLOAT); return IKS_FLOAT; };
 
       // Bool
-      if(type1 == IKS_BOOL && type2 == IKS_BOOL) return IKS_BOOL;
+      if(type1 == IKS_BOOL && type2 == IKS_BOOL) {printf("\n tipoFLOAT: %d",IKS_BOOL); return IKS_BOOL; };
 	}
 	else
 	{
@@ -263,17 +263,68 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* global, comp_list_
 
 	if(pointer!=NULL){ 
 		switch(pointer->disc->type){
-		
-		case IKS_AST_ARIM_SOMA:
-						pointer->disc->type = inference(pointer->disc->child->type,pointer->disc->sibling->type);
-						printf("\nInferencia: %d",pointer->disc->type);
-						pointer->disc->size = sizeDeclarations(pointer->disc->type);
-						printf("\nSIZE: %d",pointer->disc->type);						
-						break;
+			
+			case IKS_AST_ARIM_SOMA:
+							pointer->disc->type = inference(pointer->disc->child->type,pointer->disc->sibling->type);
+							printf("\nInferencia: %d",pointer->disc->type);
+							pointer->disc->size = sizeDeclarations(pointer->disc->type);
+							printf("\nSIZE: %d",pointer->disc->type);						
+							break;
 	
+			case IKS_AST_ARIM_SUBTRACAO:
+							pointer->disc->type = inference(pointer->disc->child->type,pointer->disc->sibling->type);
+							pointer->disc->size = sizeDeclarations(pointer->disc->type);
+							break;
+
+			case IKS_AST_ARIM_MULTIPLICACAO:
+							pointer->disc->type = inference(pointer->disc->child->type,pointer->disc->sibling->type);
+							pointer->disc->size = sizeDeclarations(pointer->disc->type);
+							break;	
+		
+			case IKS_AST_IDENTIFICADOR: 	
+						//search in function list 
+						auxFunction=searchFunction(listFunction,pointer->disc->symbol->token);
+						
+						if(auxFunction!=NULL)
+						{
+							    //int typeF = auxFunction->type;
+								pointer->disc->type = auxFunction->type;
+								pointer->disc->size = sizeDeclarations(pointer->disc->type);
+								break;
+						}
+
+						else	
+						{	//search in global list
+							aux=searchToken(listGlobal,pointer->disc->symbol->token);
+
+							if(aux!=NULL)
+							{
+								pointer->disc->type = aux->tipoVar;
+								pointer->disc->size = sizeDeclarations(pointer->disc->type);
+								break;
+							
+							}
+							else
+							{	
+								//search in local list
+								aux=searchToken(listLocal,pointer->disc->symbol->token);
+
+								if(aux!=NULL)
+								{
+									pointer->disc->type = aux->tipoVar;
+									pointer->disc->size = sizeDeclarations(pointer->disc->type);
+								break;
+								}
+								else
+								{
+									exit(IKS_ERROR_UNDECLARED);
+								}
+							}
+						}
+						break;
+		
 		}
 		
-
 		pointer= pointer->next;
 //		return  sPop(pointer, listFunctions, listGlobal,declarations,0);
 	}

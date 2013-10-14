@@ -119,7 +119,7 @@ p: s
          //checkDeclarations($$);
          //checkUtilization($$);
          printList(declarationList);
-         //printList(listFunctions);
+         printList(listFunctions);
       }
   ;
 s:
@@ -491,27 +491,28 @@ bloco_comando_fluxo_controle:
 
 expressao:
     TK_LIT_INT
-      { $$ = createNode(IKS_AST_LITERAL, $1); }
+      { $$ = createNode(IKS_AST_LITERAL, $1); pointer=sPush(pointer,$$);}
 
   | TK_LIT_FLOAT
-      { $$ = createNode(IKS_AST_LITERAL, $1); }
+      { $$ = createNode(IKS_AST_LITERAL, $1); pointer=sPush(pointer,$$);}
 
   | TK_LIT_FALSE
-      { $$ = createNode(IKS_AST_LITERAL, $1); }
+      { $$ = createNode(IKS_AST_LITERAL, $1); pointer=sPush(pointer,$$);}
 
   | TK_LIT_TRUE
-      { $$ = createNode(IKS_AST_LITERAL, $1); }
+      { $$ = createNode(IKS_AST_LITERAL, $1); pointer=sPush(pointer,$$);}
 
   | TK_LIT_CHAR
       {
          $1->token = (char *)convertString($1->token);
          $$ = createNode(IKS_AST_LITERAL, $1);
+         pointer=sPush(pointer,$$);
       }
 
   | TK_LIT_STRING
       {
          $1->token = (char *)convertString($1->token);
-         $$ = createNode(IKS_AST_LITERAL, $1);
+         $$ = createNode(IKS_AST_LITERAL, $1);pointer=sPush(pointer,$$);
       }
   
   | chamada_funcao
@@ -521,7 +522,7 @@ expressao:
 
   | TK_IDENTIFICADOR
       {
-         $$ = createNode(IKS_AST_IDENTIFICADOR, $1);
+         $$ = createNode(IKS_AST_IDENTIFICADOR, $1);pointer=sPush(pointer,$$);
       }
   | vetor
       { $$ = $1; }
@@ -535,19 +536,19 @@ expressao:
       }
 
   | expressao '-' expressao
-      { $$ = createNode(IKS_AST_ARIM_SUBTRACAO, 0); insertChild($$, $1); insertChild($$, $3); }
+      { $$ = createNode(IKS_AST_ARIM_SUBTRACAO, 0); insertChild($$, $1); insertChild($$, $3); pointer=sPush(pointer,$$);}
 
   | expressao '*' expressao
-      { $$ = createNode(IKS_AST_ARIM_MULTIPLICACAO, 0); insertChild($$, $1); insertChild($$, $3); }
+      { $$ = createNode(IKS_AST_ARIM_MULTIPLICACAO, 0); insertChild($$, $1); insertChild($$, $3); pointer=sPush(pointer,$$);}
 
   | expressao '/' expressao
-      { $$ = createNode(IKS_AST_ARIM_DIVISAO, 0); insertChild($$, $1); insertChild($$, $3); }
+      { $$ = createNode(IKS_AST_ARIM_DIVISAO, 0); insertChild($$, $1); insertChild($$, $3);pointer=sPush(pointer,$$); }
 
   | expressao '<' expressao
-      { $$ = createNode(IKS_AST_LOGICO_COMP_L, 0); insertChild($$, $1); insertChild($$, $3); }
+      { $$ = createNode(IKS_AST_LOGICO_COMP_L, 0); insertChild($$, $1); insertChild($$, $3);pointer=sPush(pointer,$$); }
 
   | expressao '>' expressao
-      { $$ = createNode(IKS_AST_LOGICO_COMP_G, 0); insertChild($$, $1); insertChild($$, $3); }
+      { $$ = createNode(IKS_AST_LOGICO_COMP_G, 0); insertChild($$, $1); insertChild($$, $3);pointer=sPush(pointer,$$); }
 
   | '+' expressao
       { $$ = $2; }

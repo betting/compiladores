@@ -93,6 +93,5 @@ int checkUtilization(comp_tree_t *root);
 
 
 int sizeDeclarations(int type);
-//void sPop(STACK* pointer,comp_list_t* global,comp_list_t* global_vet, comp_list_t* local,int func_type);
 void sPop(STACK* pointer, comp_list_t* function, comp_list_t* global, comp_list_t* local, int func_type);
 #endif
