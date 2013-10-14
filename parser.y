@@ -119,7 +119,7 @@ p: s
          //checkDeclarations($$);
          //checkUtilization($$);
          printList(declarationList);
-         printList(listFunctions);
+         //printList(listFunctions);
       }
   ;
 s:

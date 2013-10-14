@@ -163,7 +163,7 @@ comp_list_t* getLastItemList(comp_list_t* list)
 {
    comp_list_t* aux = list;
 
-   if (aux != NULL)
+   if (list != NULL)
    {
       while(aux->next != NULL)
       {
@@ -175,7 +175,7 @@ comp_list_t* getLastItemList(comp_list_t* list)
 }
 
 /**
- * Get the context elemenst from a list.
+ * Get the context element from a list.
  *
  * This function returns a list starting with the first element after the item (function) given.
  * 
@@ -183,14 +183,17 @@ comp_list_t* getLastItemList(comp_list_t* list)
  * @param   *function   The element to search in the list. The next element after it will be the first element of the new list.
  * @return New list with a restrict set of elements.
  */
-comp_list_t* getContextList(comp_list_t* list, comp_list_t* function)
+comp_list_t* getLocalList(comp_list_t* list, comp_list_t* function)
 {
    comp_list_t* aux = list;
 
-   while ((aux->tipoGlobal != function->tipoGlobal) && (strcmp(aux->nomeVar, function->nomeVar) != 0))
+   if (list != NULL)
    {
-      aux = aux->next;
+      //while ((aux->tipoGlobal != function->tipoGlobal) && (strcmp(aux->nomeVar, function->nomeVar) != 0))
+      while ((strcmp(aux->nomeVar, function->nomeVar) != 0))
+      {
+         aux = aux->next;
+      }
    }
-
    return aux;
 }

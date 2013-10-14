@@ -71,12 +71,15 @@ int insertDeclarations(comp_dict_item_t* dictNode, int escopo)
 	 * Não -> inserir nodo
 	 * Sim -> retornar erro
 	 */
+   comp_list_t *lastFunctionNameItem;
+   comp_list_t *localList;
 	switch(escopo)
 	{
 		case IKS_LOCAL: //local
-
-         
-			if(searchToken(declarationList, dictNode->token) == NULL)
+         lastFunctionNameItem = getLastItemList(listFunctions);
+         localList = getLocalList(declarationList, lastFunctionNameItem);
+        
+			if(searchToken(localList, dictNode->token) == NULL)
 			{
 				declarationList = addItem(dictNode->type, dictNode->token, declarationList, IKS_LOCAL);
 			}
