@@ -110,9 +110,7 @@ FILE *yyin;
 
 p: s
       {
-         //pointer=invert(pointer);
-         //sPop(pointer, listFunction, listGlobal,listLocal,0);
-
+         
          $$ = createNode(IKS_AST_PROGRAMA,0);
          insertChild($$, $1);
          saveASTRoot($$);
@@ -120,6 +118,8 @@ p: s
          //checkUtilization($$);
          printList(declarationList);
          printList(listFunctions);
+		 pointer=invert(pointer);
+         sPop(pointer, listFunctions, declarationList,0);
       }
   ;
 s:
@@ -140,12 +140,12 @@ s:
 decl_global:
     decl_var ';'
       {
-//printf("Global:%d:%s\n", $1->type, $1->token);
+		//printf("Global:%d:%s\n", $1->type, $1->token);
          insertDeclarations($1, IKS_GLOBAL_VAR);
       }
   | decl_vetor ';'
       {
-//printf("Vetor(Global):%d:%s\n", $1->type, $1->token);
+		//printf("Vetor(Global):%d:%s\n", $1->type, $1->token);
          insertDeclarations($1, IKS_GLOBAL_VET);
       }
   ;
@@ -231,7 +231,7 @@ parametro:
     decl_var
       {
          insertDeclarations($1, IKS_LOCAL);
-//printf("Local(Param):%d:%s\n", $1->type, $1->token);
+		 printf("Local(Param):%d:%s\n", $1->type, $1->token);
       }
   ;
 
@@ -250,31 +250,36 @@ seq_comando:
     comando seq_comando
       {
          insertChild($$, $2);
-      }
+		 pointer=sPush(pointer,$$);     }
   | comando_simples
       {
          insertChild($$, $1);
+         pointer=sPush(pointer,$$);
       }
   | bloco_comando
       {
          $$ = createNode(IKS_AST_BLOCO, 0);
          insertChild($$, $1);
+         pointer=sPush(pointer,$$);
       }
   | bloco_comando ';' seq_comando
       {
          $$ = createNode(IKS_AST_BLOCO, 0);
          insertChild($$, $1);
          insertChild($$, $3);
+         pointer=sPush(pointer,$$);
       }
   | seq_comando comando_simples
       {
          insertChild($$, $1);
          insertChild($$, $2);
+         pointer=sPush(pointer,$$);
       }
   | seq_comando bloco_comando
       {
          insertChild($$, $1);
          insertChild($$, $2);
+         pointer=sPush(pointer,$$);
       }
   | ';'
       { $$ = NULL; }
@@ -333,7 +338,7 @@ chamada_funcao:
 nome_func:
    TK_IDENTIFICADOR
       {
-         $$ = createNode(IKS_AST_IDENTIFICADOR, $1);
+         $$ = createNode(IKS_AST_IDENTIFICADOR, $1);pointer=sPush(pointer,$$);
       }
   ;
 
@@ -358,7 +363,7 @@ atribuicao:
 nome_var:
    TK_IDENTIFICADOR
       {
-         $$ = createNode(IKS_AST_IDENTIFICADOR, $1);
+         $$ = createNode(IKS_AST_IDENTIFICADOR, $1);pointer=sPush(pointer,$$);
       }
   ;
 
@@ -375,7 +380,7 @@ entrada:
 valor_entrada:
    TK_IDENTIFICADOR
       {
-         $$ = createNode(IKS_AST_IDENTIFICADOR, $1);
+         $$ = createNode(IKS_AST_IDENTIFICADOR, $1);pointer=sPush(pointer,$$);
       }
   ;
 
@@ -414,6 +419,7 @@ controle_fluxo:
          $$ = createNode(IKS_AST_IF_ELSE, 0);
          insertChild($$, $3);
          insertChild($$, $6);
+         pointer=sPush(pointer,$$);
       }
 
   | TK_PR_IF '(' expressao ')' TK_PR_THEN comando_simples ';' %prec LOWER_THAN_ELSE
@@ -421,6 +427,7 @@ controle_fluxo:
          $$ = createNode(IKS_AST_IF_ELSE, 0);
          insertChild($$, $3);
          insertChild($$, $6);
+         pointer=sPush(pointer,$$);
       }
 
   | TK_PR_IF '(' expressao ')' TK_PR_THEN bloco_comando_fluxo_controle TK_PR_ELSE bloco_comando_fluxo_controle
@@ -429,6 +436,7 @@ controle_fluxo:
          insertChild($$, $3);
          insertChild($$, $6);
          insertChild($$, $8);
+         pointer=sPush(pointer,$$);
       }
 
   | TK_PR_IF '(' expressao ')' TK_PR_THEN bloco_comando_fluxo_controle TK_PR_ELSE comando_simples ';'
@@ -437,6 +445,7 @@ controle_fluxo:
          insertChild($$, $3);
          insertChild($$, $6);
          insertChild($$, $8); 
+         pointer=sPush(pointer,$$);
       }
 
   | TK_PR_IF '(' expressao ')' TK_PR_THEN comando_simples TK_PR_ELSE bloco_comando_fluxo_controle
@@ -445,6 +454,7 @@ controle_fluxo:
          insertChild($$, $3);
          insertChild($$, $6);
          insertChild($$, $8);
+         pointer=sPush(pointer,$$);
       }
 
   | TK_PR_IF '(' expressao ')' TK_PR_THEN comando_simples TK_PR_ELSE comando_simples ';'
@@ -453,6 +463,7 @@ controle_fluxo:
          insertChild($$, $3);
          insertChild($$, $6);
          insertChild($$, $8);
+         pointer=sPush(pointer,$$);
       }
 
   | TK_PR_WHILE '(' expressao ')' TK_PR_DO bloco_comando_fluxo_controle
@@ -460,6 +471,7 @@ controle_fluxo:
          $$ = createNode(IKS_AST_WHILE_DO, 0);
          insertChild($$, $3);
          insertChild($$, $6);
+         pointer=sPush(pointer,$$);
       }
 
   | TK_PR_DO bloco_comando_fluxo_controle TK_PR_WHILE '(' expressao ')'
@@ -467,6 +479,7 @@ controle_fluxo:
          $$ = createNode(IKS_AST_DO_WHILE, 0);
          insertChild($$, $2);
          insertChild($$, $5);
+         pointer=sPush(pointer,$$);
       }
   ;
 
@@ -475,12 +488,14 @@ bloco_comando_fluxo_controle:
       {
          $$ = createNode(IKS_AST_BLOCO, 0);
          insertChild($$, $1);
+         pointer=sPush(pointer,$$);
       }
 
   | bloco_comando ';'
       {
          $$ = createNode(IKS_AST_BLOCO, 0);
          insertChild($$, $1);
+         pointer=sPush(pointer,$$);
       }
 
   | comando
@@ -532,7 +547,7 @@ expressao:
          $$ = createNode(IKS_AST_ARIM_SOMA, 0);
          insertChild($$, $1);
          insertChild($$, $3);
-         //pointer=sPush(pointer,$$);
+         pointer=sPush(pointer,$$);
       }
 
   | expressao '-' expressao
@@ -563,28 +578,29 @@ expressao:
       {
          $$ = createNode(IKS_AST_LOGICO_COMP_NEGACAO, 0);
          insertChild($$, $2);
+         pointer=sPush(pointer,$$);
       }
 
   | '(' expressao ')'
       { $$ = $2; }
 
   | expressao TK_OC_LE expressao
-      { $$ = createNode(IKS_AST_LOGICO_COMP_LE, 0); insertChild($$, $1); insertChild($$, $3); }
+      { $$ = createNode(IKS_AST_LOGICO_COMP_LE, 0); insertChild($$, $1); insertChild($$, $3); pointer=sPush(pointer,$$);}
 
   | expressao TK_OC_GE expressao
-      { $$ = createNode(IKS_AST_LOGICO_COMP_GE, 0); insertChild($$, $1); insertChild($$, $3); }
+      { $$ = createNode(IKS_AST_LOGICO_COMP_GE, 0); insertChild($$, $1); insertChild($$, $3); pointer=sPush(pointer,$$);}
 
   | expressao TK_OC_EQ expressao
-      { $$ = createNode(IKS_AST_LOGICO_COMP_IGUAL, 0); insertChild($$, $1); insertChild($$, $3); }
+      { $$ = createNode(IKS_AST_LOGICO_COMP_IGUAL, 0); insertChild($$, $1); insertChild($$, $3); pointer=sPush(pointer,$$);}
 
   | expressao TK_OC_NE expressao
-      { $$ = createNode(IKS_AST_LOGICO_COMP_DIF, 0); insertChild($$, $1); insertChild($$, $3); }
+      { $$ = createNode(IKS_AST_LOGICO_COMP_DIF, 0); insertChild($$, $1); insertChild($$, $3); pointer=sPush(pointer,$$);}
 
   | expressao TK_OC_OR expressao
-      { $$ = createNode(IKS_AST_LOGICO_OU, 0); insertChild($$, $1); insertChild($$, $3); }
+      { $$ = createNode(IKS_AST_LOGICO_OU, 0); insertChild($$, $1); insertChild($$, $3); pointer=sPush(pointer,$$);}
 
   | expressao TK_OC_AND expressao
-      { $$ = createNode(IKS_AST_LOGICO_E, 0); insertChild($$, $1); insertChild($$, $3); }
+      { $$ = createNode(IKS_AST_LOGICO_E, 0); insertChild($$, $1); insertChild($$, $3); pointer=sPush(pointer,$$);}
 
   ;
 
@@ -602,6 +618,7 @@ nome_vetor:
     TK_IDENTIFICADOR
       {
          $$ = createNode(IKS_AST_IDENTIFICADOR, $1);
+         pointer=sPush(pointer,$$);
       }
   ;
 

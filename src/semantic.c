@@ -34,7 +34,8 @@ STACK* invert(STACK* stack)
 
 STACK* sPush(STACK* pointer, comp_tree_t* nodoAST)
 {
-
+    //if(nodoAST->symbol->token!=NULL)
+	//	printf("\nnodo_ast token => %s",nodoAST->symbol->token);
 	STACK* new = malloc(sizeof(STACK*));
 	new->disc = nodoAST;
 	new->next = NULL;
@@ -128,6 +129,10 @@ int insertDeclarations(comp_dict_item_t* dictNode, int escopo)
 				printf("Funcao com nome duplicado - linha %d\n", getLineNumber());
 				return IKS_ERROR_DECLARED;
 			}
+			break;
+		default:
+				printf("Funcao não declarada - linha %d\n", getLineNumber());
+				return IKS_ERROR_UNDECLARED;
 			break;
 	}
 }
@@ -254,52 +259,63 @@ int inference(int type1, int type2)
 }
 
 
-void sPop(STACK* pointer, comp_list_t* function, comp_list_t* global, comp_list_t* local, int func_type)
+void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_type)
 {
 
-	printf("$$$$$$$ TIPO DA FUNC = %d  $$$$$$$$$$", func_type);
+	//printf("\n$$$$$$$ TIPO DA FUNC = %d  ======\n", pointer->disc->type);
 	int flag = 0;	// 1- global var ----- 2- global vector ------- 3- local var
 	comp_list_t* aux_list;
+    comp_list_t *lastFunctionNameItem;
+    comp_list_t *localList;
 
 	if(pointer!=NULL){ 
-		switch(pointer->disc->type){
+		switch(pointer->disc->type)
+		{
 			
 			case IKS_AST_ARIM_SOMA:
 							pointer->disc->type = inference(pointer->disc->child->type,pointer->disc->sibling->type);
-							printf("\nInferencia: %d",pointer->disc->type);
+							//printf("\nInferencia: %d",pointer->disc->type);
 							pointer->disc->size = sizeDeclarations(pointer->disc->type);
-							printf("\nSIZE: %d",pointer->disc->type);						
+							//printf("\nSIZE: %d",pointer->disc->type);						
+							printf("\n\tSOMA type: %d - size: %d",pointer->disc->type,pointer->disc->size);
 							break;
 	
 			case IKS_AST_ARIM_SUBTRACAO:
 							pointer->disc->type = inference(pointer->disc->child->type,pointer->disc->sibling->type);
 							pointer->disc->size = sizeDeclarations(pointer->disc->type);
+							printf("\n\tSUBTRAÇÃO type: %d - size: %d",pointer->disc->type,pointer->disc->size);
 							break;
 
 			case IKS_AST_ARIM_MULTIPLICACAO:
 							pointer->disc->type = inference(pointer->disc->child->type,pointer->disc->sibling->type);
 							pointer->disc->size = sizeDeclarations(pointer->disc->type);
+							printf("\n\tMULTIPLICAÇÃO type: %d - size: %d",pointer->disc->type,pointer->disc->size);
 							break;	
 		
-			case IKS_AST_IDENTIFICADOR: 	
+			case IKS_AST_IDENTIFICADOR:
+						//printf("\n\t\t CHEGOU NO IDENTIFICADOR");
 						//search in function list 
-						auxFunction=searchFunction(listFunction,pointer->disc->symbol->token);
+						lastFunctionNameItem = getLastItemList(listFunctions);
+						localList = getLocalList(declarationList, lastFunctionNameItem);
+						aux_list=searchToken(declarationList,pointer->disc->symbol->token);
 						
-						if(auxFunction!=NULL)
+						if(aux_list!=NULL)
 						{
-							    //int typeF = auxFunction->type;
-								pointer->disc->type = auxFunction->type;
+								//printf("\nIDENTX");
+								pointer->disc->type = aux_list->tipoVar;
 								pointer->disc->size = sizeDeclarations(pointer->disc->type);
+								printf("\n\tIDENTIFICADOR type: %d - size: %d",pointer->disc->type,pointer->disc->size);
 								break;
 						}
 
 						else	
 						{	//search in global list
-							aux=searchToken(listGlobal,pointer->disc->symbol->token);
+							aux_list=searchToken(declarationList,pointer->disc->symbol->token);
 
-							if(aux!=NULL)
+							if(aux_list!=NULL)
 							{
-								pointer->disc->type = aux->tipoVar;
+								printf("\nIDENTY");
+								pointer->disc->type = aux_list->tipoVar;
 								pointer->disc->size = sizeDeclarations(pointer->disc->type);
 								break;
 							
@@ -307,25 +323,34 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* global, comp_list_
 							else
 							{	
 								//search in local list
-								aux=searchToken(listLocal,pointer->disc->symbol->token);
+								aux_list=searchToken(localList,pointer->disc->symbol->token);
 
-								if(aux!=NULL)
+								if(aux_list!=NULL)
 								{
-									pointer->disc->type = aux->tipoVar;
+									printf("\nIDENTZ");
+									pointer->disc->type = aux_list->tipoVar;
 									pointer->disc->size = sizeDeclarations(pointer->disc->type);
 								break;
 								}
 								else
 								{
+									printf("\nIDENTW");
+									printf("\nVariável não declarada");								
 									exit(IKS_ERROR_UNDECLARED);
 								}
 							}
 						}
 						break;
+						
+			case IKS_AST_LITERAL:
+						pointer->disc->type = aux_list->tipoVar;
+						pointer->disc->size = sizeDeclarations(pointer->disc->type);
+						printf("\n\tLITERAL type: %d - size: %d",pointer->disc->type,pointer->disc->size);
+						break;
 		
 		}
 		
 		pointer= pointer->next;
-//		return  sPop(pointer, listFunctions, listGlobal,declarations,0);
+		return  sPop(pointer, listFunctions, declarationList,0);
 	}
 }
