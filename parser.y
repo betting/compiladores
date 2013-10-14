@@ -118,7 +118,7 @@ p: s
          //checkUtilization($$);
          printList(declarationList);
          printList(listFunctions);
-		 pointer=invert(pointer);
+         pointer = invert(pointer);
          sPop(pointer, listFunctions, declarationList,0);
       }
   ;
@@ -140,12 +140,12 @@ s:
 decl_global:
     decl_var ';'
       {
-		//printf("Global:%d:%s\n", $1->type, $1->token);
+         //printf("Global:%d:%s\n", $1->type, $1->token);
          insertDeclarations($1, IKS_GLOBAL_VAR);
       }
   | decl_vetor ';'
       {
-		//printf("Vetor(Global):%d:%s\n", $1->type, $1->token);
+         //printf("Vetor(Global):%d:%s\n", $1->type, $1->token);
          insertDeclarations($1, IKS_GLOBAL_VET);
       }
   ;
@@ -154,7 +154,7 @@ decl_global:
 decl_local:
     decl_var ';' decl_local
       {
-//printf("Local:%d:%s\n", $1->type, $1->token);
+         //printf("Local:%d:%s\n", $1->type, $1->token);
          insertDeclarations($1, IKS_LOCAL);
       }
    |
@@ -203,7 +203,7 @@ cabecalho:
     decl_func '(' lista_parametros ')'
       {
          insertDeclarations($1, IKS_FUNCTION);
-//printf("Func:%d:%s\n", $1->type, $1->token);
+         //printf("Func:%d:%s\n", $1->type, $1->token);
          $$ = $1;
       }
   ;
@@ -231,7 +231,7 @@ parametro:
     decl_var
       {
          insertDeclarations($1, IKS_LOCAL);
-		 printf("Local(Param):%d:%s\n", $1->type, $1->token);
+         //printf("Local(Param):%d:%s\n", $1->type, $1->token);
       }
   ;
 
@@ -250,7 +250,8 @@ seq_comando:
     comando seq_comando
       {
          insertChild($$, $2);
-		 pointer=sPush(pointer,$$);     }
+         pointer=sPush(pointer,$$);
+      }
   | comando_simples
       {
          insertChild($$, $1);
@@ -338,7 +339,8 @@ chamada_funcao:
 nome_func:
    TK_IDENTIFICADOR
       {
-         $$ = createNode(IKS_AST_IDENTIFICADOR, $1);pointer=sPush(pointer,$$);
+         $$ = createNode(IKS_AST_IDENTIFICADOR, $1);
+         pointer=sPush(pointer,$$);
       }
   ;
 
@@ -363,7 +365,8 @@ atribuicao:
 nome_var:
    TK_IDENTIFICADOR
       {
-         $$ = createNode(IKS_AST_IDENTIFICADOR, $1);pointer=sPush(pointer,$$);
+         $$ = createNode(IKS_AST_IDENTIFICADOR, $1);
+         pointer=sPush(pointer,$$);
       }
   ;
 
@@ -380,7 +383,8 @@ entrada:
 valor_entrada:
    TK_IDENTIFICADOR
       {
-         $$ = createNode(IKS_AST_IDENTIFICADOR, $1);pointer=sPush(pointer,$$);
+         $$ = createNode(IKS_AST_IDENTIFICADOR, $1);
+         pointer=sPush(pointer,$$);
       }
   ;
 
@@ -506,16 +510,28 @@ bloco_comando_fluxo_controle:
 
 expressao:
     TK_LIT_INT
-      { $$ = createNode(IKS_AST_LITERAL, $1); pointer=sPush(pointer,$$);}
+      {
+         $$ = createNode(IKS_AST_LITERAL, $1);
+         pointer=sPush(pointer,$$);
+      }
 
   | TK_LIT_FLOAT
-      { $$ = createNode(IKS_AST_LITERAL, $1); pointer=sPush(pointer,$$);}
+      {
+         $$ = createNode(IKS_AST_LITERAL, $1);
+         pointer=sPush(pointer,$$);
+      }
 
   | TK_LIT_FALSE
-      { $$ = createNode(IKS_AST_LITERAL, $1); pointer=sPush(pointer,$$);}
+      {
+         $$ = createNode(IKS_AST_LITERAL, $1);
+         pointer=sPush(pointer,$$);
+      }
 
   | TK_LIT_TRUE
-      { $$ = createNode(IKS_AST_LITERAL, $1); pointer=sPush(pointer,$$);}
+      {
+         $$ = createNode(IKS_AST_LITERAL, $1);
+         pointer=sPush(pointer,$$);
+      }
 
   | TK_LIT_CHAR
       {
@@ -527,7 +543,8 @@ expressao:
   | TK_LIT_STRING
       {
          $1->token = (char *)convertString($1->token);
-         $$ = createNode(IKS_AST_LITERAL, $1);pointer=sPush(pointer,$$);
+         $$ = createNode(IKS_AST_LITERAL, $1);
+         pointer=sPush(pointer,$$);
       }
   
   | chamada_funcao
@@ -537,7 +554,8 @@ expressao:
 
   | TK_IDENTIFICADOR
       {
-         $$ = createNode(IKS_AST_IDENTIFICADOR, $1);pointer=sPush(pointer,$$);
+         $$ = createNode(IKS_AST_IDENTIFICADOR, $1);
+         pointer=sPush(pointer,$$);
       }
   | vetor
       { $$ = $1; }
@@ -551,19 +569,44 @@ expressao:
       }
 
   | expressao '-' expressao
-      { $$ = createNode(IKS_AST_ARIM_SUBTRACAO, 0); insertChild($$, $1); insertChild($$, $3); pointer=sPush(pointer,$$);}
+      {
+         $$ = createNode(IKS_AST_ARIM_SUBTRACAO, 0);
+         insertChild($$, $1);
+         insertChild($$, $3);
+         pointer=sPush(pointer,$$);
+      }
 
   | expressao '*' expressao
-      { $$ = createNode(IKS_AST_ARIM_MULTIPLICACAO, 0); insertChild($$, $1); insertChild($$, $3); pointer=sPush(pointer,$$);}
+      {
+         $$ = createNode(IKS_AST_ARIM_MULTIPLICACAO, 0);
+         insertChild($$, $1);
+         insertChild($$, $3);
+         pointer=sPush(pointer,$$);
+      }
 
   | expressao '/' expressao
-      { $$ = createNode(IKS_AST_ARIM_DIVISAO, 0); insertChild($$, $1); insertChild($$, $3);pointer=sPush(pointer,$$); }
+      {
+         $$ = createNode(IKS_AST_ARIM_DIVISAO, 0);
+         insertChild($$, $1);
+         insertChild($$, $3);
+         pointer=sPush(pointer,$$);
+      }
 
   | expressao '<' expressao
-      { $$ = createNode(IKS_AST_LOGICO_COMP_L, 0); insertChild($$, $1); insertChild($$, $3);pointer=sPush(pointer,$$); }
+      {
+         $$ = createNode(IKS_AST_LOGICO_COMP_L, 0);
+         insertChild($$, $1);
+         insertChild($$, $3);
+         pointer=sPush(pointer,$$);
+      }
 
   | expressao '>' expressao
-      { $$ = createNode(IKS_AST_LOGICO_COMP_G, 0); insertChild($$, $1); insertChild($$, $3);pointer=sPush(pointer,$$); }
+      {
+         $$ = createNode(IKS_AST_LOGICO_COMP_G, 0);
+         insertChild($$, $1);
+         insertChild($$, $3);
+         pointer=sPush(pointer,$$);
+      }
 
   | '+' expressao
       { $$ = $2; }
@@ -585,22 +628,52 @@ expressao:
       { $$ = $2; }
 
   | expressao TK_OC_LE expressao
-      { $$ = createNode(IKS_AST_LOGICO_COMP_LE, 0); insertChild($$, $1); insertChild($$, $3); pointer=sPush(pointer,$$);}
+      {
+         $$ = createNode(IKS_AST_LOGICO_COMP_LE, 0);
+         insertChild($$, $1);
+         insertChild($$, $3);
+         pointer=sPush(pointer,$$);
+      }
 
   | expressao TK_OC_GE expressao
-      { $$ = createNode(IKS_AST_LOGICO_COMP_GE, 0); insertChild($$, $1); insertChild($$, $3); pointer=sPush(pointer,$$);}
+      {
+         $$ = createNode(IKS_AST_LOGICO_COMP_GE, 0);
+         insertChild($$, $1);
+         insertChild($$, $3);
+         pointer=sPush(pointer,$$);
+      }
 
   | expressao TK_OC_EQ expressao
-      { $$ = createNode(IKS_AST_LOGICO_COMP_IGUAL, 0); insertChild($$, $1); insertChild($$, $3); pointer=sPush(pointer,$$);}
+      {
+         $$ = createNode(IKS_AST_LOGICO_COMP_IGUAL, 0);
+         insertChild($$, $1);
+         insertChild($$, $3);
+         pointer=sPush(pointer,$$);
+      }
 
   | expressao TK_OC_NE expressao
-      { $$ = createNode(IKS_AST_LOGICO_COMP_DIF, 0); insertChild($$, $1); insertChild($$, $3); pointer=sPush(pointer,$$);}
+      {
+         $$ = createNode(IKS_AST_LOGICO_COMP_DIF, 0);
+         insertChild($$, $1);
+         insertChild($$, $3);
+         pointer=sPush(pointer,$$);
+      }
 
   | expressao TK_OC_OR expressao
-      { $$ = createNode(IKS_AST_LOGICO_OU, 0); insertChild($$, $1); insertChild($$, $3); pointer=sPush(pointer,$$);}
+      {
+         $$ = createNode(IKS_AST_LOGICO_OU, 0);
+         insertChild($$, $1);
+         insertChild($$, $3);
+         pointer=sPush(pointer,$$);
+      }
 
   | expressao TK_OC_AND expressao
-      { $$ = createNode(IKS_AST_LOGICO_E, 0); insertChild($$, $1); insertChild($$, $3); pointer=sPush(pointer,$$);}
+      {
+         $$ = createNode(IKS_AST_LOGICO_E, 0);
+         insertChild($$, $1);
+         insertChild($$, $3);
+         pointer=sPush(pointer,$$);
+      }
 
   ;
 
