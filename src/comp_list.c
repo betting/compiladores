@@ -187,9 +187,8 @@ comp_list_t* getLocalList(comp_list_t* list, comp_list_t* function)
 {
    comp_list_t* aux = list;
 
-   if (list != NULL)
+   if ((list != NULL) && (function != NULL))
    {
-      //while ((aux->tipoGlobal != function->tipoGlobal) && (strcmp(aux->nomeVar, function->nomeVar) != 0))
       while ((strcmp(aux->nomeVar, function->nomeVar) != 0))
       {
          aux = aux->next;
