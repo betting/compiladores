@@ -120,6 +120,7 @@ p: s
          printList(listFunctions);
          pointer = invert(pointer);
          sPop(pointer, listFunctions, declarationList,0);
+         printStack(pointer);
       }
   ;
 s:

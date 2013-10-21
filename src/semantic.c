@@ -32,6 +32,27 @@ STACK* invert(STACK* stack)
 	return stack;
 }
 
+
+void printStack(STACK* stack_l)
+{
+   printf("NO DISC \n\t Tipo de Dados \t Variável \t Tamanho \n");
+
+   while( stack_l != NULL)
+   {
+      printf("%d \t %s \t %d \n", stack_l->disc->type, stack_l->disc->symbol->token, stack_l->disc->size);
+      stack_l = stack_l->next;
+   }
+ /*  
+   printf("\n\nNO SYMBOL \n\t Tipo de Dados \t Variável \t Tamanho \n");
+ 
+   while( stack_l != NULL)
+   {
+      printf("%d \t %d \t %s \n", stack_l->disc->type, stack_l->disc->symbol->token, stack_l->disc->symbol->token);
+      list = list->next;
+   }
+   */
+}
+
 STACK* sPush(STACK* pointer, comp_tree_t* nodoAST)
 {
     //if(nodoAST->symbol->token!=NULL)

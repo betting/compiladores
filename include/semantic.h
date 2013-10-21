@@ -69,7 +69,7 @@ STACK* initStack(void);
 
 STACK* sPush(STACK* pointer, comp_tree_t* nodoAST);
 
-
+void printStack(STACK* stack_l);
 /**
  * Check Declarations.
  * 
