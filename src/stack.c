@@ -10,6 +10,8 @@ STACK2* initStack2()
 {
 	STACK2* stack_l = malloc(sizeof(STACK2*));
 	stack_l = NULL;
+	//stack_l->next = NULL;
+	//stack_l->disc = initList();
 	//stack_l->disc->nomeVar = NULL;
 	//stack_l->disc->tipoVar = 0;
 	//stack_l->type = 99;
@@ -42,23 +44,61 @@ STACK2* addStack(STACK2* stack_l, STACK2* node)
    return stack_l;
 }
 
+STACK2* addItemStack(int tipoVar, char *nomeVar, int tipoGlobal, STACK2* node)
+{
+	
+	STACK2* new;
+	new = (STACK2 *)malloc(sizeof(STACK2));
+	new->tipoVar = tipoVar;
+	new->nomeVar = nomeVar;
+	new->type = tipoGlobal;
+	new->next = NULL;
+	new->size = sizeDeclarations(tipoVar);
+    
+    node = addStack(node, new);
+
+	return node;
+}
+
 //insere no topo da pilha
 STACK2* push_s(comp_list_t* list)
 {
-	comp_list_t* list_aux;
+	STACK2* new = initStack2();
+	STACK2* aux = initStack2();
+	//comp_list_t* list = (comp_list_t *)malloc(sizeof(comp_list_t));
 
-	STACK2* new;
-	new = initStack2();
+	//list = list_aux;
+
 	
 	int aux_tipoGlobal, aux_tipoVar;
 	char *aux_nomeVar;
 	
 	//printf("\n\nPUSH:");
+	
+		if(new == NULL)
+		{
+			//new = initStack2();
+			aux_nomeVar = list->nomeVar;
+			aux_tipoVar = list->tipoVar;
+			aux_tipoGlobal = list->tipoGlobal;	
+			
+			printf("\nNOME_VAR => %s", aux_nomeVar);
+			printf("\nTIPO_VAR => %d", aux_tipoVar);
+			printf("\nGLOBAL_VAR => %d", aux_tipoGlobal);
+
+			aux = addItemStack(aux_tipoVar,aux_nomeVar,aux_tipoGlobal,aux);	
+			aux->next = NULL;
+
+			list = list->next;
+
+			new = aux;
+		}
 
 	while(list != NULL)
 	{
-		if(new == NULL)
-		{
+
+		//else
+		//{		
 			aux_nomeVar = list->nomeVar;
 			aux_tipoVar = list->tipoVar;
 			aux_tipoGlobal = list->tipoGlobal;	
@@ -67,16 +107,16 @@ STACK2* push_s(comp_list_t* list)
 			printf("\nTIPO_VAR => %d", aux_tipoVar);
 			printf("\nGLOBAL_VAR => %d", aux_tipoGlobal);
 			
-			new->disc->nomeVar = aux_nomeVar;
-			new->disc->tipoVar = aux_tipoVar;
-			new->type = aux_tipoGlobal;
+			aux = addItemStack(aux_tipoVar,aux_nomeVar,aux_tipoGlobal,aux);	
+//			aux->next = new;
 			
-			new->size = sizeDeclarations(list->tipoVar);
+//			new = aux;
 			
-			new->next = initStack2();
-			new = new->next;
-			list = list->next;	
-		}
+//			list = list->next;	
+			
+		//}
+		list = list->next;
+	
 	}
 	
 	
@@ -87,7 +127,6 @@ STACK2* push_s(comp_list_t* list)
 }
 
 
-
 void printStack2(STACK2* stack_l)
 {
    printf("\n\nSTACK2");
@@ -95,21 +134,14 @@ void printStack2(STACK2* stack_l)
    while( stack_l != NULL)
    {
 	  printf("\n(GLOBAL)STACK->TYPE = %d", stack_l->type);
-	  printf("\nSTACK->disc->tipoVar = %d", stack_l->disc->tipoVar);
-	  printf("\nSTACK->disc->nomeVar = %s\n", stack_l->disc->nomeVar);
+	  printf("\nSTACK->tipoVar = %d", stack_l->tipoVar);
+	  printf("\nSTACK->nomeVar = %s", stack_l->nomeVar);
+	  printf("\nSTACK->size = %d", stack_l->size);
 	  stack_l = stack_l->next;
       //printf("%d \t %s \t %d \n", stack_l->disc->type, stack_l->disc->symbol->token, stack_l->disc->size);
       //stack_l = stack_l->next;
    }
- /*  
-   printf("\n\nNO SYMBOL \n\t Tipo de Dados \t Variável \t Tamanho \n");
- 
-   while( stack_l != NULL)
-   {
-      printf("%d \t %d \t %s \n", stack_l->disc->type, stack_l->disc->symbol->token, stack_l->disc->symbol->token);
-      list = list->next;
-   }
-   */
+   
 }
 
 

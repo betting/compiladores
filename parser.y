@@ -128,7 +128,7 @@ p: s
          //pointerStack = listToStack(declarationList);
          //printStack(pointer);
          pointerStack = push_s(declarationList);
-         //printListK(declarationList);
+         printStack2(pointerStack);
       }
   ;
 s:
