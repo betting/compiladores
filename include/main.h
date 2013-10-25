@@ -10,6 +10,7 @@
 #include "comp_list.h"
 #include "comp_tree.h"
 #include "comp_graph.h"
+#include "stack.h"
 #include "iks_ast.h"
 #include "gv.h"
 

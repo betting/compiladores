@@ -17,5 +17,6 @@ ADD_EXECUTABLE(main
   src/comp_tree.c
   src/comp_graph.c
   src/semantic.c
+  src/stack.c
 )
 TARGET_LINK_LIBRARIES(main ${FLEX_LIBRARIES})

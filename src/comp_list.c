@@ -134,8 +134,10 @@ void printList(comp_list_t *list)
    {
       printf("%d \t %d \t %s \n", list->tipoGlobal, list->tipoVar, list->nomeVar);
       list = list->next;
-   }
+   }  
+   
 }
+
 
 comp_list_t* searchToken(comp_list_t* list, char* text)
 {

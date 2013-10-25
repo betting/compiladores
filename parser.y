@@ -7,6 +7,8 @@
 #include "comp_list.h"
 #include "iks_ast.h"
 #include "semantic.h"
+#include "stack.h"
+
 
 FILE *yyin;
 
@@ -14,9 +16,10 @@ FILE *yyin;
 
 %union 
 {
-        comp_dict_item_t *symbol;
+        comp_dict_item_t *symbol;      
         comp_tree_t *tree;
         int integer;
+
 }
 
 /* Declaração dos tokens da gramática da Linguagem K */
@@ -91,6 +94,8 @@ FILE *yyin;
 
 %type<integer> tipo_var
 
+
+
 %right
    TK_OC_AND
    TK_OC_OR
@@ -118,9 +123,12 @@ p: s
          //checkUtilization($$);
          printList(declarationList);
          printList(listFunctions);
-         pointer = invert(pointer);
-         sPop(pointer, listFunctions, declarationList,0);
-         printStack(pointer);
+         //pointer = invert(pointer);
+         //sPop(pointer, listFunctions, declarationList,0);
+         //pointerStack = listToStack(declarationList);
+         //printStack(pointer);
+         pointerStack = push_s(declarationList);
+         //printListK(declarationList);
       }
   ;
 s:
@@ -513,39 +521,39 @@ expressao:
     TK_LIT_INT
       {
          $$ = createNode(IKS_AST_LITERAL, $1);
-         pointer=sPush(pointer,$$);
+         //pointer=sPush(pointer,$$);
       }
 
   | TK_LIT_FLOAT
       {
          $$ = createNode(IKS_AST_LITERAL, $1);
-         pointer=sPush(pointer,$$);
+         //pointer=sPush(pointer,$$);
       }
 
   | TK_LIT_FALSE
       {
          $$ = createNode(IKS_AST_LITERAL, $1);
-         pointer=sPush(pointer,$$);
+         //pointer=sPush(pointer,$$);
       }
 
   | TK_LIT_TRUE
       {
          $$ = createNode(IKS_AST_LITERAL, $1);
-         pointer=sPush(pointer,$$);
+         //pointer=sPush(pointer,$$);
       }
 
   | TK_LIT_CHAR
       {
          $1->token = (char *)convertString($1->token);
          $$ = createNode(IKS_AST_LITERAL, $1);
-         pointer=sPush(pointer,$$);
+         //pointer=sPush(pointer,$$);
       }
 
   | TK_LIT_STRING
       {
          $1->token = (char *)convertString($1->token);
          $$ = createNode(IKS_AST_LITERAL, $1);
-         pointer=sPush(pointer,$$);
+         //pointer=sPush(pointer,$$);
       }
   
   | chamada_funcao

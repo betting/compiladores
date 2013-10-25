@@ -39,8 +39,12 @@ void printStack(STACK* stack_l)
 
    while( stack_l != NULL)
    {
-      printf("%d \t %s \t %d \n", stack_l->disc->type, stack_l->disc->symbol->token, stack_l->disc->size);
-      stack_l = stack_l->next;
+	  //printf("\nSTACK->TYPE = %d", stack_l->type);
+	  printf("\nSTACK->disc->type = %d", stack_l->disc->type);
+	  printf("\nSTACK->disc->symbol->type = %d\n", stack_l->disc->symbol->type);
+	  stack_l = stack_l->next;
+      //printf("%d \t %s \t %d \n", stack_l->disc->type, stack_l->disc->symbol->token, stack_l->disc->size);
+      //stack_l = stack_l->next;
    }
  /*  
    printf("\n\nNO SYMBOL \n\t Tipo de Dados \t Variável \t Tamanho \n");
@@ -364,11 +368,11 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
 						break;
 						
 			case IKS_AST_LITERAL:
-						pointer->disc->type = aux_list->tipoVar;
+						/*pointer->disc->type = aux_list->tipoVar;
 						pointer->disc->size = sizeDeclarations(pointer->disc->type);
-						printf("\n\tLITERAL type: %d - size: %d",pointer->disc->type,pointer->disc->size);
+						printf("\n\tLITERAL type: %d - size: %d",pointer->disc->type,pointer->disc->size);*/
 						break;
-		
+		 
 		}
 		
 		pointer= pointer->next;
