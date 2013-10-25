@@ -61,7 +61,7 @@ STACK2* addItemStack(int tipoVar, char *nomeVar, int tipoGlobal, STACK2* node)
 }
 
 //insere no topo da pilha
-STACK2* push_s(comp_list_t* list)
+STACK2* listToStack(comp_list_t* list)
 {
 	STACK2* new = initStack2();
 	STACK2* aux = initStack2();

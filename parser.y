@@ -127,7 +127,7 @@ p: s
          //sPop(pointer, listFunctions, declarationList,0);
          //pointerStack = listToStack(declarationList);
          //printStack(pointer);
-         pointerStack = push_s(declarationList);
+         pointerStack = listToStack(declarationList);
          printStack2(pointerStack);
       }
   ;
