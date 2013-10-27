@@ -12,6 +12,8 @@
 #include "iks_ast.h"
 #include "semantic.h"
 
+FILE *logFile;
+
 /**
  *  Initiate Stack
  *  
@@ -35,46 +37,61 @@ STACK* invert(STACK* stack)
 
 void printStack(STACK* stack_l)
 {
-   printf("NO DISC \n\t Tipo de Dados \t Variável \t Tamanho \n");
-
+//   printf("NO DISC \n\t Tipo de Dados \t Variável \t Tamanho \n");
+//logFile = fopen("file.txt","a+");
    while( stack_l != NULL)
    {
 	  //printf("\nSTACK->TYPE = %d", stack_l->type);
-	  printf("\nSTACK->disc->type = %d", stack_l->disc->type);
-	  printf("\nSTACK->disc->symbol->type = %d\n", stack_l->disc->symbol->type);
-	  stack_l = stack_l->next;
-      //printf("%d \t %s \t %d \n", stack_l->disc->type, stack_l->disc->symbol->token, stack_l->disc->size);
-      //stack_l = stack_l->next;
+//	  printf("\nSTACK->disc->type = %d", stack_l->disc->type);
+	  printf("%s\n", stack_l->disc->symbol->token);
+
+//fprintf(logFile, stack_l->disc->symbol->token);
+
+      stack_l = stack_l->next;
    }
- /*  
-   printf("\n\nNO SYMBOL \n\t Tipo de Dados \t Variável \t Tamanho \n");
- 
-   while( stack_l != NULL)
-   {
-      printf("%d \t %d \t %s \n", stack_l->disc->type, stack_l->disc->symbol->token, stack_l->disc->symbol->token);
-      list = list->next;
-   }
-   */
+//   fclose(logFile);
 }
 
 STACK* sPush(STACK* pointer, comp_tree_t* nodoAST)
 {
-    //if(nodoAST->symbol->token!=NULL)
-	//	printf("\nnodo_ast token => %s",nodoAST->symbol->token);
 	STACK* new = malloc(sizeof(STACK*));
 	new->disc = nodoAST;
 	new->next = NULL;
 	new->previous = NULL;
 
-
-	if(pointer != NULL){ 
-		new->previous = pointer;
-		pointer->next = new;
-	}
-		
-	pointer = new;
+/*
+   if(pointer != NULL)
+   { 
+      new->previous = pointer;
+      pointer->next = new;
+   }
+        
+     pointer = new;
+*/     
+   pointer = addElementStack(pointer, new);
 
 	return pointer;
+}
+
+
+STACK* addElementStack(STACK* stack, STACK* newElement)
+{
+   if (stack == NULL)
+   {
+      stack = newElement;
+   }
+   else if (stack->next == NULL)
+   {
+      // Atualizando pilha (duplamente encadeada) - segundo elemento
+      stack->next = newElement;
+      newElement->previous = stack;
+   }
+   else
+   {
+      addElementStack(stack->next, newElement);
+   }
+
+   return stack;
 }
 
 int sizeDeclarations(int type)

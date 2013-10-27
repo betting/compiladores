@@ -94,4 +94,5 @@ int checkUtilization(comp_tree_t *root);
 
 int sizeDeclarations(int type);
 void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_type);
+STACK* addElementStack(STACK* stack, STACK* newElement);
 #endif
