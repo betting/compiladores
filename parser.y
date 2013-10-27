@@ -205,7 +205,7 @@ def_funcao:
       {
          $$ = createNode(IKS_AST_FUNCAO, $1);
          insertChild($$, $3);
-//         pointer=sPush(pointer,$$);
+         pointer=sPush(pointer,$$);
       }
   ;
 
@@ -416,7 +416,8 @@ lista_expressoes_nao_vazia:
     expressao ',' lista_expressoes_nao_vazia
       {
          insertChild($$, $3);
-         pointer=sPush(pointer,$$);
+         
+//         pointer=sPush(pointer,$$); // Não utilizado, duplica os valores.
       }
 
   | expressao
