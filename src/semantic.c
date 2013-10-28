@@ -251,6 +251,21 @@ int checkUtilization(comp_tree_t *root)
 
 
 
+int coertion(int type1, int type2)
+{
+	
+        if(type1 == type2) return type1;
+
+		//erros de coerção
+        if(type2 == IKS_STRING) exit(IKS_ERROR_STRING_TO_X);
+        if(type2 == IKS_CHAR) exit(IKS_ERROR_CHAR_TO_X);
+		if((type1 == IKS_STRING) || (type1 == IKS_CHAR )) exit(IKS_ERROR_WRONG_TYPE); 	
+
+        if(type1 == IKS_INT && (type2 == IKS_FLOAT||type2 == IKS_BOOL)) return IKS_INT;  
+        if((type1 == IKS_FLOAT) && ((type2 == IKS_INT)||(type2 == IKS_BOOL))) return IKS_FLOAT;
+        if((type1 == IKS_BOOL) && (type2 == IKS_FLOAT || type2 == IKS_INT)) return IKS_BOOL;
+}
+
 /*
  * Regras de inferência
  * @param type1
