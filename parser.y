@@ -126,7 +126,7 @@ p: s
 //         printList(declarationList);
 //         printList(listFunctions);
          //pointer = invert(pointer);
-         //sPop(pointer, listFunctions, declarationList,0);
+         sPop(pointer, listFunctions, declarationList,0);
          //pointerStack = listToStack(declarationList);
          printStack(pointer);
          //pointerStack = listToStack(declarationList);

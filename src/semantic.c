@@ -287,16 +287,14 @@ int inference(int type1, int type2)
 	}
 	else
 	{
-      if((type1 == IKS_INT)
-            || (type1 == IKS_FLOAT)
-            || (type1 == IKS_BOOL))
+      if(((type1 == IKS_INT) || (type1 == IKS_FLOAT) || (type1 == IKS_BOOL)) && ((type2 != IKS_INT) || (type2 != IKS_FLOAT) || (type2 != IKS_BOOL)))
       {
-         return type1;
+         if(type2 == IKS_CHAR) exit(IKS_ERROR_CHAR_TO_X);
+         if(type2 == IKS_STRING) exit(IKS_ERROR_STRING_TO_X);
       }
-      else
-      {	
-         return type2;
-      }
+      else 
+      if((type1 == IKS_STRING)||(type1 == IKS_CHAR)) exit(IKS_ERROR_WRONG_TYPE);
+
    }
 }
 
