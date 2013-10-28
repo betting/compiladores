@@ -19,7 +19,6 @@ FILE *yyin;
         comp_dict_item_t *symbol;      
         comp_tree_t *tree;
         int integer;
-        char *string;
 
 }
 
@@ -121,12 +120,12 @@ p: s
          $$ = createNode(IKS_AST_PROGRAMA,0);
          insertChild($$, $1);
          saveASTRoot($$);
-         //checkDeclarations($$);
+         checkDeclarations(pointer, declarationList);
          //checkUtilization($$);
-//         printList(declarationList);
+         printList(declarationList);
 //         printList(listFunctions);
          //pointer = invert(pointer);
-         sPop(pointer, listFunctions, declarationList,0);
+//         sPop(pointer, listFunctions, declarationList,0);
          //pointerStack = listToStack(declarationList);
          printStack(pointer);
          //pointerStack = listToStack(declarationList);

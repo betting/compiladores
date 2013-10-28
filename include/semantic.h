@@ -43,6 +43,9 @@
 #define IKS_GLOBAL_VET 1 //PARAMETRO PRA DEFINIR VETOR GLOBAL
 #define IKS_FUNCTION 2
 
+#define TRUE 1
+#define FALSE 0
+
 /**
  * Stack for organize 
  */ 
@@ -78,8 +81,7 @@ void printStack(STACK* stack_l);
  * @param *root   The tree with all elements found
  * @return The return code (sucess or error)
  */
-
-int checkDeclarations(comp_tree_t *root);
+int checkDeclarations(STACK* stack, comp_list_t* declarationList);
 
 /**
  * Check Utilization.

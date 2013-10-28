@@ -188,10 +188,25 @@ int insertDeclarations(comp_dict_item_t* dictNode, int escopo)
  * @param *root   The tree with all elements found
  * @return The return code (sucess or error)
  */
-int checkDeclarations(comp_tree_t *root)
+int checkDeclarations(STACK* stack, comp_list_t* declarationList)
 {
+   int retorno;
+   while (stack->next != NULL)
+   {
+      if (stack->disc->symbol->type == IKS_AST_IDENTIFICADOR)
+      {
+         retorno = verifyGlobalDeclarations(stack->disc->symbol->token, declarationList);
+         if (retorno == FALSE)
+         {
+            return FALSE;
+         }
+      }
+   }
+
+   return retorno;
+/*
    // Checking if there are variable/vector declariation or function definition.
-   if(root->type == IKS_AST_FUNCAO || root->type == IKS_AST_VETOR_INDEXADO)
+   if(stack->disc->symbol->type == IKS_AST_FUNCAO || stack->disc->symbol->type == IKS_AST_VETOR_INDEXADO)
    {
       if(root->symbol == 0)
       {
@@ -212,6 +227,23 @@ int checkDeclarations(comp_tree_t *root)
 	 }
       }
    }
+*/
+//return 1;
+}
+
+int verifyGlobalDeclarations(char* token, comp_list_t* declarationList)
+{
+   while (declarationList->next != NULL)
+   {
+      if ((strcmp(declarationList->nomeVar, token) == 0)
+            && (declarationList->tipoGlobal == IKS_GLOBAL_VAR))
+      {
+         return TRUE;
+      }
+      declarationList = declarationList->next;
+   }
+
+   return FALSE; 
 }
 
 /**
