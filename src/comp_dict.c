@@ -158,3 +158,36 @@ char* convertString(char* value)
 
    return newString;
 }
+
+
+/**
+ * Create new item for Dictionary.
+ *
+ * Generates new key/value of a Dictionary, according to the value specified.
+ *
+ * @param  *token    Dicitonary value/key (Unique value).
+ * @param  *text  String to be added.
+ * @param  type   Type of identifiers/literal 
+ * @return Dictionary item created (Key/Value).
+ */
+comp_dict_item_t* createDictionaryItem(char *token, char *text, int type)
+{
+   comp_dict_item_t *element;
+
+   // Creating new dictionary item
+   element = (comp_dict_item_t *)malloc(sizeof(comp_dict_item_t));
+
+   // Adding new elements to it.
+   element->token = (char*)calloc(strlen(token)+1,sizeof(char));
+   strcpy(element->token, token);
+
+   element->text = (char*)calloc(strlen(text)+1,sizeof(char));
+   strcpy(element->text, text);
+
+   element->type = type;
+
+   element->next = 0;
+
+   return element;
+}
+

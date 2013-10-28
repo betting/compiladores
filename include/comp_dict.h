@@ -68,4 +68,17 @@ void printDict();
  * @return char* New value without the chars.
  */
 char* convertString(char* value);
+
+/**
+ * Create new item for Dictionary.
+ *                     
+ * Generates new key/value of a Dictionary, according to the value specified.
+ *
+ * @param  *token    Dicitonary value/key (Unique value).
+ * @param  *text  String to be added.
+ * @param  type   Type of identifiers/literal 
+ * @return Dictionary item created (Key/Value).
+ */
+comp_dict_item_t* createDictionaryItem(char *token, char *text, int type);
+
 #endif

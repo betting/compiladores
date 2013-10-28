@@ -19,6 +19,7 @@ FILE *yyin;
         comp_dict_item_t *symbol;      
         comp_tree_t *tree;
         int integer;
+        char *string;
 
 }
 
@@ -47,13 +48,14 @@ FILE *yyin;
        TK_OC_AND
        TK_OC_OR
        TOKEN_ERRO
-       TK_IDENTIFICADOR
        '+'
        '-'
        '*'
        '/'
        '<'
        '>'
+
+%token TK_IDENTIFICADOR
 
 %token<tree> TK_PR_INT
              TK_PR_FLOAT
@@ -364,6 +366,11 @@ atribuicao:
          $$ = createNode(IKS_AST_ATRIBUICAO, 0);
          insertChild($$, $1);
          insertChild($$, $3);
+
+         comp_tree_t *treeItem;
+         treeItem = createNewNode(IKS_AST_ATRIBUICAO, "=");
+
+         pointer=sPush(pointer, treeItem);
 //         pointer=sPush(pointer,$1);
       }
 
@@ -586,6 +593,11 @@ expressao:
          $$ = createNode(IKS_AST_ARIM_SOMA, 0);
          insertChild($$, $1);
          insertChild($$, $3);
+         
+         comp_tree_t *treeItem;
+         treeItem = createNewNode(IKS_AST_ARIM_SOMA, "+");
+
+         pointer=sPush(pointer, treeItem);
 //         pointer=sPush(pointer,$$);
       }
 
@@ -594,6 +606,11 @@ expressao:
          $$ = createNode(IKS_AST_ARIM_SUBTRACAO, 0);
          insertChild($$, $1);
          insertChild($$, $3);
+
+         comp_tree_t *treeItem;
+         treeItem = createNewNode(IKS_AST_ARIM_SUBTRACAO, "-");
+
+         pointer=sPush(pointer, treeItem);
 //         pointer=sPush(pointer,$$);
       }
 
@@ -602,6 +619,11 @@ expressao:
          $$ = createNode(IKS_AST_ARIM_MULTIPLICACAO, 0);
          insertChild($$, $1);
          insertChild($$, $3);
+
+         comp_tree_t *treeItem;
+         treeItem = createNewNode(IKS_AST_ARIM_MULTIPLICACAO, "*");
+
+         pointer=sPush(pointer, treeItem);
 //         pointer=sPush(pointer,$$);
       }
 
@@ -610,6 +632,11 @@ expressao:
          $$ = createNode(IKS_AST_ARIM_DIVISAO, 0);
          insertChild($$, $1);
          insertChild($$, $3);
+         
+         comp_tree_t *treeItem;
+         treeItem = createNewNode(IKS_AST_ARIM_DIVISAO, "/");
+
+         pointer=sPush(pointer, treeItem);
 //         pointer=sPush(pointer,$$);
       }
 
@@ -618,6 +645,11 @@ expressao:
          $$ = createNode(IKS_AST_LOGICO_COMP_L, 0);
          insertChild($$, $1);
          insertChild($$, $3);
+
+         comp_tree_t *treeItem;
+         treeItem = createNewNode(IKS_AST_LOGICO_COMP_L, "<");
+
+         pointer=sPush(pointer, treeItem);
 //         pointer=sPush(pointer,$$);
       }
 
@@ -626,6 +658,11 @@ expressao:
          $$ = createNode(IKS_AST_LOGICO_COMP_G, 0);
          insertChild($$, $1);
          insertChild($$, $3);
+
+         comp_tree_t *treeItem;
+         treeItem = createNewNode(IKS_AST_LOGICO_COMP_G, ">");
+
+         pointer=sPush(pointer, treeItem);
 //         pointer=sPush(pointer,$$);
       }
 
@@ -636,6 +673,11 @@ expressao:
       {
          $$ = createNode(IKS_AST_ARIM_INVERSAO, 0);
          insertChild($$, $2);
+         
+         comp_tree_t *treeItem;
+         treeItem = createNewNode(IKS_AST_ARIM_INVERSAO, "-");
+
+         pointer=sPush(pointer, treeItem);
 //         pointer=sPush(pointer,$$);
       }
 
@@ -643,6 +685,11 @@ expressao:
       {
          $$ = createNode(IKS_AST_LOGICO_COMP_NEGACAO, 0);
          insertChild($$, $2);
+
+         comp_tree_t *treeItem;
+         treeItem = createNewNode(IKS_AST_LOGICO_COMP_NEGACAO, "!");
+
+         pointer=sPush(pointer, treeItem);
 //         pointer=sPush(pointer,$$);
       }
 
@@ -654,6 +701,11 @@ expressao:
          $$ = createNode(IKS_AST_LOGICO_COMP_LE, 0);
          insertChild($$, $1);
          insertChild($$, $3);
+
+         comp_tree_t *treeItem;
+         treeItem = createNewNode(IKS_AST_LOGICO_COMP_LE, "<=");
+
+         pointer=sPush(pointer, treeItem);
 //         pointer=sPush(pointer,$$);
       }
 
@@ -662,6 +714,11 @@ expressao:
          $$ = createNode(IKS_AST_LOGICO_COMP_GE, 0);
          insertChild($$, $1);
          insertChild($$, $3);
+
+         comp_tree_t *treeItem;
+         treeItem = createNewNode(IKS_AST_LOGICO_COMP_GE, ">=");
+
+         pointer=sPush(pointer, treeItem);
 //         pointer=sPush(pointer,$$);
       }
 
@@ -670,6 +727,11 @@ expressao:
          $$ = createNode(IKS_AST_LOGICO_COMP_IGUAL, 0);
          insertChild($$, $1);
          insertChild($$, $3);
+         
+         comp_tree_t *treeItem;
+         treeItem = createNewNode(IKS_AST_LOGICO_COMP_IGUAL, "==");
+
+         pointer=sPush(pointer, treeItem);
 //         pointer=sPush(pointer,$$);
       }
 
@@ -678,6 +740,11 @@ expressao:
          $$ = createNode(IKS_AST_LOGICO_COMP_DIF, 0);
          insertChild($$, $1);
          insertChild($$, $3);
+         
+         comp_tree_t *treeItem;
+         treeItem = createNewNode(IKS_AST_LOGICO_COMP_DIF, "!=");
+
+         pointer=sPush(pointer, treeItem);
 //         pointer=sPush(pointer,$$);
       }
 
@@ -686,6 +753,11 @@ expressao:
          $$ = createNode(IKS_AST_LOGICO_OU, 0);
          insertChild($$, $1);
          insertChild($$, $3);
+         
+         comp_tree_t *treeItem;
+         treeItem = createNewNode(IKS_AST_LOGICO_OU, "||");
+
+         pointer=sPush(pointer, treeItem);
 //         pointer=sPush(pointer,$$);
       }
 
@@ -694,6 +766,11 @@ expressao:
          $$ = createNode(IKS_AST_LOGICO_E, 0);
          insertChild($$, $1);
          insertChild($$, $3);
+         
+         comp_tree_t *treeItem;
+         treeItem = createNewNode(IKS_AST_LOGICO_E, "&&");
+
+         pointer=sPush(pointer, treeItem);
 //         pointer=sPush(pointer,$$);
       }
 
