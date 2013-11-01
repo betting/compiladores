@@ -191,10 +191,14 @@ int insertDeclarations(comp_dict_item_t* dictNode, int escopo)
 int checkDeclarations(STACK* stack, comp_list_t* declarationList)
 {
    int retorno;
+   printf("\nchegou AQUI!");
    while (stack->next != NULL)
    {
+	  printf("\nEntrei no while!");
+   
       if (stack->disc->symbol->type == IKS_AST_IDENTIFICADOR)
       {
+		 printf("\nIF DO STACK!");
          retorno = verifyGlobalDeclarations(stack->disc->symbol->token, declarationList);
          if (retorno == FALSE)
          {
@@ -203,6 +207,8 @@ int checkDeclarations(STACK* stack, comp_list_t* declarationList)
       }
    }
 
+   printf("\nAntes do retorno!");
+   
    return retorno;
 /*
    // Checking if there are variable/vector declariation or function definition.
@@ -349,7 +355,7 @@ int inference(int type1, int type2)
 void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_type)
 {
 
-	//printf("\n$$$$$$$ TIPO DA FUNC = %d  ======\n", pointer->disc->type);
+	printf("\n$$$$$$$ TIPO DA FUNC = %d  ======\n", pointer->disc->type);
 	int flag = 0;	// 1- global var ----- 2- global vector ------- 3- local var
 	comp_list_t* aux_list;
     comp_list_t *lastFunctionNameItem;
@@ -358,29 +364,34 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
 	if(pointer!=NULL){ 
 		switch(pointer->disc->type)
 		{
-			
+			case IKS_AST_ARIM_SUBTRACAO:
+            case IKS_AST_ARIM_MULTIPLICACAO:
+            case IKS_AST_LOGICO_E:
+            case IKS_AST_LOGICO_OU:
+            case IKS_AST_ARIM_DIVISAO:
+            case IKS_AST_LOGICO_COMP_DIF:
+            case IKS_AST_LOGICO_COMP_IGUAL:
+            case IKS_AST_LOGICO_COMP_LE:
+            case IKS_AST_LOGICO_COMP_GE:
+            case IKS_AST_LOGICO_COMP_L:
+            case IKS_AST_LOGICO_COMP_G: 
 			case IKS_AST_ARIM_SOMA:
+							printf("\nEntrei em alguma operação !");
 							pointer->disc->type = inference(pointer->disc->child->type,pointer->disc->sibling->type);
-							//printf("\nInferencia: %d",pointer->disc->type);
+							printf("\nInferencia: %d",pointer->disc->type);
 							pointer->disc->size = sizeDeclarations(pointer->disc->type);
-							//printf("\nSIZE: %d",pointer->disc->type);						
-							printf("\n\tSOMA type: %d - size: %d",pointer->disc->type,pointer->disc->size);
+							printf("\nSIZE: %d",pointer->disc->type);						
+							printf("\n\tOPERACAO - type: %d - size: %d",pointer->disc->type,pointer->disc->size);
 							break;
 	
-			case IKS_AST_ARIM_SUBTRACAO:
+			/*case IKS_AST_ARIM_SUBTRACAO:
 							pointer->disc->type = inference(pointer->disc->child->type,pointer->disc->sibling->type);
 							pointer->disc->size = sizeDeclarations(pointer->disc->type);
 							printf("\n\tSUBTRAÇÃO type: %d - size: %d",pointer->disc->type,pointer->disc->size);
 							break;
-
-			case IKS_AST_ARIM_MULTIPLICACAO:
-							pointer->disc->type = inference(pointer->disc->child->type,pointer->disc->sibling->type);
-							pointer->disc->size = sizeDeclarations(pointer->disc->type);
-							printf("\n\tMULTIPLICAÇÃO type: %d - size: %d",pointer->disc->type,pointer->disc->size);
-							break;	
-		
+*/	
 			case IKS_AST_IDENTIFICADOR:
-						//printf("\n\t\t CHEGOU NO IDENTIFICADOR");
+						printf("\n\t\t CHEGOU NO IDENTIFICADOR");
 						//search in function list 
 						lastFunctionNameItem = getLastItemList(listFunctions);
 						localList = getLocalList(declarationList, lastFunctionNameItem);

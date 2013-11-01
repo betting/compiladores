@@ -120,12 +120,13 @@ p: s
          $$ = createNode(IKS_AST_PROGRAMA,0);
          insertChild($$, $1);
          saveASTRoot($$);
-         checkDeclarations(pointer, declarationList);
+//         checkDeclarations(pointer, declarationList);
          //checkUtilization($$);
          printList(declarationList);
+         printStack(pointer);
 //         printList(listFunctions);
-         //pointer = invert(pointer);
-//         sPop(pointer, listFunctions, declarationList,0);
+         pointer = invert(pointer);
+         sPop(pointer, listFunctions, declarationList,0);
          //pointerStack = listToStack(declarationList);
          printStack(pointer);
          //pointerStack = listToStack(declarationList);
