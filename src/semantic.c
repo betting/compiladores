@@ -21,18 +21,29 @@ FILE *logFile;
  */
 STACK* initStack(void)
 {
-	STACK* stack = malloc(sizeof(STACK*));
-	stack = NULL;
-	return stack;
+	STACK* pilha = malloc(sizeof(STACK*));
+	pilha = NULL;
+	return pilha;
 }
 
-STACK* invert(STACK* stack)
+STACK* invert(STACK* stack_old)
 {
-	while(stack->previous != NULL)
-		stack = stack->previous;
+	printf("\nINVERT");
+	while(stack_old->next != NULL) 
+		stack_old = stack_old->next;
 
-	return stack;
+	while(stack_old->previous != NULL)
+	{
+		printf("\nTOKEN: %s",stack_old->disc->symbol->token);
+		stack_old = stack_old->previous;	
+	}
+//	stack_old = stack_old->previous;
+    printf("\nTOKEN: %s",stack_old->disc->symbol->token);
+
+	
+	return stack_old;
 }
+
 
 
 void printStack(STACK* stack_l)
@@ -66,7 +77,7 @@ STACK* sPush(STACK* pointer, comp_tree_t* nodoAST)
       pointer->next = new;
    }
         
-     pointer = new;
+     //pointer = new;
 */     
    pointer = addElementStack(pointer, new);
 
@@ -74,24 +85,24 @@ STACK* sPush(STACK* pointer, comp_tree_t* nodoAST)
 }
 
 
-STACK* addElementStack(STACK* stack, STACK* newElement)
+STACK* addElementStack(STACK* S, STACK* newElement)
 {
-   if (stack == NULL)
+   if (S == NULL)
    {
-      stack = newElement;
+      S = newElement;
    }
-   else if (stack->next == NULL)
+   else if (S->next == NULL)
    {
       // Atualizando pilha (duplamente encadeada) - segundo elemento
-      stack->next = newElement;
-      newElement->previous = stack;
+      S->next = newElement;
+      newElement->previous = S;
    }
    else
    {
-      addElementStack(stack->next, newElement);
+      addElementStack(S->next, newElement);
    }
 
-   return stack;
+   return S;
 }
 
 int sizeDeclarations(int type)
@@ -384,7 +395,7 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
 							//if(pointer->disc->child->type!=NULL){printf("\nEntrei em alguma operação ! - X");
 							//}
 							printf("\nEntrei em alguma operação !");
-							pointer->disc->type = inference(pointer->disc->child->type,pointer->disc->sibling->type);
+							/*pointer->disc->type = inference(pointer->disc->child->type,pointer->disc->sibling->type);
 							printf("\nCHILD: %d - SIBLING %d",pointer->disc->child->type,pointer->disc->sibling->type);
 							
 							printf("\nInferencia: %d",pointer->disc->type);
@@ -398,7 +409,7 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
 							pointer->disc->size = sizeDeclarations(pointer->disc->type);
 							printf("\n\tSUBTRAÇÃO type: %d - size: %d",pointer->disc->type,pointer->disc->size);
 							break;
-*/	
+			*/	
 			case IKS_AST_IDENTIFICADOR:
 						printf("\n\t\t CHEGOU NO IDENTIFICADOR");
 						//search in function list 

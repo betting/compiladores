@@ -125,8 +125,10 @@ p: s
 //         printList(declarationList);
          printStack(pointer);
 //         printList(listFunctions);
-//         pointer = invert(pointer);
-         sPop(pointer, listFunctions, declarationList,0);
+         printf("\n\nPOINTER INVERTIDO");
+
+         pointer = invert(pointer);
+//        sPop(pointer, listFunctions, declarationList,0);
          printf("\n\nSEM FALHAS ATE AQUI");
          //pointerStack = listToStack(declarationList);
 //         printStack(pointer);
