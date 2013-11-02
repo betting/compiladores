@@ -120,16 +120,11 @@ p: s
          $$ = createNode(IKS_AST_PROGRAMA,0);
          insertChild($$, $1);
          saveASTRoot($$);
-         checkDeclarations(pointer, declarationList);
+//         checkDeclarations(pointer, declarationList);
          //checkUtilization($$);
-         //printf("\n\nPOINTER INVERTIDO");
          printList(declarationList);
-
-//         printStack(pointer);
 //         printList(listFunctions);
 
-//         printf("\n\nPOINTER INVERTIDO");
-         pointer = invert(pointer);
          printStack(pointer);
 
 //        sPop(pointer, listFunctions, declarationList,0);

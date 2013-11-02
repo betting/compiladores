@@ -58,26 +58,23 @@ typedef struct stack
 }STACK;
 
 comp_list_t* declarationList;
+
 comp_list_t* listFunctions;
+
 comp_list_t* listGlobal;
+
 STACK* pointer;
+
 comp_dict_item_t* tk_var;
 
-
 int insertDeclarations(comp_dict_item_t* dictNode, int escopo);
-
-
 
 STACK* initStack(void);
 
 STACK* sPush(STACK* pointer, comp_tree_t* nodoAST);
 
-
-STACK* invert(STACK* stack_old);
-
-
-
 void printStack(STACK* stack_l);
+
 /**
  * Check Declarations.
  * 
@@ -98,8 +95,9 @@ int checkDeclarations(STACK* stack, comp_list_t* declarationList);
  */
 int checkUtilization(comp_tree_t *root);
 
-
 int sizeDeclarations(int type);
+
 void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_type);
+
 STACK* addElementStack(STACK* stack, STACK* newElement);
 #endif

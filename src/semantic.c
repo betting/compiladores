@@ -35,26 +35,6 @@ STACK* initStack(void)
 	return pilha;
 }
 
-STACK* invert(STACK* stack_old)
-{
-	printf("\nINVERT");
-	while(stack_old->next != NULL) 
-		stack_old = stack_old->next;
-
-	while(stack_old->previous != NULL)
-	{
-//		printf("\nTOKEN: %s",stack_old->disc->symbol->token);
-		stack_old = stack_old->previous;	
-	}
-//	stack_old = stack_old->previous;
-//    printf("\nTOKEN: %s",stack_old->disc->symbol->token);
-
-	
-	return stack_old;
-}
-
-
-
 void printStack(STACK* stack_l)
 {
    while( stack_l != NULL)
@@ -80,15 +60,6 @@ STACK* sPush(STACK* pointer, comp_tree_t* nodoAST)
 	new->next = NULL;
 	new->previous = NULL;
 
-/*
-   if(pointer != NULL)
-   { 
-      new->previous = pointer;
-      pointer->next = new;
-   }
-        
-     //pointer = new;
-*/     
    pointer = addElementStack(pointer, new);
 
 	return pointer;
@@ -97,21 +68,20 @@ STACK* sPush(STACK* pointer, comp_tree_t* nodoAST)
 
 STACK* addElementStack(STACK* S, STACK* newElement)
 {
+   STACK* pilha_aux = malloc(sizeof(STACK*));
+
    if (S == NULL)
    {
-      S = newElement;
-   }
-   else if (S->next == NULL)
-   {
-      // Atualizando pilha (duplamente encadeada) - segundo elemento
-      S->next = newElement;
-      newElement->previous = S;
+      pilha_aux = newElement;
    }
    else
    {
-      addElementStack(S->next, newElement);
+      pilha_aux = newElement;
+      pilha_aux->next = S;
+      pilha_aux->previous = NULL;
    }
 
+   S = pilha_aux;
    return S;
 }
 
