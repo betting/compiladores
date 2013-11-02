@@ -409,9 +409,10 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
 							printf("\nEntrei em alguma operação !");
 							if(pointer->disc->child != NULL){printf("\nCHILD: %d",pointer->disc->child->type);}else{printf("\nCHILD NULL");}
 							if(pointer->disc->sibling != NULL){ printf("\nSIBLING: %d",pointer->disc->sibling->type);}else{printf("\nSIBLING NULL");}
-//							printf("\nSYMBOL - TOKEN: %s\n",pointer->disc->symbol->token);
+							//printf("\nSYMBOL - TOKEN: %s\n",pointer->disc->child->symbol->token);
+							//printf("\nSYMBOL - TOKEN: %s\n",pointer->disc->sibling->symbol->token);
 							
-							
+							/*
 							aux_stack = pointer;
 							aux_stack = aux_stack->previous;
 							
@@ -426,7 +427,7 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
 							printf("\nAUX->SYMBOL - TOKEN: %s - TIPO: %d\n",aux_stack->disc->symbol->token, aux_type1);
 								
 														
-							pointer->disc->node_type = inference(aux_type1,aux_type2);
+							pointer->disc->node_type = inference(aux_type1,aux_type2);*/
 							break;
 	
 			/*case IKS_AST_ARIM_SUBTRACAO:
