@@ -43,11 +43,11 @@ STACK* invert(STACK* stack_old)
 
 	while(stack_old->previous != NULL)
 	{
-		printf("\nTOKEN: %s",stack_old->disc->symbol->token);
+//		printf("\nTOKEN: %s",stack_old->disc->symbol->token);
 		stack_old = stack_old->previous;	
 	}
 //	stack_old = stack_old->previous;
-    printf("\nTOKEN: %s",stack_old->disc->symbol->token);
+//    printf("\nTOKEN: %s",stack_old->disc->symbol->token);
 
 	
 	return stack_old;
@@ -409,7 +409,7 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
 							printf("\nEntrei em alguma operação !");
 							if(pointer->disc->child != NULL){printf("\nCHILD: %d",pointer->disc->child->type);}else{printf("\nCHILD NULL");}
 							if(pointer->disc->sibling != NULL){ printf("\nSIBLING: %d",pointer->disc->sibling->type);}else{printf("\nSIBLING NULL");}
-							printf("\nSYMBOL - TOKEN: %s\n",pointer->disc->symbol->token);
+//							printf("\nSYMBOL - TOKEN: %s\n",pointer->disc->symbol->token);
 							
 							
 							aux_stack = pointer;

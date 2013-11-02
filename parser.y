@@ -130,7 +130,7 @@ p: s
 
 //         printf("\n\nPOINTER INVERTIDO");
          pointer = invert(pointer);
-         printStack(pointer);
+//         printStack(pointer);
 
 //        sPop(pointer, listFunctions, declarationList,0);
 
@@ -281,14 +281,14 @@ seq_comando:
       {
          $$ = createNode(IKS_AST_BLOCO, 0);
          insertChild($$, $1);
-//         pointer=sPush(pointer,$$);
+         pointer=sPush(pointer,$$);
       }
   | bloco_comando ';' seq_comando
       {
          $$ = createNode(IKS_AST_BLOCO, 0);
          insertChild($$, $1);
          insertChild($$, $3);
-//         pointer=sPush(pointer,$$);
+         pointer=sPush(pointer,$$);
       }
   | seq_comando comando_simples
       {
@@ -353,8 +353,9 @@ chamada_funcao:
          $$ = createNode(IKS_AST_CHAMADA_DE_FUNCAO, 0);
          insertChild($$, $1);
          insertChild($$, $3);
-         pointer=sPush(pointer,$1);
+//         pointer=sPush(pointer,$1);
 //         pointer=sPush(pointer,$3);
+         pointer=sPush(pointer,$$);
       }
   ;
 
@@ -362,7 +363,7 @@ nome_func:
    TK_IDENTIFICADOR
       {
          $$ = createNode(IKS_AST_IDENTIFICADOR, $1);
-//         pointer=sPush(pointer,$$);
+         pointer=sPush(pointer,$$);
       }
   ;
 
@@ -375,11 +376,11 @@ atribuicao:
          insertChild($$, $1);
          insertChild($$, $3);
 
-         comp_tree_t *treeItem;
-         treeItem = createNewNode(IKS_AST_ATRIBUICAO, "=");
+//         comp_tree_t *treeItem;
+//         treeItem = createNewNode(IKS_AST_ATRIBUICAO, "=");
 
-         pointer=sPush(pointer, treeItem);
-//         pointer=sPush(pointer,$1);
+//         pointer=sPush(pointer, treeItem);
+         pointer=sPush(pointer,$$);
       }
 
   | vetor '=' expressao
@@ -406,7 +407,7 @@ entrada:
       {
          $$ = createNode(IKS_AST_INPUT, 0);
          insertChild($$, $2);
-//         pointer=sPush(pointer,$$);
+         pointer=sPush(pointer,$$);
       }
   ;
 
@@ -446,7 +447,7 @@ retorna:
       { 
          $$ = createNode(IKS_AST_RETURN, 0);
          insertChild($$, $2);
-//         pointer=sPush(pointer,$2);
+         pointer=sPush(pointer,$$);
       }
   ;
 
@@ -457,7 +458,7 @@ controle_fluxo:
          $$ = createNode(IKS_AST_IF_ELSE, 0);
          insertChild($$, $3);
          insertChild($$, $6);
-//         pointer=sPush(pointer,$$);
+         pointer=sPush(pointer,$$);
       }
 
   | TK_PR_IF '(' expressao ')' TK_PR_THEN comando_simples ';' %prec LOWER_THAN_ELSE
@@ -465,7 +466,7 @@ controle_fluxo:
          $$ = createNode(IKS_AST_IF_ELSE, 0);
          insertChild($$, $3);
          insertChild($$, $6);
-//         pointer=sPush(pointer,$$);
+         pointer=sPush(pointer,$$);
       }
 
   | TK_PR_IF '(' expressao ')' TK_PR_THEN bloco_comando_fluxo_controle TK_PR_ELSE bloco_comando_fluxo_controle
@@ -475,7 +476,7 @@ controle_fluxo:
          insertChild($$, $3);
          insertChild($$, $6);
          insertChild($$, $8);
-//         pointer=sPush(pointer,$$);
+         pointer=sPush(pointer,$$);
       }
 
   | TK_PR_IF '(' expressao ')' TK_PR_THEN bloco_comando_fluxo_controle TK_PR_ELSE comando_simples ';'
@@ -484,7 +485,7 @@ controle_fluxo:
          insertChild($$, $3);
          insertChild($$, $6);
          insertChild($$, $8); 
-//         pointer=sPush(pointer,$$);
+         pointer=sPush(pointer,$$);
       }
 
   | TK_PR_IF '(' expressao ')' TK_PR_THEN comando_simples TK_PR_ELSE bloco_comando_fluxo_controle
@@ -493,7 +494,7 @@ controle_fluxo:
          insertChild($$, $3);
          insertChild($$, $6);
          insertChild($$, $8);
-//         pointer=sPush(pointer,$$);
+         pointer=sPush(pointer,$$);
       }
 
   | TK_PR_IF '(' expressao ')' TK_PR_THEN comando_simples TK_PR_ELSE comando_simples ';'
@@ -502,7 +503,7 @@ controle_fluxo:
          insertChild($$, $3);
          insertChild($$, $6);
          insertChild($$, $8);
-//         pointer=sPush(pointer,$$);
+         pointer=sPush(pointer,$$);
       }
 
   | TK_PR_WHILE '(' expressao ')' TK_PR_DO bloco_comando_fluxo_controle
@@ -510,7 +511,7 @@ controle_fluxo:
          $$ = createNode(IKS_AST_WHILE_DO, 0);
          insertChild($$, $3);
          insertChild($$, $6);
-//         pointer=sPush(pointer,$$);
+         pointer=sPush(pointer,$$);
       }
 
   | TK_PR_DO bloco_comando_fluxo_controle TK_PR_WHILE '(' expressao ')'
@@ -518,7 +519,7 @@ controle_fluxo:
          $$ = createNode(IKS_AST_DO_WHILE, 0);
          insertChild($$, $2);
          insertChild($$, $5);
-//         pointer=sPush(pointer,$$);
+         pointer=sPush(pointer,$$);
       }
   ;
 
@@ -527,14 +528,14 @@ bloco_comando_fluxo_controle:
       {
          $$ = createNode(IKS_AST_BLOCO, 0);
          insertChild($$, $1);
-//         pointer=sPush(pointer,$$);
+         pointer=sPush(pointer,$$);
       }
 
   | bloco_comando ';'
       {
          $$ = createNode(IKS_AST_BLOCO, 0);
          insertChild($$, $1);
-//         pointer=sPush(pointer,$$);
+         pointer=sPush(pointer,$$);
       }
 
   | comando
@@ -602,11 +603,11 @@ expressao:
          insertChild($$, $1);
          insertChild($$, $3);
          
-         comp_tree_t *treeItem;
-         treeItem = createNewNode(IKS_AST_ARIM_SOMA, "+");
+//         comp_tree_t *treeItem;
+//         treeItem = createNewNode(IKS_AST_ARIM_SOMA, "+");
 
-         pointer=sPush(pointer, treeItem);
-//         pointer=sPush(pointer,$$);
+//         pointer=sPush(pointer, treeItem);
+         pointer=sPush(pointer,$$);
       }
 
   | expressao '-' expressao
@@ -615,11 +616,11 @@ expressao:
          insertChild($$, $1);
          insertChild($$, $3);
 
-         comp_tree_t *treeItem;
-         treeItem = createNewNode(IKS_AST_ARIM_SUBTRACAO, "-");
+//         comp_tree_t *treeItem;
+//         treeItem = createNewNode(IKS_AST_ARIM_SUBTRACAO, "-");
 
-         pointer=sPush(pointer, treeItem);
-//         pointer=sPush(pointer,$$);
+//         pointer=sPush(pointer, treeItem);
+         pointer=sPush(pointer,$$);
       }
 
   | expressao '*' expressao
@@ -628,11 +629,11 @@ expressao:
          insertChild($$, $1);
          insertChild($$, $3);
 
-         comp_tree_t *treeItem;
-         treeItem = createNewNode(IKS_AST_ARIM_MULTIPLICACAO, "*");
+//         comp_tree_t *treeItem;
+//         treeItem = createNewNode(IKS_AST_ARIM_MULTIPLICACAO, "*");
 
-         pointer=sPush(pointer, treeItem);
-//         pointer=sPush(pointer,$$);
+//         pointer=sPush(pointer, treeItem);
+         pointer=sPush(pointer,$$);
       }
 
   | expressao '/' expressao
@@ -641,11 +642,11 @@ expressao:
          insertChild($$, $1);
          insertChild($$, $3);
          
-         comp_tree_t *treeItem;
-         treeItem = createNewNode(IKS_AST_ARIM_DIVISAO, "/");
+//         comp_tree_t *treeItem;
+//         treeItem = createNewNode(IKS_AST_ARIM_DIVISAO, "/");
 
-         pointer=sPush(pointer, treeItem);
-//         pointer=sPush(pointer,$$);
+//         pointer=sPush(pointer, treeItem);
+         pointer=sPush(pointer,$$);
       }
 
   | expressao '<' expressao
@@ -654,11 +655,11 @@ expressao:
          insertChild($$, $1);
          insertChild($$, $3);
 
-         comp_tree_t *treeItem;
-         treeItem = createNewNode(IKS_AST_LOGICO_COMP_L, "<");
+//         comp_tree_t *treeItem;
+//         treeItem = createNewNode(IKS_AST_LOGICO_COMP_L, "<");
 
-         pointer=sPush(pointer, treeItem);
-//         pointer=sPush(pointer,$$);
+//         pointer=sPush(pointer, treeItem);
+         pointer=sPush(pointer,$$);
       }
 
   | expressao '>' expressao
@@ -667,11 +668,11 @@ expressao:
          insertChild($$, $1);
          insertChild($$, $3);
 
-         comp_tree_t *treeItem;
-         treeItem = createNewNode(IKS_AST_LOGICO_COMP_G, ">");
+//         comp_tree_t *treeItem;
+//         treeItem = createNewNode(IKS_AST_LOGICO_COMP_G, ">");
 
-         pointer=sPush(pointer, treeItem);
-//         pointer=sPush(pointer,$$);
+//         pointer=sPush(pointer, treeItem);
+         pointer=sPush(pointer,$$);
       }
 
   | '+' expressao
@@ -682,11 +683,11 @@ expressao:
          $$ = createNode(IKS_AST_ARIM_INVERSAO, 0);
          insertChild($$, $2);
          
-         comp_tree_t *treeItem;
-         treeItem = createNewNode(IKS_AST_ARIM_INVERSAO, "-");
+//         comp_tree_t *treeItem;
+//         treeItem = createNewNode(IKS_AST_ARIM_INVERSAO, "-");
 
-         pointer=sPush(pointer, treeItem);
-//         pointer=sPush(pointer,$$);
+//         pointer=sPush(pointer, treeItem);
+         pointer=sPush(pointer,$$);
       }
 
   | '!' expressao
@@ -694,11 +695,11 @@ expressao:
          $$ = createNode(IKS_AST_LOGICO_COMP_NEGACAO, 0);
          insertChild($$, $2);
 
-         comp_tree_t *treeItem;
-         treeItem = createNewNode(IKS_AST_LOGICO_COMP_NEGACAO, "!");
+//         comp_tree_t *treeItem;
+//         treeItem = createNewNode(IKS_AST_LOGICO_COMP_NEGACAO, "!");
 
-         pointer=sPush(pointer, treeItem);
-//         pointer=sPush(pointer,$$);
+//         pointer=sPush(pointer, treeItem);
+         pointer=sPush(pointer,$$);
       }
 
   | '(' expressao ')'
@@ -710,11 +711,11 @@ expressao:
          insertChild($$, $1);
          insertChild($$, $3);
 
-         comp_tree_t *treeItem;
-         treeItem = createNewNode(IKS_AST_LOGICO_COMP_LE, "<=");
+//         comp_tree_t *treeItem;
+//         treeItem = createNewNode(IKS_AST_LOGICO_COMP_LE, "<=");
 
-         pointer=sPush(pointer, treeItem);
-//         pointer=sPush(pointer,$$);
+//         pointer=sPush(pointer, treeItem);
+         pointer=sPush(pointer,$$);
       }
 
   | expressao TK_OC_GE expressao
@@ -723,11 +724,11 @@ expressao:
          insertChild($$, $1);
          insertChild($$, $3);
 
-         comp_tree_t *treeItem;
-         treeItem = createNewNode(IKS_AST_LOGICO_COMP_GE, ">=");
+//         comp_tree_t *treeItem;
+//         treeItem = createNewNode(IKS_AST_LOGICO_COMP_GE, ">=");
 
-         pointer=sPush(pointer, treeItem);
-//         pointer=sPush(pointer,$$);
+//         pointer=sPush(pointer, treeItem);
+         pointer=sPush(pointer,$$);
       }
 
   | expressao TK_OC_EQ expressao
@@ -736,11 +737,11 @@ expressao:
          insertChild($$, $1);
          insertChild($$, $3);
          
-         comp_tree_t *treeItem;
-         treeItem = createNewNode(IKS_AST_LOGICO_COMP_IGUAL, "==");
+//         comp_tree_t *treeItem;
+//         treeItem = createNewNode(IKS_AST_LOGICO_COMP_IGUAL, "==");
 
-         pointer=sPush(pointer, treeItem);
-//         pointer=sPush(pointer,$$);
+//         pointer=sPush(pointer, treeItem);
+         pointer=sPush(pointer,$$);
       }
 
   | expressao TK_OC_NE expressao
@@ -749,11 +750,11 @@ expressao:
          insertChild($$, $1);
          insertChild($$, $3);
          
-         comp_tree_t *treeItem;
-         treeItem = createNewNode(IKS_AST_LOGICO_COMP_DIF, "!=");
+//         comp_tree_t *treeItem;
+//         treeItem = createNewNode(IKS_AST_LOGICO_COMP_DIF, "!=");
 
-         pointer=sPush(pointer, treeItem);
-//         pointer=sPush(pointer,$$);
+//         pointer=sPush(pointer, treeItem);
+         pointer=sPush(pointer,$$);
       }
 
   | expressao TK_OC_OR expressao
@@ -762,11 +763,11 @@ expressao:
          insertChild($$, $1);
          insertChild($$, $3);
          
-         comp_tree_t *treeItem;
-         treeItem = createNewNode(IKS_AST_LOGICO_OU, "||");
+//         comp_tree_t *treeItem;
+//         treeItem = createNewNode(IKS_AST_LOGICO_OU, "||");
 
-         pointer=sPush(pointer, treeItem);
-//         pointer=sPush(pointer,$$);
+//         pointer=sPush(pointer, treeItem);
+         pointer=sPush(pointer,$$);
       }
 
   | expressao TK_OC_AND expressao
@@ -775,11 +776,11 @@ expressao:
          insertChild($$, $1);
          insertChild($$, $3);
          
-         comp_tree_t *treeItem;
-         treeItem = createNewNode(IKS_AST_LOGICO_E, "&&");
+//         comp_tree_t *treeItem;
+//         treeItem = createNewNode(IKS_AST_LOGICO_E, "&&");
 
-         pointer=sPush(pointer, treeItem);
-//         pointer=sPush(pointer,$$);
+//         pointer=sPush(pointer, treeItem);
+         pointer=sPush(pointer,$$);
       }
 
   ;
@@ -791,7 +792,7 @@ vetor:
          $$ = createNode(IKS_AST_VETOR_INDEXADO, 0);
          insertChild($$, $1);
          insertChild($$, $3);
-//         pointer=sPush(pointer,$$);
+         pointer=sPush(pointer,$$);
       }
   ;
 
@@ -799,7 +800,7 @@ nome_vetor:
     TK_IDENTIFICADOR
       {
          $$ = createNode(IKS_AST_IDENTIFICADOR, $1);
-//         pointer=sPush(pointer,$$);
+         pointer=sPush(pointer,$$);
       }
   ;
 
