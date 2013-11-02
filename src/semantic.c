@@ -360,8 +360,12 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
 	comp_list_t* aux_list;
     comp_list_t *lastFunctionNameItem;
     comp_list_t *localList;
-
+    
+	int aux_type = pointer->disc->type;
+	printf("\nANTES DO IF");
 	if(pointer!=NULL){ 
+		printf("\nANTES DO SWITCH");
+
 		switch(pointer->disc->type)
 		{
 			case IKS_AST_ARIM_SUBTRACAO:
@@ -376,12 +380,16 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
             case IKS_AST_LOGICO_COMP_L:
             case IKS_AST_LOGICO_COMP_G: 
 			case IKS_AST_ARIM_SOMA:
+							//if(pointer->disc->child->type!=NULL){printf("\nEntrei em alguma operação ! - X");
+							//}
 							printf("\nEntrei em alguma operação !");
-							pointer->disc->type = inference(pointer->disc->child->type,pointer->disc->sibling->type);
+							/*pointer->disc->type = inference(pointer->disc->child->type,pointer->disc->sibling->type);
+							printf("\nCHILD: %d - SIBLING %d",pointer->disc->child->type,pointer->disc->sibling->type);
+							
 							printf("\nInferencia: %d",pointer->disc->type);
 							pointer->disc->size = sizeDeclarations(pointer->disc->type);
 							printf("\nSIZE: %d",pointer->disc->type);						
-							printf("\n\tOPERACAO - type: %d - size: %d",pointer->disc->type,pointer->disc->size);
+							printf("\n\tOPERACAO - type: %d - size: %d",pointer->disc->type,pointer->disc->size);*/
 							break;
 	
 			/*case IKS_AST_ARIM_SUBTRACAO:
@@ -441,10 +449,32 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
 						break;
 						
 			case IKS_AST_LITERAL:
+						printf("\nIKS_AST_LITERAL");
+			
 						/*pointer->disc->type = aux_list->tipoVar;
 						pointer->disc->size = sizeDeclarations(pointer->disc->type);
 						printf("\n\tLITERAL type: %d - size: %d",pointer->disc->type,pointer->disc->size);*/
 						break;
+						
+			case IKS_AST_ATRIBUICAO:
+						printf("\nIKS_AST_ATRIBUICAO");
+						break;
+
+			case IKS_AST_INPUT: 
+						printf("\nIKS_AST_INPUT");
+						break;
+
+			case IKS_AST_OUTPUT:
+						printf("\nIKS_AST_INPUT");
+						break;
+
+			case IKS_AST_RETURN:
+						printf("\nIKS_AST_INPUT");
+						break;
+			default:
+						printf("\nCAIU NO DEFAULT");
+						break;
+				
 		 
 		}
 		
