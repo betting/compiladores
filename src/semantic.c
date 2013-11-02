@@ -64,6 +64,10 @@ void printStack(STACK* stack_l)
       {
          printf("%s\n", stack_l->disc->symbol->token);
       }
+      else
+      {
+         printf("Op Type: %d\n", stack_l->disc->type);
+      }
 
       stack_l = stack_l->next;
    }
