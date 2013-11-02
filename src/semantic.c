@@ -38,12 +38,17 @@ STACK* initStack(void)
 STACK* invert(STACK* stack_old)
 {
 	printf("\nINVERT");
+	printf("\nTOKEN ANTES: %s",stack_old->disc->symbol->token);
 	while(stack_old->next != NULL) 
 		stack_old = stack_old->next;
-
-	while(stack_old->previous != NULL)
+	printf("\nTOKEN DEPOIS: %s\n",stack_old->disc->symbol->token);
+	if(stack_old->previous!= NULL)	printf("\nSTACK != NULL");
+	stack_old = stack_old->previous;
+	printf("\nTOKEN: %s",stack_old->disc->symbol->token);
+	
+	while(stack_old->previous != NULL) 
 	{
-//		printf("\nTOKEN: %s",stack_old->disc->symbol->token);
+		printf("\nTOKEN: %s",stack_old->disc->symbol->token);
 		stack_old = stack_old->previous;	
 	}
 //	stack_old = stack_old->previous;
@@ -404,8 +409,8 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
 							//if(pointer->disc->child->type!=NULL){printf("\n =================>>>>>>> Entrei em alguma operação ! - X");
 							//}
 							printf("\nEntrei em alguma operação !");
-							if(pointer->disc->child != NULL){printf("\nCHILD: %d",pointer->disc->child->type);}else{printf("\nCHILD NULL");}
-							if(pointer->disc->sibling != NULL){ printf("\nSIBLING: %d",pointer->disc->sibling->type);}else{printf("\nSIBLING NULL");}
+							if(pointer->disc->child != NULL){printf("\nCHILD: %d",pointer->disc->child->symbol->type);}else{printf("\nCHILD NULL");}
+							if(pointer->disc->sibling != NULL){ printf("\nSIBLING: %d",pointer->disc->sibling->symbol->type);}else{printf("\nSIBLING NULL");}
 							//printf("\nSYMBOL - TOKEN: %s\n",pointer->disc->child->symbol->token);
 							//printf("\nSYMBOL - TOKEN: %s\n",pointer->disc->sibling->symbol->token);
 							

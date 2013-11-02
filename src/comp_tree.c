@@ -76,13 +76,15 @@ comp_tree_t* createNode(int type, comp_dict_item_t *symbol)
 void insertChild(comp_tree_t* parent, comp_tree_t* child)
 {
    if (child != NULL)
-   {
+   {	   
       if(parent->child == NULL)
       {
+		//printf("\nInserindo Child = %s",child->symbol->token);
          parent->child = child;
       }
       else
       {
+ 		//printf("\nINSERINDO NO SIBLING = %s",child->symbol->token);
          addSiblings(parent->child, child);
       }
 
@@ -103,7 +105,9 @@ void addSiblings(comp_tree_t* first, comp_tree_t* newNode)
 {
    if(first->sibling == NULL)
    {
+	//printf("\nInserindo dentro do addSiblings = %s",newNode->symbol->token);
       first->sibling = newNode;
+      
    }
    else
    {
