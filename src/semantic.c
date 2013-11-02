@@ -205,14 +205,17 @@ int insertDeclarations(comp_dict_item_t* dictNode, int escopo)
  * 
  * Check all variable and function declarations.
  *
- * @param *root   The tree with all elements found
+ * @param *program  All the program in stack
+ * @param *declarationList List of all variable and function declared
  * @return The return code (sucess or error)
  */
-int checkDeclarations(STACK* stack, comp_list_t* declarationList)
+int checkDeclarations(STACK* program, comp_list_t* declarationList)
 {
    int retorno;
+   STACK* stack = program;
    while (stack->next != NULL)
    {
+      // Checking if actual symbol is a global declaration 
       if (stack->disc->symbol->type == IKS_SIMBOLO_IDENTIFICADOR)
       {
          retorno = verifyGlobalDeclarations(stack->disc->symbol->token, declarationList);
@@ -221,6 +224,8 @@ int checkDeclarations(STACK* stack, comp_list_t* declarationList)
             return FALSE;
          }
       }
+
+
       stack = stack->next;
    }
 
