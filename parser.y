@@ -125,7 +125,7 @@ p: s
          //printf("\n\nPOINTER INVERTIDO");
          printList(declarationList);
 
-//         printStack(pointer);
+         printStack(pointer);
 //         printList(listFunctions);
 
 //         printf("\n\nPOINTER INVERTIDO");

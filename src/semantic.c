@@ -57,19 +57,16 @@ STACK* invert(STACK* stack_old)
 
 void printStack(STACK* stack_l)
 {
-//   printf("NO DISC \n\t Tipo de Dados \t Variável \t Tamanho \n");
-//logFile = fopen("file.txt","a+");
    while( stack_l != NULL)
    {
-	  //printf("\nSTACK->TYPE = %d", stack_l->type);
-//	  printf("\nSTACK->disc->type = %d", stack_l->disc->type);
-	  printf("%s\n", stack_l->disc->symbol->token);
-
-//fprintf(logFile, stack_l->disc->symbol->token);
+      // Checking if there's a token available
+      if (stack_l->disc->symbol != NULL)
+      {
+         printf("%s\n", stack_l->disc->symbol->token);
+      }
 
       stack_l = stack_l->next;
    }
-//   fclose(logFile);
 }
 
 STACK* sPush(STACK* pointer, comp_tree_t* nodoAST)
