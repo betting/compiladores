@@ -7,6 +7,7 @@
 #include "comp_tree.h"
 
 extern int lineNumber;
+extern FILE* yyin;
  
 int getLineNumber (void)
 {
@@ -39,9 +40,20 @@ void saveASTRoot(comp_tree_t* root)
 
 int main (int argc, char **argv)
 {
-  gv_init("saida.dot");
-  int resultado = yyparse();
-  gv_close();
-  return resultado;
+   if (argc > 1)
+   {
+      yyin  = fopen(argv[1], "r");
+   }
+   
+   gv_init("saida.dot");
+
+   int resultado = yyparse();
+   gv_close();
+   
+   if (argc > 1)
+   {
+      fclose(yyin);
+   }
+   return resultado;
 }
 

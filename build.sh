@@ -1,5 +1,5 @@
 #!/bin/bash
 
-cmake CMakeLists.txt --clean-first --build .
+cmake -DCMAKE_BUILD_TYPE=Debug CMakeLists.txt --clean-first --build .
 make clean
-make
+make VERBOSE=1
