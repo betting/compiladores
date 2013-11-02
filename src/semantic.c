@@ -405,21 +405,23 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
 							if(pointer->disc->child != NULL){printf("\nCHILD: %d",pointer->disc->child->type);}else{printf("\nCHILD NULL");}
 							if(pointer->disc->sibling != NULL){ printf("\nSIBLING: %d",pointer->disc->sibling->type);}else{printf("\nSIBLING NULL");}
 							printf("\nSYMBOL - TOKEN: %s\n",pointer->disc->symbol->token);
+							
+							
 							aux_stack = pointer;
 							aux_stack = aux_stack->previous;
+							
+							//AQUI TEM QUE PEGAR O TIPO DA DECLARAÇÃO
 							aux_type2 = aux_stack->disc->symbol->type;
+							
 							printf("\nAUX->SYMBOL - TOKEN: %s - TIPO: %d\n",aux_stack->disc->symbol->token, aux_type2);
 							aux_stack = aux_stack->previous;
+
+							//AQUI TEM QUE PEGAR O TIPO DA DECLARAÇÃO
 							aux_type1 = aux_stack->disc->type;
 							printf("\nAUX->SYMBOL - TOKEN: %s - TIPO: %d\n",aux_stack->disc->symbol->token, aux_type1);
+								
 														
-							/*pointer->disc->type = inference(pointer->disc->child->type,pointer->disc->sibling->type);
-							printf("\nCHILD: %d - SIBLING %d",pointer->disc->child->type,pointer->disc->sibling->type);
-							
-							printf("\nInferencia: %d",pointer->disc->type);
-							pointer->disc->size = sizeDeclarations(pointer->disc->type);
-							printf("\nSIZE: %d",pointer->disc->type);						
-							printf("\n\tOPERACAO - type: %d - size: %d",pointer->disc->type,pointer->disc->size);
+							pointer->disc->node_type = inference(aux_type1,aux_type2);
 							break;
 	
 			/*case IKS_AST_ARIM_SUBTRACAO:
