@@ -12,6 +12,15 @@
 #include "iks_ast.h"
 #include "semantic.h"
 
+#define IKS_SIMBOLO_INDEFINIDO         0
+#define IKS_SIMBOLO_LITERAL_INT        1
+#define IKS_SIMBOLO_LITERAL_FLOAT      2
+#define IKS_SIMBOLO_LITERAL_CHAR       3
+#define IKS_SIMBOLO_LITERAL_STRING     4
+#define IKS_SIMBOLO_LITERAL_BOOL       5
+#define IKS_SIMBOLO_IDENTIFICADOR      6
+
+
 FILE *logFile;
 
 /**
@@ -202,24 +211,19 @@ int insertDeclarations(comp_dict_item_t* dictNode, int escopo)
 int checkDeclarations(STACK* stack, comp_list_t* declarationList)
 {
    int retorno;
-   printf("\nchegou AQUI!");
    while (stack->next != NULL)
    {
-	  printf("\nEntrei no while!");
-   
-      if (stack->disc->symbol->type == IKS_AST_IDENTIFICADOR)
+      if (stack->disc->symbol->type == IKS_SIMBOLO_IDENTIFICADOR)
       {
-		 printf("\nIF DO STACK!");
          retorno = verifyGlobalDeclarations(stack->disc->symbol->token, declarationList);
          if (retorno == FALSE)
          {
             return FALSE;
          }
       }
+      stack = stack->next;
    }
 
-   printf("\nAntes do retorno!");
-   
    return retorno;
 /*
    // Checking if there are variable/vector declariation or function definition.
@@ -401,7 +405,7 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
 							printf("\nInferencia: %d",pointer->disc->type);
 							pointer->disc->size = sizeDeclarations(pointer->disc->type);
 							printf("\nSIZE: %d",pointer->disc->type);						
-							printf("\n\tOPERACAO - type: %d - size: %d",pointer->disc->type,pointer->disc->size);*/
+							printf("\n\tOPERACAO - type: %d - size: %d",pointer->disc->type,pointer->disc->size);
 							break;
 	
 			/*case IKS_AST_ARIM_SUBTRACAO:
