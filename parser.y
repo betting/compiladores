@@ -122,14 +122,18 @@ p: s
          saveASTRoot($$);
 //         checkDeclarations(pointer, declarationList);
          //checkUtilization($$);
-//         printList(declarationList);
+         //printf("\n\nPOINTER INVERTIDO");
+         printList(declarationList);
+
          printStack(pointer);
 //         printList(listFunctions);
-         printf("\n\nPOINTER INVERTIDO");
 
+         printf("\n\nPOINTER INVERTIDO");
          pointer = invert(pointer);
-//        sPop(pointer, listFunctions, declarationList,0);
-         printf("\n\nSEM FALHAS ATE AQUI");
+
+        sPop(pointer, listFunctions, declarationList,0);
+
+         printf("\n\nSEM FALHAS ATE AQUI\n");
          //pointerStack = listToStack(declarationList);
 //         printStack(pointer);
          //pointerStack = listToStack(declarationList);

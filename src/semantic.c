@@ -371,8 +371,11 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
 	comp_list_t* aux_list;
     comp_list_t *lastFunctionNameItem;
     comp_list_t *localList;
+    STACK* aux_stack;
     
 	int aux_type = pointer->disc->type;
+	int aux_type1, aux_type2;
+	
 	printf("\nANTES DO IF");
 	if(pointer!=NULL)
 	{ 
@@ -392,9 +395,20 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
             case IKS_AST_LOGICO_COMP_L:
             case IKS_AST_LOGICO_COMP_G: 
 			case IKS_AST_ARIM_SOMA:
-							//if(pointer->disc->child->type!=NULL){printf("\nEntrei em alguma operação ! - X");
+							//if(pointer->disc->child->type!=NULL){printf("\n =================>>>>>>> Entrei em alguma operação ! - X");
 							//}
 							printf("\nEntrei em alguma operação !");
+							if(pointer->disc->child != NULL){printf("\nCHILD: %d",pointer->disc->child->type);}else{printf("\nCHILD NULL");}
+							if(pointer->disc->sibling != NULL){ printf("\nSIBLING: %d",pointer->disc->sibling->type);}else{printf("\nSIBLING NULL");}
+							printf("\nSYMBOL - TOKEN: %s\n",pointer->disc->symbol->token);
+							aux_stack = pointer;
+							aux_stack = aux_stack->previous;
+							aux_type2 = aux_stack->disc->symbol->type;
+							printf("\nAUX->SYMBOL - TOKEN: %s - TIPO: %d\n",aux_stack->disc->symbol->token, aux_type2);
+							aux_stack = aux_stack->previous;
+							aux_type1 = aux_stack->disc->type;
+							printf("\nAUX->SYMBOL - TOKEN: %s - TIPO: %d\n",aux_stack->disc->symbol->token, aux_type1);
+														
 							/*pointer->disc->type = inference(pointer->disc->child->type,pointer->disc->sibling->type);
 							printf("\nCHILD: %d - SIBLING %d",pointer->disc->child->type,pointer->disc->sibling->type);
 							
@@ -485,6 +499,7 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
 						break;
 			default:
 						printf("\nCAIU NO DEFAULT");
+						printf("\nTipo: %d",pointer->disc->type);
 						break;
 				
 		 
