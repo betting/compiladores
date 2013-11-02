@@ -363,7 +363,8 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
     
 	int aux_type = pointer->disc->type;
 	printf("\nANTES DO IF");
-	if(pointer!=NULL){ 
+	if(pointer!=NULL)
+	{ 
 		printf("\nANTES DO SWITCH");
 
 		switch(pointer->disc->type)
@@ -383,7 +384,7 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
 							//if(pointer->disc->child->type!=NULL){printf("\nEntrei em alguma operação ! - X");
 							//}
 							printf("\nEntrei em alguma operação !");
-							/*pointer->disc->type = inference(pointer->disc->child->type,pointer->disc->sibling->type);
+							pointer->disc->type = inference(pointer->disc->child->type,pointer->disc->sibling->type);
 							printf("\nCHILD: %d - SIBLING %d",pointer->disc->child->type,pointer->disc->sibling->type);
 							
 							printf("\nInferencia: %d",pointer->disc->type);
@@ -401,7 +402,7 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
 			case IKS_AST_IDENTIFICADOR:
 						printf("\n\t\t CHEGOU NO IDENTIFICADOR");
 						//search in function list 
-						lastFunctionNameItem = getLastItemList(listFunctions);
+						/*lastFunctionNameItem = getLastItemList(listFunctions);
 						localList = getLocalList(declarationList, lastFunctionNameItem);
 						aux_list=searchToken(declarationList,pointer->disc->symbol->token);
 						
@@ -445,7 +446,7 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
 									exit(IKS_ERROR_UNDECLARED);
 								}
 							}
-						}
+						}*/
 						break;
 						
 			case IKS_AST_LITERAL:
@@ -477,8 +478,14 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
 				
 		 
 		}
-		
-		pointer= pointer->next;
-		return  sPop(pointer, listFunctions, declarationList,0);
+			pointer = pointer->next;
+			if(pointer!=NULL)
+				return  sPop(pointer, listFunctions, declarationList,0);
 	}
+	else
+	{
+		printf("\nPOINTER NULL");
+	}
+	
+	
 }
