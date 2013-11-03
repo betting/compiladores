@@ -34,11 +34,11 @@ void printStack(STACK* stack_l)
       if (stack_l->disc->symbol != NULL)
       {
          printf("%s\n", stack_l->disc->symbol->token);
-         if(stack_l->disc->type == IKS_AST_LITERAL) printf("IKS_AST_LITERAL\n\n");
       }
       else
       {
          printf("Op Type: %d\n", stack_l->disc->type);
+         if(stack_l->disc->type == IKS_AST_INPUT) printf("IKS_AST_INPUT\n\n");
       }
 
       stack_l = stack_l->next;
@@ -471,6 +471,16 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
 
 			case IKS_AST_INPUT: 
 						printf("\nIKS_AST_INPUT");
+						if(pointer->disc->child->type != IKS_AST_IDENTIFICADOR)
+						{
+								printf("O parametro do comando input nao é um identificador\n");
+								exit(IKS_ERROR_WRONG_PAR_INPUT);                        
+						}
+						else
+						{
+							 //printf("CHILD = IKS_AST_IDENTIFICADOR");
+							 pointer->disc->node_type = pointer->disc->child->node_type;  
+						}
 						break;
 
 			case IKS_AST_OUTPUT:
