@@ -359,10 +359,10 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
 	int aux_type = pointer->disc->type;
 	int aux_type1, aux_type2;
 	
-	printf("\nANTES DO IF");
+	//printf("\nANTES DO IF");
 	if(pointer!=NULL)
 	{ 
-		printf("\nANTES DO SWITCH");
+		//printf("\nANTES DO SWITCH");
 
 		switch(pointer->disc->type)
 		{
@@ -387,6 +387,8 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
 								printf("\nSYMBOL - TOKEN: %s\n",pointer->disc->child->symbol->token);
 								printf("\nSYMBOL - TYPE: %d\n",pointer->disc->child->node_type);
 								aux_type1 = pointer->disc->child->node_type;
+								if(aux_type1 == 0) aux_type1 = pointer->disc->child->symbol->type;
+
 							}
 							if(pointer->disc->child->sibling != NULL)
 							{
@@ -394,6 +396,7 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
 								printf("\nSYMBOL - TOKEN: %s\n",pointer->disc->child->sibling->symbol->token);
 								printf("\nSYMBOL - TYPE: %d\n",pointer->disc->child->sibling->node_type);
 								aux_type2 = pointer->disc->child->sibling->node_type;
+								if(aux_type2 == 0) aux_type2 = pointer->disc->child->sibling->symbol->type;
 							}
 
 							//printf("\nAUX->SYMBOL - TOKEN: %s - TIPO: %d\n",aux_stack->disc->symbol->token, aux_type1);
@@ -402,12 +405,7 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
 							pointer->disc->node_type = inference(aux_type1,aux_type2);
 							break;
 	
-			/*case IKS_AST_ARIM_SUBTRACAO:
-							pointer->disc->type = inference(pointer->disc->child->type,pointer->disc->sibling->type);
-							pointer->disc->size = sizeDeclarations(pointer->disc->type);
-							printf("\n\tSUBTRAÇÃO type: %d - size: %d",pointer->disc->type,pointer->disc->size);
-							break;
-			*/	
+	
 			case IKS_AST_IDENTIFICADOR:
 						printf("\n\t\t CHEGOU NO IDENTIFICADOR");
 						//search in function list 
