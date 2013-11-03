@@ -42,4 +42,12 @@
 #define IKS_SIMBOLO_LITERAL_BOOL       5
 #define IKS_SIMBOLO_IDENTIFICADOR      6
 
+#define IKS_LOCAL       0 // References to local variable
+#define IKS_GLOBAL_VAR  1 // References to global variable
+#define IKS_GLOBAL_VET  2 // References to global vector
+#define IKS_FUNCTION    3 // References to function
+
+#define TRUE 1
+#define FALSE 0
+
 #endif

@@ -5,6 +5,7 @@
 
 #include <stdlib.h>
 #include "comp_list.h"
+#include "iks_ast.h"
 
 /**
  * List initalization.
@@ -205,3 +206,27 @@ comp_list_t* getLocalList(comp_list_t* list, comp_list_t* function)
    }
    return aux;
 }
+
+/**
+ * Get the datatype of the variable/function given
+ *
+ * @param   declarationType      Specify if this variable/function local or global
+ * @param   *token               The token to be searched in the list
+ * @param   *declarationList     List with all declarations found in the code
+ * @result                       The datatype of the declaration. Otherwise, it will return -1.
+ */
+int getDeclarationDataType(int declarationType, char* token, comp_list_t* declarationList)
+{
+   while (declarationList->next != NULL)
+   {
+      if ((strcmp(declarationList->nomeVar, token) == 0)
+            && (declarationList->tipoGlobal == declarationType))
+      {
+         return declarationList->tipoVar;
+      }
+      declarationList = declarationList->next;
+   }
+
+   return -1;
+}
+

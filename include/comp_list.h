@@ -94,4 +94,14 @@ comp_list_t* getLastItemList(comp_list_t* list);
  * @return comp_list_t local list
  */
 comp_list_t* getLocalList(comp_list_t* list, comp_list_t* function);
+
+/**
+ * Get the datatype of the variable/function given
+ *
+ * @param   declarationType      Specify if this variable/function local or global
+ * @param   *token               The token to be searched in the list
+ * @param   *declarationList     List with all declarations found in the code
+ * @result                       The datatype of the declaration. Otherwise, it will return -1.
+ */
+int getDeclarationDataType(int declarationType, char* token, comp_list_t* declarationList);
 #endif
