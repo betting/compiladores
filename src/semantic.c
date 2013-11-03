@@ -34,6 +34,7 @@ void printStack(STACK* stack_l)
       if (stack_l->disc->symbol != NULL)
       {
          printf("%s\n", stack_l->disc->symbol->token);
+         if(stack_l->disc->type == IKS_AST_LITERAL) printf("IKS_AST_LITERAL\n\n");
       }
       else
       {
@@ -458,11 +459,10 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
 						
 			case IKS_AST_LITERAL:
 						printf("\nIKS_AST_LITERAL");
-						//printf("\nSYMBOL - TOKEN: %s\n",pointer->disc->symbol->token);
-						//pointer->disc->type = pointer->disc->node_type;
-						//pointer->disc->size = sizeDeclarations(pointer->disc->node_type);
-						
-						//printf("\n\tLITERAL type: %d - size: %d",pointer->disc->node_type,pointer->disc->size);
+						//if(pointer->disc->symbol!=NULL) 
+						//	printf("\nSYMBOL - TOKEN: %s\n",pointer->disc->symbol->token);
+						pointer->disc->type = pointer->disc->symbol->type;
+						pointer->disc->size = sizeDeclarations(pointer->disc->type);
 						break;
 						
 			case IKS_AST_ATRIBUICAO:
