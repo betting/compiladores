@@ -473,7 +473,7 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
 						printf("\nIKS_AST_INPUT");
 						if(pointer->disc->child->type != IKS_AST_IDENTIFICADOR)
 						{
-								printf("O parametro do comando input nao é um identificador\n");
+								printf("O parametro do comando INPUT nao é um identificador\n");
 								exit(IKS_ERROR_WRONG_PAR_INPUT);                        
 						}
 						else
@@ -484,7 +484,17 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
 						break;
 
 			case IKS_AST_OUTPUT:
-						printf("\nIKS_AST_INPUT");
+						printf("\nIKS_AST_OUTPUT");
+						if(pointer->disc->child->type != IKS_SIMBOLO_LITERAL_CHAR)
+						{
+								printf("O parametro do comando OUTPUT deve ser literal do tipo string\n");
+								exit(IKS_ERROR_WRONG_PAR_OUTPUT);                        
+						}
+						else
+						{
+							 //printf("CHILD = IKS_SIMBOLO_LITERAL_CHAR");
+							 pointer->disc->node_type = pointer->disc->child->node_type;  
+						}
 						break;
 
 			case IKS_AST_RETURN:
