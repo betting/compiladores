@@ -13,6 +13,9 @@
 #include "semantic.h"
 
 FILE *logFile;
+comp_tree_t *variableName;
+comp_tree_t *data;
+comp_tree_t *dataChild;
 
 /**
  *  Initiate Stack
@@ -162,22 +165,6 @@ int insertDeclarations(comp_dict_item_t* dictNode, int escopo)
 	}
 }
 
-
-int verifyGlobalDeclarations(char* token, comp_list_t* declarationList)
-{
-   while (declarationList->next != NULL)
-   {
-      if ((strcmp(declarationList->nomeVar, token) == 0)
-            && (declarationList->tipoGlobal == IKS_GLOBAL_VAR))
-      {
-         return TRUE;
-      }
-      declarationList = declarationList->next;
-   }
-
-   return FALSE; 
-}
-
 int coertion(int type1, int type2)
 {
    if(type1 == type2)
@@ -295,8 +282,6 @@ int inference(int type1, int type2)
 
 void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_type)
 {
-
-printf("\n$$$$$$$ TIPO DA FUNC = %d  ======\n", pointer->disc->type);
    int flag = 0;	// 1- global var ----- 2- global vector ------- 3- local var
    comp_list_t* aux_list;
    comp_list_t *lastFunctionNameItem;
@@ -305,11 +290,11 @@ printf("\n$$$$$$$ TIPO DA FUNC = %d  ======\n", pointer->disc->type);
 
    int aux_type = pointer->disc->type;
    int aux_type1, aux_type2;
-	
-	if(pointer!=NULL)
-	{ 
-		switch(pointer->disc->type)
-		{
+
+   if(pointer!=NULL)
+   {
+      switch(pointer->disc->type)
+      {
          case IKS_AST_ARIM_SUBTRACAO:
          case IKS_AST_ARIM_MULTIPLICACAO:
          case IKS_AST_LOGICO_E:
@@ -322,96 +307,94 @@ printf("\n$$$$$$$ TIPO DA FUNC = %d  ======\n", pointer->disc->type);
          case IKS_AST_LOGICO_COMP_L:
          case IKS_AST_LOGICO_COMP_G:
          case IKS_AST_ARIM_SOMA:
-							
-							printf("\nEntrei em alguma operação !");
-							if(pointer->disc->symbol != NULL) printf("\nSYMBOL IS NOT NULL");
-							if(pointer->disc->child != NULL)
-							{
-								printf("\nCHILD IS NOT NULL");
-								printf("\nSYMBOL - TOKEN: %s\n",pointer->disc->child->symbol->token);
-								printf("\nSYMBOL - TYPE: %d\n",pointer->disc->child->node_type);
-								aux_type1 = pointer->disc->child->node_type;
-								if(aux_type1 == 0) aux_type1 = pointer->disc->child->symbol->type;
+            printf("\nEntrei em alguma operação !");
+            if(pointer->disc->symbol != NULL) printf("\nSYMBOL IS NOT NULL");
+            if(pointer->disc->child != NULL)
+            {
+               printf("\nCHILD IS NOT NULL");
+               printf("\nSYMBOL - TOKEN: %s\n",pointer->disc->child->symbol->token);
+               printf("\nSYMBOL - TYPE: %d\n",pointer->disc->child->node_type);
+               aux_type1 = pointer->disc->child->node_type;
+               if(aux_type1 == 0) aux_type1 = pointer->disc->child->symbol->type;
+            }
 
-							}
-							if(pointer->disc->child->sibling != NULL)
-							{
-								printf("\nSIBLING IS NOT NULL");
-								printf("\nSYMBOL - TOKEN: %s\n",pointer->disc->child->sibling->symbol->token);
-								printf("\nSYMBOL - TYPE: %d\n",pointer->disc->child->sibling->node_type);
-								aux_type2 = pointer->disc->child->sibling->node_type;
-								if(aux_type2 == 0) aux_type2 = pointer->disc->child->sibling->symbol->type;
-							}
+            if(pointer->disc->child->sibling != NULL)
+            {
+               printf("\nSIBLING IS NOT NULL");
+               printf("\nSYMBOL - TOKEN: %s\n",pointer->disc->child->sibling->symbol->token);
+               printf("\nSYMBOL - TYPE: %d\n",pointer->disc->child->sibling->node_type);
+               aux_type2 = pointer->disc->child->sibling->node_type;
+               if(aux_type2 == 0) aux_type2 = pointer->disc->child->sibling->symbol->type;
+            }
 
-							//printf("\nAUX->SYMBOL - TOKEN: %s - TIPO: %d\n",aux_stack->disc->symbol->token, aux_type1);
-								
-														
-							pointer->disc->node_type = inference(aux_type1,aux_type2);
-							break;
+            pointer->disc->node_type = inference(aux_type1,aux_type2);
+            break;
 	
-	
-			case IKS_AST_IDENTIFICADOR:
-                  // Nothing to do. Validation performed in the function insertDeclarations().
-						break;
+         case IKS_AST_IDENTIFICADOR:
+            // Nothing to do. Validation performed in the function insertDeclarations().
+            break;
 						
-			case IKS_AST_LITERAL:
-						printf("\nIKS_AST_LITERAL");
-						//if(pointer->disc->symbol!=NULL) 
-						//	printf("\nSYMBOL - TOKEN: %s\n",pointer->disc->symbol->token);
-						pointer->disc->type = pointer->disc->symbol->type;
-						pointer->disc->size = sizeDeclarations(pointer->disc->type);
-						break;
+         case IKS_AST_LITERAL:
+            pointer->disc->type = pointer->disc->symbol->type;
+            pointer->disc->size = sizeDeclarations(pointer->disc->type);
+            break;
 						
-			case IKS_AST_ATRIBUICAO:
-						printf("\nIKS_AST_ATRIBUICAO");
-						break;
+         case IKS_AST_ATRIBUICAO:
+            variableName = pointer->disc->child;
+            data = pointer->disc->child->sibling;
+            dataChild = data->child;
 
-			case IKS_AST_INPUT: 
-						printf("\nIKS_AST_INPUT");
-						if(pointer->disc->child->type != IKS_AST_IDENTIFICADOR)
-						{
-								printf("O parametro do comando INPUT nao é um identificador\n");
-								exit(IKS_ERROR_WRONG_PAR_INPUT);                        
-						}
-						else
-						{
-							 //printf("CHILD = IKS_AST_IDENTIFICADOR");
-							 pointer->disc->node_type = pointer->disc->child->node_type;  
-						}
-						break;
+            int variableType;
+            variableType = getDeclarationDataType(IKS_GLOBAL_VAR, variableName->symbol->token, declarationList);
 
-			case IKS_AST_OUTPUT:
-						printf("\nIKS_AST_OUTPUT");
-						if(pointer->disc->child->type != IKS_SIMBOLO_LITERAL_CHAR)
-						{
-								printf("O parametro do comando OUTPUT deve ser literal do tipo string\n");
-								exit(IKS_ERROR_WRONG_PAR_OUTPUT);                        
-						}
-						else
-						{
-							 //printf("CHILD = IKS_SIMBOLO_LITERAL_CHAR");
-							 pointer->disc->node_type = pointer->disc->child->node_type;  
-						}
-						break;
+            if(variableName->type == IKS_AST_IDENTIFICADOR)
+            {
+               pointer->disc->node_type = coertion(variableType, data->symbol->type);
+            }
+            break;
 
-			case IKS_AST_RETURN:
-						printf("\nIKS_AST_INPUT");
-						break;
-			default:
-						printf("\nCAIU NO DEFAULT");
-						printf("\nTipo: %d",pointer->disc->type);
-						break;
-				
-		 
-		}
-			pointer = pointer->next;
-			if(pointer!=NULL)
-				return  sPop(pointer, listFunctions, declarationList,0);
-	}
-	else
-	{
-		printf("\nPOINTER NULL");
-	}
-	
-	
+         case IKS_AST_INPUT:
+            if(pointer->disc->child->type != IKS_AST_IDENTIFICADOR)
+            {
+               printf("O parametro do comando INPUT nao é um identificador\n");
+               exit(IKS_ERROR_WRONG_PAR_INPUT);
+            }
+            else
+            {
+               pointer->disc->node_type = pointer->disc->child->node_type;
+            }
+            break;
+
+         case IKS_AST_OUTPUT:
+            if(pointer->disc->child->type != IKS_SIMBOLO_LITERAL_CHAR)
+            {
+               printf("O parametro do comando OUTPUT deve ser literal do tipo string\n");
+               exit(IKS_ERROR_WRONG_PAR_OUTPUT);
+            }
+            else
+            {
+               pointer->disc->node_type = pointer->disc->child->node_type;
+            }
+            break;
+
+         case IKS_AST_RETURN:
+            printf("\nIKS_AST_INPUT");
+            break;
+
+         default:
+            printf("\nCAIU NO DEFAULT");
+            printf("\nTipo: %d",pointer->disc->type);
+            break;
+      }
+      pointer = pointer->next;
+
+      if(pointer != NULL)
+      {
+         return sPop(pointer, listFunctions, declarationList, 0);
+      }
+   }
+   else
+   {
+      printf("\nPOINTER NULL");
+   }
 }
