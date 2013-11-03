@@ -5,15 +5,12 @@
 #include <stdio.h>
 #include <malloc.h>
 
-//definicao da estrutura para o elemento GRAFO
-//ligações
 typedef struct _link
 {
  struct node *points;
  struct _link *next;
 } link;
 
-//nós
 typedef struct node
 {
  int item,visit;
@@ -21,12 +18,56 @@ typedef struct node
  struct node *next;
 } comp_graph_t;
 
-
-//prototipos das funcoes
-//void createGraph(struct node *h, int item);
+/**
+ * Create a graph
+ *
+ * Initialize a graph with node and item
+ *
+ * @param *h comp_graph_t node
+ * @param item int.
+ * @return void
+ */
 void createGraph(comp_graph_t *h, int item);
+
+/**
+ * Search a node of given value in the graph
+ *
+ *
+ * @param *h graph
+ * @param p int
+ * @return comp_graph_t
+ */
 comp_graph_t *searchGraph(comp_graph_t *h,int p);
+
+/**
+ * Connect a given node to the graph
+ *
+ *
+ * @param *h graph node
+ * @param *l link
+ * @param int value
+ * @return void
+ */
 void connectNodeGraph(comp_graph_t *h,  link *l, int value);
+
+/**
+ * Remove a given link of the graph
+ *
+ *
+ * @param *h graph node
+ * @param *l link
+ * @param int value
+ * @return void
+ */
 link *removeLink (comp_graph_t *h, link *l, int value);
+
+/**
+ * Edit the value of a given node of the graph
+ *
+ *
+ * @param *h graph node
+ * @param int old value
+ * @param int new value
+ * @return comp_graph_t node
+ */
 comp_graph_t *alterGraphNodeValue(comp_graph_t *h, int oldValue, int newValue);
-//void getAdjacent(struct node *h,link *l)

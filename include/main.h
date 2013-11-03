@@ -36,8 +36,27 @@
  Variáveis globais
 */
 
+/**
+ * Saves ast root in memory after parser
+ *
+ * @param *root
+ * @return void
+ */
 void saveASTRoot(comp_tree_t* root);
+
+/**
+ * Check list of declarations
+ *
+ * @param *firt
+ * @return void
+ */
 void saveDeclarationsList(comp_list_t* first);
+
+/**
+ * Returns head os the list
+ *
+ * @return comp_list_t
+ */
 comp_list_t* getListHead();
 
 #endif

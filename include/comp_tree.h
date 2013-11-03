@@ -11,7 +11,6 @@
 
 struct comp_dict_item_t;
 
-//definicao da estrutura do elemento LISTA
 typedef struct _tree
 {
 	int type;
@@ -21,10 +20,42 @@ typedef struct _tree
 	struct _tree *child,*sibling;
 } comp_tree_t;
 
-/* prototipos das funções */ 
+/**
+ * Search data in tree
+ *
+ * @param *root tree root
+ * @param data
+ * @return comp_tree_t tree
+ */
 comp_tree_t* search(comp_tree_t* root,int data);
+
+/**
+ * Concatenate two lists
+ *
+ * @param type
+ * @param *symbol
+ * @return comp_tree_t new node
+ */
 comp_tree_t* createNode(int type, comp_dict_item_t *symbol);
+
+/**
+ * Insert child in a node
+ *
+ * @param *parent
+ * @param *child
+ * @return void
+ */
 void insertChild(comp_tree_t* parent, comp_tree_t* child);
+
+/**
+ * Add siblings of a node
+ * 
+ * Each node has its list of sons, add siblings add new nodes in this list of sons of a given node
+ *
+ * @param *parent
+ * @param *child
+ * @return void
+ */
 void addSiblings(comp_tree_t* first, comp_tree_t* newNode);
 
 /**

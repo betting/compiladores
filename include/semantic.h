@@ -61,17 +61,64 @@ STACK* pointer;
 
 comp_dict_item_t* tk_var;
 
+/**
+ * Inserts declarations
+ * 
+ * @param *dictNode
+ * @param escopo
+ * @return int
+ */
 int insertDeclarations(comp_dict_item_t* dictNode, int escopo);
 
+/**
+ * Initialize stack
+ * 
+ * @return stack
+ */
 STACK* initStack(void);
 
+/**
+ * Inserts declarations
+ * 
+ * @param *pointer pointer to stack
+ * @param nodoAST
+ * @return stack
+ */
 STACK* sPush(STACK* pointer, comp_tree_t* nodoAST);
 
+/**
+ * Prints stack
+ * 
+ * @param stack_l
+ * @return void
+ */
 void printStack(STACK* stack_l);
 
+/**
+ * Size declarations
+ * 
+ * @param type
+ * @return int
+ */
 int sizeDeclarations(int type);
 
+/**
+ * Pop item of the stack
+ * 
+ * @param *pointer pointer to the stack
+ * @param *function list of function declarations
+ * @param *local list of local declarations
+ * @param func_type
+ * @return void
+ */
 void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_type);
 
+/**
+ * Add element stack?
+ * 
+ * @param *stack
+ * @param *newElement
+ * @return int
+ */
 STACK* addElementStack(STACK* stack, STACK* newElement);
 #endif

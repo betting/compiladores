@@ -10,11 +10,6 @@ STACK2* initStack2()
 {
 	STACK2* stack_l = malloc(sizeof(STACK2*));
 	stack_l = NULL;
-	//stack_l->next = NULL;
-	//stack_l->disc = initList();
-	//stack_l->disc->nomeVar = NULL;
-	//stack_l->disc->tipoVar = 0;
-	//stack_l->type = 99;
 	return stack_l;
 }
 
@@ -96,32 +91,18 @@ STACK2* listToStack(comp_list_t* list)
 
 	while(list != NULL)
 	{
-
-		//else
-		//{		
-			aux_nomeVar = list->nomeVar;
-			aux_tipoVar = list->tipoVar;
-			aux_tipoGlobal = list->tipoGlobal;	
+		aux_nomeVar = list->nomeVar;
+		aux_tipoVar = list->tipoVar;
+		aux_tipoGlobal = list->tipoGlobal;	
 			
-			printf("\nNOME_VAR => %s", aux_nomeVar);
-			printf("\nTIPO_VAR => %d", aux_tipoVar);
-			printf("\nGLOBAL_VAR => %d", aux_tipoGlobal);
+		printf("\nNOME_VAR => %s", aux_nomeVar);
+		printf("\nTIPO_VAR => %d", aux_tipoVar);
+		printf("\nGLOBAL_VAR => %d", aux_tipoGlobal);
 			
-			aux = addItemStack(aux_tipoVar,aux_nomeVar,aux_tipoGlobal,aux);	
-//			aux->next = new;
-			
-//			new = aux;
-			
-//			list = list->next;	
-			
-		//}
+		aux = addItemStack(aux_tipoVar,aux_nomeVar,aux_tipoGlobal,aux);	
 		list = list->next;
 	
 	}
-	
-	
-	
-	//node = addStack(node, new);
 
 	return new;
 }
@@ -138,8 +119,6 @@ void printStack2(STACK2* stack_l)
 	  printf("\nSTACK->nomeVar = %s", stack_l->nomeVar);
 	  printf("\nSTACK->size = %d", stack_l->size);
 	  stack_l = stack_l->next;
-      //printf("%d \t %s \t %d \n", stack_l->disc->type, stack_l->disc->symbol->token, stack_l->disc->size);
-      //stack_l = stack_l->next;
    }
    
 }
