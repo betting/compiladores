@@ -166,11 +166,11 @@ decl_global:
 
  /* Declaracao de variaveis locais em funcoes. Nenhuma variavel pode ser declarada.*/
 decl_local:
-    decl_var ';' decl_local
-      {
-         //printf("Local:%d:%s\n", $1->type, $1->token);
-         insertDeclarations($1, IKS_LOCAL);
-      }
+    decl_var_local
+   ;
+
+decl_var_local:
+    parametro ';' decl_local
    |
    ;
 
@@ -217,7 +217,6 @@ def_funcao:
 cabecalho:
     decl_func '(' lista_parametros ')'
       {
-         insertDeclarations($1, IKS_FUNCTION);
          //printf("Func:%d:%s\n", $1->type, $1->token);
          $$ = $1;
       }
@@ -228,6 +227,7 @@ decl_func:
       {
          $3->type = $1; 
          $$ = $3;         
+         insertDeclarations($3, IKS_FUNCTION);
 
       }
   ;
@@ -239,7 +239,7 @@ lista_parametros:
 
 lista_parametros_nao_vazia:
     parametro ',' lista_parametros_nao_vazia
-  | parametro															
+  | parametro
   ;
 
 parametro:

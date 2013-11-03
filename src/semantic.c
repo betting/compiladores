@@ -111,7 +111,7 @@ int insertDeclarations(comp_dict_item_t* dictNode, int escopo)
 			else
 			{
 				printf("Variavel local duplicada - linha %d\n", getLineNumber());
-				return IKS_ERROR_DECLARED;
+				exit(IKS_ERROR_DECLARED);
 			}
 			break;
 			
@@ -123,7 +123,7 @@ int insertDeclarations(comp_dict_item_t* dictNode, int escopo)
 			else
 			{
 				printf("Variavel global duplicada - linha %d\n", getLineNumber());
-				return IKS_ERROR_DECLARED;
+				exit(IKS_ERROR_DECLARED);
 			}		
 		
 			break;
@@ -136,7 +136,7 @@ int insertDeclarations(comp_dict_item_t* dictNode, int escopo)
 			else
 			{
 				printf("Variavel (vetor) global duplicado - linha %d\n", getLineNumber());
-				return IKS_ERROR_DECLARED;
+				exit(IKS_ERROR_DECLARED);
 			}	
 			break;
 
@@ -151,12 +151,12 @@ int insertDeclarations(comp_dict_item_t* dictNode, int escopo)
 			else
 			{
 				printf("Funcao com nome duplicado - linha %d\n", getLineNumber());
-				return IKS_ERROR_DECLARED;
+				exit(IKS_ERROR_DECLARED);
 			}
 			break;
 		default:
 				printf("Funcao não declarada - linha %d\n", getLineNumber());
-				return IKS_ERROR_UNDECLARED;
+				exit(IKS_ERROR_UNDECLARED);
 			break;
 	}
 }
