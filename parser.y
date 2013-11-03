@@ -196,11 +196,11 @@ decl_vetor:
   ;
 
 tipo_var:
-    TK_PR_INT { $$ = IKS_INT; }
-  | TK_PR_FLOAT { $$ = IKS_FLOAT; }
-  | TK_PR_BOOL { $$ = IKS_BOOL; }
-  | TK_PR_CHAR { $$ = IKS_CHAR; }
-  | TK_PR_STRING { $$ = IKS_STRING; }
+    TK_PR_INT { $$ = IKS_SIMBOLO_LITERAL_INT; }
+  | TK_PR_FLOAT { $$ = IKS_SIMBOLO_LITERAL_FLOAT; }
+  | TK_PR_BOOL { $$ = IKS_SIMBOLO_LITERAL_BOOL; }
+  | TK_PR_CHAR { $$ = IKS_SIMBOLO_LITERAL_CHAR; }
+  | TK_PR_STRING { $$ = IKS_SIMBOLO_LITERAL_STRING; }
   ;
 
 

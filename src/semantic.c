@@ -12,15 +12,6 @@
 #include "iks_ast.h"
 #include "semantic.h"
 
-#define IKS_SIMBOLO_INDEFINIDO         0
-#define IKS_SIMBOLO_LITERAL_INT        1
-#define IKS_SIMBOLO_LITERAL_FLOAT      2
-#define IKS_SIMBOLO_LITERAL_CHAR       3
-#define IKS_SIMBOLO_LITERAL_STRING     4
-#define IKS_SIMBOLO_LITERAL_BOOL       5
-#define IKS_SIMBOLO_IDENTIFICADOR      6
-
-
 FILE *logFile;
 
 /**
@@ -89,11 +80,11 @@ int sizeDeclarations(int type)
 {
 	switch(type)
 	{
-      case IKS_INT: return 4; break;
-      case IKS_FLOAT: return 8; break;
-      case IKS_BOOL: return 1; break;
-      case IKS_CHAR: return 1; break;
-      case IKS_STRING: return 1; break;
+      case IKS_SIMBOLO_LITERAL_INT: return 4; break;
+      case IKS_SIMBOLO_LITERAL_FLOAT: return 8; break;
+      case IKS_SIMBOLO_LITERAL_BOOL: return 1; break;
+      case IKS_SIMBOLO_LITERAL_CHAR: return 1; break;
+      case IKS_SIMBOLO_LITERAL_STRING: return 1; break;
 	}
 }
 
@@ -286,13 +277,13 @@ int coertion(int type1, int type2)
         if(type1 == type2) return type1;
 
 		//erros de coerção
-        if(type2 == IKS_STRING) exit(IKS_ERROR_STRING_TO_X);
-        if(type2 == IKS_CHAR) exit(IKS_ERROR_CHAR_TO_X);
-		if((type1 == IKS_STRING) || (type1 == IKS_CHAR )) exit(IKS_ERROR_WRONG_TYPE); 	
+        if(type2 == IKS_SIMBOLO_LITERAL_STRING) exit(IKS_ERROR_STRING_TO_X);
+        if(type2 == IKS_SIMBOLO_LITERAL_CHAR) exit(IKS_ERROR_CHAR_TO_X);
+		if((type1 == IKS_SIMBOLO_LITERAL_STRING) || (type1 == IKS_SIMBOLO_LITERAL_CHAR )) exit(IKS_ERROR_WRONG_TYPE); 	
 
-        if(type1 == IKS_INT && (type2 == IKS_FLOAT||type2 == IKS_BOOL)) return IKS_INT;  
-        if((type1 == IKS_FLOAT) && ((type2 == IKS_INT)||(type2 == IKS_BOOL))) return IKS_FLOAT;
-        if((type1 == IKS_BOOL) && (type2 == IKS_FLOAT || type2 == IKS_INT)) return IKS_BOOL;
+        if(type1 == IKS_SIMBOLO_LITERAL_INT && (type2 == IKS_SIMBOLO_LITERAL_FLOAT||type2 == IKS_SIMBOLO_LITERAL_BOOL)) return IKS_SIMBOLO_LITERAL_INT;  
+        if((type1 == IKS_SIMBOLO_LITERAL_FLOAT) && ((type2 == IKS_SIMBOLO_LITERAL_INT)||(type2 == IKS_SIMBOLO_LITERAL_BOOL))) return IKS_SIMBOLO_LITERAL_FLOAT;
+        if((type1 == IKS_SIMBOLO_LITERAL_BOOL) && (type2 == IKS_SIMBOLO_LITERAL_FLOAT || type2 == IKS_SIMBOLO_LITERAL_INT)) return IKS_SIMBOLO_LITERAL_BOOL;
 }
 
 /*
@@ -307,37 +298,37 @@ int inference(int type1, int type2)
     * Type 02: Int/Float/Bool
     */
 	if(
-      ( (type1 == IKS_INT)
-            || (type1 == IKS_FLOAT)
-            || (type1 == IKS_BOOL)
+      ( (type1 == IKS_SIMBOLO_LITERAL_INT)
+            || (type1 == IKS_SIMBOLO_LITERAL_FLOAT)
+            || (type1 == IKS_SIMBOLO_LITERAL_BOOL)
       ) && (
-        (type2 == IKS_INT)
-            || (type2 == IKS_FLOAT)
-            || (type2 == IKS_BOOL)
+        (type2 == IKS_SIMBOLO_LITERAL_INT)
+            || (type2 == IKS_SIMBOLO_LITERAL_FLOAT)
+            || (type2 == IKS_SIMBOLO_LITERAL_BOOL)
         )
      )
 	{
       // Int
-      if(type1 == IKS_INT && type2 == IKS_INT) {printf("\n tipoINT: %d",IKS_INT); return IKS_INT;};
-      if((type1 == IKS_INT && type2 == IKS_BOOL) || (type1 == IKS_BOOL && type2 == IKS_INT)) {printf("\n tipoINT: %d",IKS_INT); return IKS_INT;};
+      if(type1 == IKS_SIMBOLO_LITERAL_INT && type2 == IKS_SIMBOLO_LITERAL_INT) {printf("\n tipoINT: %d",IKS_SIMBOLO_LITERAL_INT); return IKS_SIMBOLO_LITERAL_INT;};
+      if((type1 == IKS_SIMBOLO_LITERAL_INT && type2 == IKS_SIMBOLO_LITERAL_BOOL) || (type1 == IKS_SIMBOLO_LITERAL_BOOL && type2 == IKS_SIMBOLO_LITERAL_INT)) {printf("\n tipoINT: %d",IKS_SIMBOLO_LITERAL_INT); return IKS_SIMBOLO_LITERAL_INT;};
 
       // Float
-      if(type1 == IKS_FLOAT && type2 == IKS_FLOAT) {printf("\n tipoFLOAT: %d",IKS_FLOAT); return IKS_FLOAT; };
-      if((type1 == IKS_INT && type2 == IKS_FLOAT) || (type1 == IKS_FLOAT && type2 == IKS_INT)) {printf("\n tipoFLOAT: %d",IKS_FLOAT); return IKS_FLOAT; };
-      if((type1 == IKS_BOOL && type2 == IKS_FLOAT) || (type1 == IKS_FLOAT && type2 == IKS_BOOL))	{printf("\n tipoFLOAT: %d",IKS_FLOAT); return IKS_FLOAT; };
+      if(type1 == IKS_SIMBOLO_LITERAL_FLOAT && type2 == IKS_SIMBOLO_LITERAL_FLOAT) {printf("\n tipoFLOAT: %d",IKS_SIMBOLO_LITERAL_FLOAT); return IKS_SIMBOLO_LITERAL_FLOAT; };
+      if((type1 == IKS_SIMBOLO_LITERAL_INT && type2 == IKS_SIMBOLO_LITERAL_FLOAT) || (type1 == IKS_SIMBOLO_LITERAL_FLOAT && type2 == IKS_SIMBOLO_LITERAL_INT)) {printf("\n tipoFLOAT: %d",IKS_SIMBOLO_LITERAL_FLOAT); return IKS_SIMBOLO_LITERAL_FLOAT; };
+      if((type1 == IKS_SIMBOLO_LITERAL_BOOL && type2 == IKS_SIMBOLO_LITERAL_FLOAT) || (type1 == IKS_SIMBOLO_LITERAL_FLOAT && type2 == IKS_SIMBOLO_LITERAL_BOOL))	{printf("\n tipoFLOAT: %d",IKS_SIMBOLO_LITERAL_FLOAT); return IKS_SIMBOLO_LITERAL_FLOAT; };
 
       // Bool
-      if(type1 == IKS_BOOL && type2 == IKS_BOOL) {printf("\n tipoFLOAT: %d",IKS_BOOL); return IKS_BOOL; };
+      if(type1 == IKS_SIMBOLO_LITERAL_BOOL && type2 == IKS_SIMBOLO_LITERAL_BOOL) {printf("\n tipoFLOAT: %d",IKS_SIMBOLO_LITERAL_BOOL); return IKS_SIMBOLO_LITERAL_BOOL; };
 	}
 	else
 	{
-      if(((type1 == IKS_INT) || (type1 == IKS_FLOAT) || (type1 == IKS_BOOL)) && ((type2 != IKS_INT) || (type2 != IKS_FLOAT) || (type2 != IKS_BOOL)))
+      if(((type1 == IKS_SIMBOLO_LITERAL_INT) || (type1 == IKS_SIMBOLO_LITERAL_FLOAT) || (type1 == IKS_SIMBOLO_LITERAL_BOOL)) && ((type2 != IKS_SIMBOLO_LITERAL_INT) || (type2 != IKS_SIMBOLO_LITERAL_FLOAT) || (type2 != IKS_SIMBOLO_LITERAL_BOOL)))
       {
-         if(type2 == IKS_CHAR) exit(IKS_ERROR_CHAR_TO_X);
-         if(type2 == IKS_STRING) exit(IKS_ERROR_STRING_TO_X);
+         if(type2 == IKS_SIMBOLO_LITERAL_CHAR) exit(IKS_ERROR_CHAR_TO_X);
+         if(type2 == IKS_SIMBOLO_LITERAL_STRING) exit(IKS_ERROR_STRING_TO_X);
       }
       else 
-      if((type1 == IKS_STRING)||(type1 == IKS_CHAR)) exit(IKS_ERROR_WRONG_TYPE);
+      if((type1 == IKS_SIMBOLO_LITERAL_STRING)||(type1 == IKS_SIMBOLO_LITERAL_CHAR)) exit(IKS_ERROR_WRONG_TYPE);
 
    }
 }
