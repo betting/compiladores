@@ -69,26 +69,6 @@ STACK* sPush(STACK* pointer, comp_tree_t* nodoAST);
 
 void printStack(STACK* stack_l);
 
-/**
- * Check Declarations.
- * 
- * Check all variable and function declarations.
- *
- * @param *root   The tree with all elements found
- * @return The return code (sucess or error)
- */
-int checkDeclarations(STACK* stack, comp_list_t* declarationList);
-
-/**
- * Check Utilization.
- * 
- * Check all variable and function utilization.
- *
- * @param *root   The tree with all elements found
- * @return The return code (sucess or error)
- */
-int checkUtilization(comp_tree_t *root);
-
 int sizeDeclarations(int type);
 
 void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_type);
