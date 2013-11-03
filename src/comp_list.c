@@ -155,6 +155,23 @@ comp_list_t* searchToken(comp_list_t* list, char* text)
 		return NULL;
 }
 
+int searchTypeToken(comp_list_t* list, char* text)
+{
+		comp_list_t* aux = list;
+
+		while(aux != NULL)
+		{	
+			if(strcmp(aux->nomeVar, text) == 0)
+         {
+				return aux->tipoVar;
+         }
+			aux = aux->next;
+		}
+
+		return 0;
+}
+
+
 /**
  * Return the last element from a list
  *

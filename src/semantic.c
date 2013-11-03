@@ -383,10 +383,10 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
 								printf("\nCHILD IS NOT NULL");
 								printf("\nSYMBOL - TOKEN: %s\n",pointer->disc->child->symbol->token);
 							}
-							if(pointer->disc->sibling != NULL)
+							if(pointer->disc->child->sibling != NULL)
 							{
 								printf("\nSIBLING IS NOT NULL");
-								//printf("\nSYMBOL - TOKEN: %s\n",pointer->disc->sibling->symbol->token);
+								printf("\nSYMBOL - TOKEN: %s\n",pointer->disc->child->sibling->symbol->token);
 							}
 							/*
 							aux_stack = pointer;
