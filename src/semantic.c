@@ -199,6 +199,7 @@ int checkDeclarations(STACK* program, comp_list_t* declarationList)
       {
 			retorno = searchTypeToken(declarationList,stack_l->disc->symbol->token);
 			printf("\n\nToken %s - RETORNO %d",stack_l->disc->symbol->token, retorno);
+			stack_l->disc->node_type = retorno;
 	   }
 	   stack_l = stack_l->next;
    }
@@ -384,29 +385,21 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
 							{
 								printf("\nCHILD IS NOT NULL");
 								printf("\nSYMBOL - TOKEN: %s\n",pointer->disc->child->symbol->token);
+								printf("\nSYMBOL - TYPE: %d\n",pointer->disc->child->node_type);
+								aux_type1 = pointer->disc->child->node_type;
 							}
 							if(pointer->disc->child->sibling != NULL)
 							{
 								printf("\nSIBLING IS NOT NULL");
 								printf("\nSYMBOL - TOKEN: %s\n",pointer->disc->child->sibling->symbol->token);
+								printf("\nSYMBOL - TYPE: %d\n",pointer->disc->child->sibling->node_type);
+								aux_type2 = pointer->disc->child->sibling->node_type;
 							}
-							/*
-							aux_stack = pointer;
-							aux_stack = aux_stack->previous;
-							
-							//AQUI TEM QUE PEGAR O TIPO DA DECLARAÇÃO
-							aux_type2 = aux_stack->disc->symbol->type;
-							
-							printf("\nAUX->SYMBOL - TOKEN: %s - TIPO: %d\n",aux_stack->disc->symbol->token, aux_type2);
-							aux_stack = aux_stack->previous;
 
-							//AQUI TEM QUE PEGAR O TIPO DA DECLARAÇÃO
-							aux_type1 = aux_stack->disc->type;
-							printf("\nAUX->SYMBOL - TOKEN: %s - TIPO: %d\n",aux_stack->disc->symbol->token, aux_type1);
+							//printf("\nAUX->SYMBOL - TOKEN: %s - TIPO: %d\n",aux_stack->disc->symbol->token, aux_type1);
 								
 														
 							pointer->disc->node_type = inference(aux_type1,aux_type2);
-							*/
 							break;
 	
 			/*case IKS_AST_ARIM_SUBTRACAO:
@@ -467,10 +460,11 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
 						
 			case IKS_AST_LITERAL:
 						printf("\nIKS_AST_LITERAL");
-			
-						/*pointer->disc->type = aux_list->tipoVar;
-						pointer->disc->size = sizeDeclarations(pointer->disc->type);
-						printf("\n\tLITERAL type: %d - size: %d",pointer->disc->type,pointer->disc->size);*/
+						//printf("\nSYMBOL - TOKEN: %s\n",pointer->disc->symbol->token);
+						//pointer->disc->type = pointer->disc->node_type;
+						//pointer->disc->size = sizeDeclarations(pointer->disc->node_type);
+						
+						//printf("\n\tLITERAL type: %d - size: %d",pointer->disc->node_type,pointer->disc->size);
 						break;
 						
 			case IKS_AST_ATRIBUICAO:
