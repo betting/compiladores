@@ -32,12 +32,6 @@
 #define IKS_ERROR_WRONG_PAR_OUTPUT  13 // parâmetro não é literal string ou expressão
 #define IKS_ERROR_WRONG_PAR_RETURN  14 // parâmetro não é expressão compatível com tipo do retorno
 
-#define IKS_INT    1
-#define IKS_FLOAT  2
-#define IKS_CHAR   3
-#define IKS_STRING 4
-#define IKS_BOOL   5
-
 #define IKS_LOCAL  -1 //PARAMETRO PRA DEFINIR VARIAVEL LOCAL
 #define IKS_GLOBAL_VAR 0 //PARAMETRO PRA DEFINIR VARIAVEL GLOBAL
 #define IKS_GLOBAL_VET 1 //PARAMETRO PRA DEFINIR VETOR GLOBAL
