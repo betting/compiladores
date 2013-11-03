@@ -157,18 +157,8 @@ comp_list_t* searchToken(comp_list_t* list, char* text)
 
 int searchTypeToken(comp_list_t* list, char* text)
 {
-		comp_list_t* aux = list;
-
-		while(aux != NULL)
-		{	
-			if(strcmp(aux->nomeVar, text) == 0)
-         {
-				return aux->tipoVar;
-         }
-			aux = aux->next;
-		}
-
-		return 0;
+      comp_list_t* aux = searchToken(list, text);
+      return (aux ? aux->tipoVar : 0);
 }
 
 
