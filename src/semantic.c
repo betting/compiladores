@@ -174,7 +174,8 @@ int insertDeclarations(comp_dict_item_t* dictNode, int escopo)
 int checkDeclarations(STACK* program, comp_list_t* declarationList)
 {
    int retorno;
-   STACK* stack = program;
+   STACK* stack_l = program;
+   /*
    while (stack->next != NULL)
    {
       // Checking if actual symbol is a global declaration 
@@ -190,7 +191,17 @@ int checkDeclarations(STACK* program, comp_list_t* declarationList)
 
       stack = stack->next;
    }
-
+   */
+   while (stack_l->next != NULL)
+   {
+      //if (stack_l->disc->symbol->type == IKS_SIMBOLO_IDENTIFICADOR)
+      if (stack_l->disc->symbol != NULL)
+      {
+			retorno = searchTypeToken(declarationList,stack_l->disc->symbol->token);
+			printf("\n\nToken %s - RETORNO %d",stack_l->disc->symbol->token, retorno);
+	   }
+	   stack_l = stack_l->next;
+   }
    return retorno;
 /*
    // Checking if there are variable/vector declariation or function definition.

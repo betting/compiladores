@@ -120,7 +120,7 @@ p: s
          $$ = createNode(IKS_AST_PROGRAMA,0);
          insertChild($$, $1);
          saveASTRoot($$);
-//         checkDeclarations(pointer, declarationList);
+         checkDeclarations(pointer, declarationList);
          //checkUtilization($$);
          printList(declarationList);
 //         printList(listFunctions);
