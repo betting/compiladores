@@ -312,27 +312,7 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
          case IKS_AST_LOGICO_COMP_L:
          case IKS_AST_LOGICO_COMP_G:
          case IKS_AST_ARIM_SOMA:
-            printf("\nEntrei em alguma operação !");
-            if(pointer->disc->symbol != NULL) printf("\nSYMBOL IS NOT NULL");
-            if(pointer->disc->child != NULL)
-            {
-               printf("\nCHILD IS NOT NULL");
-               printf("\nSYMBOL - TOKEN: %s\n",pointer->disc->child->symbol->token);
-               printf("\nSYMBOL - TYPE: %d\n",pointer->disc->child->node_type);
-               aux_type1 = pointer->disc->child->node_type;
-               if(aux_type1 == 0) aux_type1 = pointer->disc->child->symbol->type;
-            }
-
-            if(pointer->disc->child->sibling != NULL)
-            {
-               printf("\nSIBLING IS NOT NULL");
-               printf("\nSYMBOL - TOKEN: %s\n",pointer->disc->child->sibling->symbol->token);
-               printf("\nSYMBOL - TYPE: %d\n",pointer->disc->child->sibling->node_type);
-               aux_type2 = pointer->disc->child->sibling->node_type;
-               if(aux_type2 == 0) aux_type2 = pointer->disc->child->sibling->symbol->type;
-            }
-
-            pointer->disc->node_type = inference(aux_type1,aux_type2);
+            pointer->disc->node_type = inference(pointer->disc->child->symbol->type, pointer->disc->child->sibling->symbol->type);
             break;
 	
          case IKS_AST_IDENTIFICADOR:
