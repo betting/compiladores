@@ -444,7 +444,9 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
             break;
 
          case IKS_AST_RETURN:
-            printf("\nIKS_AST_INPUT");
+            printf("\nIKS_AST_RETURN\n");
+            if(pointer->disc->symbol!=NULL) printf("Retunr: token -%s\n",pointer->disc->symbol->token);
+            
             break;
 
          default:
