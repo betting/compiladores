@@ -17,6 +17,11 @@ comp_tree_t *variableName;
 comp_tree_t *data;
 comp_tree_t *dataChild;
 
+int variableTypeGlobal;
+int variableTypeLocal;
+int variableTypeVector;
+int variableTypeFunction;
+
 /**
  *  Initiate Stack
  *  
@@ -82,14 +87,14 @@ STACK* addElementStack(STACK* S, STACK* newElement)
 
 int sizeDeclarations(int type)
 {
-	switch(type)
-	{
+   switch(type)
+   {
       case IKS_SIMBOLO_LITERAL_INT: return 4; break;
       case IKS_SIMBOLO_LITERAL_FLOAT: return 8; break;
       case IKS_SIMBOLO_LITERAL_BOOL: return 1; break;
       case IKS_SIMBOLO_LITERAL_CHAR: return 1; break;
       case IKS_SIMBOLO_LITERAL_STRING: return 1; break;
-	}
+   }
 }
 
 
@@ -183,7 +188,7 @@ int coertion(int type1, int type2)
       exit(IKS_ERROR_CHAR_TO_X);
    }
 
-	if((type1 == IKS_SIMBOLO_LITERAL_STRING) || (type1 == IKS_SIMBOLO_LITERAL_CHAR))
+   if((type1 == IKS_SIMBOLO_LITERAL_STRING) || (type1 == IKS_SIMBOLO_LITERAL_CHAR))
    {
       exit(IKS_ERROR_WRONG_TYPE);
    }
@@ -256,9 +261,9 @@ int inference(int type1, int type2)
       {
          return IKS_SIMBOLO_LITERAL_BOOL;
       }
-	}
-	else
-	{
+   }
+   else
+   {
       if(((type1 == IKS_SIMBOLO_LITERAL_INT) || (type1 == IKS_SIMBOLO_LITERAL_FLOAT) || (type1 == IKS_SIMBOLO_LITERAL_BOOL))
          && ((type2 != IKS_SIMBOLO_LITERAL_INT) || (type2 != IKS_SIMBOLO_LITERAL_FLOAT) || (type2 != IKS_SIMBOLO_LITERAL_BOOL)))
       {
@@ -331,7 +336,20 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
             break;
 	
          case IKS_AST_IDENTIFICADOR:
-            // Nothing to do. Validation performed in the function insertDeclarations().
+            variableTypeGlobal = getDeclarationDataType(IKS_GLOBAL_VAR, variableName->symbol->token, declarationList);
+            variableTypeLocal = getDeclarationDataType(IKS_LOCAL, variableName->symbol->token, declarationList);
+            variableTypeVector = getDeclarationDataType(IKS_GLOBAL_VET, variableName->symbol->token, declarationList);
+            variableTypeFunction = getDeclarationDataType(IKS_FUNCTION, variableName->symbol->token, declarationList);
+
+            // Checking if the variable was declared.
+				if ((variableTypeGlobal == -1)
+                && (variableTypeLocal == -1)
+                && (variableTypeVector == -1)
+                && (variableTypeFunction -1))
+            {
+               printf("Variavel '%s' nao declarada.\n", variableName->symbol->token);
+               exit(IKS_ERROR_UNDECLARED);
+            }
             break;
 						
          case IKS_AST_LITERAL:
@@ -344,12 +362,34 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
             data = pointer->disc->child->sibling;
             dataChild = data->child;
 
-            int variableType;
-            variableType = getDeclarationDataType(IKS_GLOBAL_VAR, variableName->symbol->token, declarationList);
+            variableTypeGlobal = getDeclarationDataType(IKS_GLOBAL_VAR, variableName->symbol->token, declarationList);
+            variableTypeLocal = getDeclarationDataType(IKS_LOCAL, variableName->symbol->token, declarationList);
+            variableTypeVector = getDeclarationDataType(IKS_GLOBAL_VET, variableName->symbol->token, declarationList);
+            variableTypeFunction = getDeclarationDataType(IKS_FUNCTION, variableName->symbol->token, declarationList);
 
+            // Checking if this is a variable declaration
             if(variableName->type == IKS_AST_IDENTIFICADOR)
             {
-               pointer->disc->node_type = coertion(variableType, data->symbol->type);
+               if(variableTypeVector != -1)
+               {
+                  printf("Variavel declarada como vetor.\n");
+                  exit(IKS_ERROR_VECTOR);
+               }
+               else if(variableTypeFunction != -1)
+               {
+                  printf("Variavel declarada como funcao.\n");
+                  exit(IKS_ERROR_FUNCTION);
+               }
+               else
+               {
+                  int variableType;
+                  variableType = ((variableTypeGlobal != -1) ? variableTypeGlobal : variableTypeLocal);
+                  pointer->disc->node_type = coertion(variableType, data->symbol->type);
+               }
+            }
+            // Checking if this is a vector (global) declaration
+            else if(variableName->type == IKS_AST_VETOR_INDEXADO)
+            {
             }
             break;
 
