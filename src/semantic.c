@@ -366,7 +366,19 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
                {
                   int variableType;
                   variableType = ((variableTypeGlobal != -1) ? variableTypeGlobal : variableTypeLocal);
-                  pointer->disc->node_type = coertion(variableType, data->symbol->type);
+
+                  int dataType;
+                  // If this is an operation, the values will checked before perform coertion.
+                  if ((data->type != IKS_AST_LITERAL) || (data->type != IKS_AST_IDENTIFICADOR))
+                  {
+                     dataType = inference(data->child->symbol->type, data->child->sibling->symbol->type);
+                  }
+                  // Simple value attribution
+                  else
+                  {
+                     dataType = data->symbol->type;
+                  }
+                  pointer->disc->node_type = coertion(variableType, dataType);
                }
             }
             // Checking if this is a vector (global) declaration
