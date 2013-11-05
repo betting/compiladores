@@ -101,7 +101,17 @@ comp_list_t* getLocalList(comp_list_t* list, comp_list_t* function);
  * @param   declarationType      Specify if this variable/function local or global
  * @param   *token               The token to be searched in the list
  * @param   *declarationList     List with all declarations found in the code
+ * @param   *functionName        The name of the method to search local declarations. (Note: this parameter will be ignored if the declarationType is different than IKS_LOCAL)
  * @result                       The datatype of the declaration. Otherwise, it will return -1.
  */
-int getDeclarationDataType(int declarationType, char* token, comp_list_t* declarationList);
+int getDeclarationDataType(int declarationType, char* token, comp_list_t* declarationList, char* functionName);
+
+/**
+ * Search for local declarations according to the function name given
+ *
+ * @param   *functionName     Name of the function
+ * @param   *declarationList  List with all declarations
+ * @return                    All local declarations found
+ */
+comp_list_t* getLocalDeclarations(char *functionName, comp_list_t* declarationList);
 #endif
