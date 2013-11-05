@@ -113,4 +113,12 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
  * @return int
  */
 STACK* addElementStack(STACK* stack, STACK* newElement);
+
+/**
+ * Validate all operations recursively
+ *
+ * @param   *operationNode       The first operation element found in the stack
+ * @return                       The data type returned by inference function
+ */
+int validateOperation(comp_tree_t* operationNode);
 #endif
