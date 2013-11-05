@@ -213,11 +213,19 @@ comp_list_t* getLocalList(comp_list_t* list, comp_list_t* function)
  * @param   declarationType      Specify if this variable/function local or global
  * @param   *token               The token to be searched in the list
  * @param   *declarationList     List with all declarations found in the code
+ * @param   *functionName        The name of the method to search local declarations. (Note: this parameter will be ignored if the declarationType is different than IKS_LOCAL)
  * @result                       The datatype of the declaration. Otherwise, it will return -1.
  */
-int getDeclarationDataType(int declarationType, char* token, comp_list_t* declarationList)
+int getDeclarationDataType(int declarationType, char* token, comp_list_t* declarationList, char* functionName)
 {
-   while (declarationList->next != NULL)
+   // If it's expected to search LOCAL declarations then the list will be updated
+   // with all declarations available for the function given.
+   if ((functionName != NULL) && ((declarationType == IKS_LOCAL) || (declarationType == IKS_FUNC_PARAM)))
+   {
+      declarationList = getLocalDeclarations(functionName, declarationList, declarationType);
+   }
+
+   while (declarationList != NULL)
    {
       if ((strcmp(declarationList->nomeVar, token) == 0)
             && (declarationList->tipoGlobal == declarationType))
@@ -228,5 +236,59 @@ int getDeclarationDataType(int declarationType, char* token, comp_list_t* declar
    }
 
    return -1;
+}
+
+/**
+ * Search for local declarations according to the function name given
+ *
+ * @param   *functionName     Name of the function
+ * @param   *declarationList  List with all declarations
+ * @param   declarationType   Specify if this variable/function local or global
+ * @return                    All local declarations found
+ */
+comp_list_t* getLocalDeclarations(char *functionName, comp_list_t* declarationList, int declarationType)
+{
+   comp_list_t* auxList = (comp_list_t *)malloc(sizeof(comp_list_t));
+   auxList = NULL;
+
+   while (declarationList != NULL)
+   {
+      if ((strcmp(declarationList->nomeVar, functionName) == 0)
+            && (declarationList->tipoGlobal == IKS_FUNCTION))
+      {
+         // If the function was found, then get the next element of the list 
+         // that should be the first local declaration or the next function
+         // declaration.
+         declarationList = declarationList->next;
+         while (declarationList != NULL)
+         {
+            // Getting all local declarations found for the function given
+            if (declarationList->tipoGlobal == declarationType)
+            {
+               comp_list_t* new;
+               new = (comp_list_t *)malloc(sizeof(comp_list_t));
+               new->tipoVar = declarationList->tipoVar;
+               new->nomeVar = declarationList->nomeVar;
+               new->tipoGlobal = declarationList->tipoGlobal;
+               new->next = NULL;
+
+               auxList = add(auxList, new);
+            }
+            else
+            {
+               // Return the local declarations for the function (this list
+               // can be null if, after the actual function declaration, we
+               // found another function declaration).
+               return auxList;
+            }
+
+            declarationList = declarationList->next;
+         }
+      }
+      declarationList = declarationList->next;
+   }
+
+   // The function was not found in the declaration list
+   return NULL;
 }
 

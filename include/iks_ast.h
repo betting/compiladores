@@ -46,6 +46,7 @@
 #define IKS_GLOBAL_VAR  1 // References to global variable
 #define IKS_GLOBAL_VET  2 // References to global vector
 #define IKS_FUNCTION    3 // References to function
+#define IKS_FUNC_PARAM  4 // References to function parameters
 
 #define TRUE 1
 #define FALSE 0
