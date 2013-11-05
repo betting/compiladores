@@ -496,13 +496,15 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
 
          case IKS_AST_RETURN:
             printf("\nIKS_AST_RETURN");
+			
 			if(lastFunction->node_type != pointer->disc->child->symbol->type)
 			{
 					if((pointer->disc->child->symbol->type == IKS_SIMBOLO_LITERAL_CHAR) ||(pointer->disc->child->symbol->type == IKS_SIMBOLO_LITERAL_STRING)){
 							printf("Tipo do comando return e tipo da funcao diferentes\n");
 							exit(IKS_ERROR_WRONG_PAR_RETURN);
 					}
-					else
+					//tá dando erro aqui!
+					/*else
 					{
 						 if(pointer->disc->child->symbol->type == IKS_SIMBOLO_INDEFINIDO)
 						 {
@@ -520,29 +522,35 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
 						 
 						 
 						 lastFunction->node_type = coertion(lastFunction->node_type,pointer->disc->child->symbol->type);
-					}        
+					}*/
+					        
 					pointer->disc->node_type = pointer->disc->child->symbol->type;
 			}
 			else
 			{
 					pointer->disc->node_type = pointer->disc->child->symbol->type;
 			}
+			 
+			
             if(pointer->disc->child!=NULL) printf("\nReturn: type-CHILD -%d === token - %s",pointer->disc->child->symbol->type, pointer->disc->child->symbol->token);
             printf("\nTipo: %d - SIZE: %d - Node_type: %d\n",pointer->disc->type, pointer->disc->size, pointer->disc->node_type);
-            
+			
 
             break;
 
          case IKS_AST_FUNCAO:
 			printf("\nIKS_AST_FUNCAO");
-			//printf("\n TYPE: %d",pointer->disc->symbol->type);
-			//printf("\n TOKEN: %s",pointer->disc->symbol->token);
-			
-			variableName = pointer->disc;
-			//printf("=== Nome da função: %s", variableName->symbol->token);
-			variableTypeFunction = getDeclarationDataType(IKS_FUNCTION, variableName->symbol->token, declarationList, NULL);
-			pointer->disc->node_type = variableTypeFunction;
+			printf("\n TYPE: %d",pointer->disc->symbol->type);
+			printf("\n TOKEN: %s",pointer->disc->symbol->token);
 			lastFunction = pointer->disc;
+			variableName = pointer->disc;
+			
+			printf("=== Nome da função: %s", variableName->symbol->token);
+			
+			variableTypeFunction = getDeclarationDataType(IKS_FUNCTION, pointer->disc->symbol->token, declarationList, NULL);
+			pointer->disc->node_type = variableTypeFunction;
+			printf("\n\n=== Nome da função: %s", variableName->symbol->token);
+			
 			break;
 
          default:
