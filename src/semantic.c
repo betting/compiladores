@@ -284,6 +284,26 @@ int inference(int type1, int type2)
    }
 }
 
+/**
+ * Validate all operations recursively
+ *
+ * @param   *operationNode       The first operation element found in the stack
+ * @return                       The data type returned by inference function
+ */
+int validateOperation(comp_tree_t* operationNode)
+{
+   if (operationNode->symbol != NULL)
+   {
+      return inference(operationNode->symbol->type, operationNode->sibling->symbol->type);
+   }
+   else
+   {
+      int nodeType;
+      nodeType = validateOperation(operationNode->child);
+      return inference(nodeType, operationNode->sibling->symbol->type);
+   }
+}
+
 
 void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_type)
 {
@@ -312,7 +332,7 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
          case IKS_AST_LOGICO_COMP_L:
          case IKS_AST_LOGICO_COMP_G:
          case IKS_AST_ARIM_SOMA:
-            pointer->disc->node_type = inference(pointer->disc->child->symbol->type, pointer->disc->child->sibling->symbol->type);
+            pointer->disc->node_type = validateOperation(pointer->disc->child);
             break;
 	
          case IKS_AST_IDENTIFICADOR:
@@ -371,7 +391,7 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
                   // If this is an operation, the values will checked before perform coertion.
                   if ((data->type != IKS_AST_LITERAL) || (data->type != IKS_AST_IDENTIFICADOR))
                   {
-                     dataType = inference(data->child->symbol->type, data->child->sibling->symbol->type);
+                     dataType = validateOperation(data->child);
                   }
                   // Simple value attribution
                   else
@@ -406,7 +426,19 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
                }
                else
                {
-                  pointer->disc->node_type = coertion(variableTypeVector, data->symbol->type);
+
+                  int dataType;
+                  // If this is an operation, the values will checked before perform coertion.
+                  if ((data->type != IKS_AST_LITERAL) || (data->type != IKS_AST_IDENTIFICADOR))
+                  {
+                     dataType = validateOperation(data->child);
+                  }
+                  // Simple value attribution
+                  else
+                  {
+                     dataType = data->symbol->type;
+                  }
+                  pointer->disc->node_type = coertion(variableTypeVector, dataType);
                }
             }
             break;
