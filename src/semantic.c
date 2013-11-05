@@ -513,30 +513,9 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
 						 }
 						 else if(pointer->disc->child->symbol->type == IKS_SIMBOLO_IDENTIFICADOR)
 						 {
-							 printf("\nIDENTIFICADOR");
-							//variableName = pointer->disc;
-							/*
-							variableTypeGlobal = getDeclarationDataType(IKS_GLOBAL_VAR, variableName->symbol->token, declarationList);
-							variableTypeLocal = getDeclarationDataType(IKS_LOCAL, variableName->symbol->token, declarationList);
-							variableTypeVector = getDeclarationDataType(IKS_GLOBAL_VET, variableName->symbol->token, declarationList);
-							variableTypeFunction = getDeclarationDataType(IKS_FUNCTION, variableName->symbol->token, declarationList);
-
-							// Checking if the variable was declared.
-							if ((variableTypeGlobal == -1)
-								&& (variableTypeLocal == -1)
-								&& (variableTypeVector == -1)
-								&& (variableTypeFunction -1))
-							{
-							   printf("Variavel '%s' nao declarada.\n", variableName->symbol->token);
-							   exit(IKS_ERROR_UNDECLARED);
-							}
-							else
-							{
-								printf("Variavel '%s' nao declarada.\n", variableName->symbol->token);
-							   
-							}
-							*/
-							 
+							
+							variableTypeFuncParamLocal = getDeclarationDataType(IKS_FUNC_PARAM, pointer->disc->child->symbol->token, declarationList, lastFunction->symbol->token);
+							 pointer->disc->child->symbol->type = variableTypeFuncParamLocal;
 						 }
 						 
 						 
