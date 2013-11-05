@@ -49,7 +49,7 @@ comp_list_t* listFunctions;
 
 comp_list_t* listGlobal;
 
-STACK* pointer;
+STACK* pointer, lastFunction;
 
 comp_dict_item_t* tk_var;
 

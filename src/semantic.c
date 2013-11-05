@@ -46,7 +46,7 @@ void printStack(STACK* stack_l)
       else
       {
          printf("Op Type: %d\n", stack_l->disc->type);
-         if(stack_l->disc->type == IKS_AST_INPUT) printf("IKS_AST_INPUT\n\n");
+         if(stack_l->disc->type == IKS_AST_RETURN) printf("IKS_AST_RETURN\n\n");
       }
 
       stack_l = stack_l->next;
@@ -292,7 +292,7 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
    comp_list_t *lastFunctionNameItem;
    comp_list_t *localList;
    STACK* aux_stack;
-
+   
    int aux_type = pointer->disc->type;
    int aux_type1, aux_type2;
 
@@ -436,8 +436,42 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
             break;
 
          case IKS_AST_RETURN:
-            printf("\nIKS_AST_RETURN\n");
-            if(pointer->disc->symbol!=NULL) printf("Retunr: token -%s\n",pointer->disc->symbol->token);
+            printf("\nIKS_AST_RETURN");
+            //if(pointer->disc->child!=NULL) printf("\nReturn: type-CHILD -%d === token - %s",pointer->disc->child->symbol->type, pointer->disc->child->symbol->token);
+            //printf("\nTipo: %d - SIZE: %d - Node_type: %d\n",pointer->disc->type, pointer->disc->size, pointer->disc->node_type);
+            
+            /*
+            aux_stack = pointer;
+            aux_stack = aux_stack->next;
+            if(aux_stack->disc!=NULL)
+            { 
+				printf("\n\nAUX");
+				printf("\nAUX Return: type -%d",aux_stack->disc->type);
+
+				if(pointer->disc->child!=NULL)
+				{
+					printf("\n\nCHILD NOT NULL");
+					printf("\nAUX Return: type -%d === token - %s",aux_stack->disc->child->symbol->type, aux_stack->disc->child->symbol->token);
+				}
+
+            }
+            */
+           
+			if(lastFunction->disc->type != pointer->disc->child->symbol->type)
+			{
+					if((pointer->disc->child->symbol->type == IKS_SIMBOLO_LITERAL_CHAR) ||(pointer->disc->child->symbol->type == IKS_SIMBOLO_LITERAL_STRING)){
+							printf("Tipo do comando return e tipo da funcao diferentes\n");
+							exit(IKS_ERROR_WRONG_PAR_RETURN);
+					}
+					else{
+							lastFunction->disc->type = coertion(lastFunction->disc->node_type,pointer->disc->child->symbol->type);
+					}        pointer->disc->node_type = pointer->disc->child->symbol->type;
+			}
+			else{
+					pointer->disc->node_type = pointer->disc->child->symbol->type;
+			}
+            
+            
             
             break;
 
