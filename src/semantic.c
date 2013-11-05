@@ -21,6 +21,7 @@ int variableTypeGlobal;
 int variableTypeLocal;
 int variableTypeVector;
 int variableTypeFunction;
+int variableTypeFuncParamLocal;
 
 /**
  *  Initiate Stack
@@ -110,32 +111,40 @@ int insertDeclarations(comp_dict_item_t* dictNode, int escopo)
 	switch(escopo)
 	{
 		case IKS_LOCAL: //local
+      case IKS_FUNC_PARAM:
          lastFunctionNameItem = getLastItemList(listFunctions);
          localList = getLocalList(declarationList, lastFunctionNameItem);
         
-			if(searchToken(localList, dictNode->token) == NULL)
-			{
-				declarationList = addItem(dictNode->type, dictNode->token, declarationList, IKS_LOCAL);
+         if(searchToken(localList, dictNode->token) == NULL)
+         {
+            if (escopo == IKS_LOCAL)
+            {
+               declarationList = addItem(dictNode->type, dictNode->token, declarationList, IKS_LOCAL);
+            }
+            else
+            {
+               declarationList = addItem(dictNode->type, dictNode->token, declarationList, IKS_FUNC_PARAM);
+            }
 			}
-			else
-			{
-				printf("Variavel local duplicada - linha %d\n", getLineNumber());
-				exit(IKS_ERROR_DECLARED);
-			}
-			break;
+         else
+         {
+            printf("Variavel local duplicada - linha %d\n", getLineNumber());
+            exit(IKS_ERROR_DECLARED);
+         }
+         break;
 			
-		case IKS_GLOBAL_VAR: //variavel global
-			if(searchToken(declarationList, dictNode->token) == NULL)
-			{
-				declarationList = addItem(dictNode->type, dictNode->token, declarationList, IKS_GLOBAL_VAR);
-			}
-			else
-			{
-				printf("Variavel global duplicada - linha %d\n", getLineNumber());
-				exit(IKS_ERROR_DECLARED);
-			}		
-		
-			break;
+      case IKS_GLOBAL_VAR: //variavel global
+         if(searchToken(declarationList, dictNode->token) == NULL)
+         {
+            declarationList = addItem(dictNode->type, dictNode->token, declarationList, IKS_GLOBAL_VAR);
+         }
+         else
+         {
+            printf("Variavel global duplicada - linha %d\n", getLineNumber());
+            exit(IKS_ERROR_DECLARED);
+         }
+
+         break;
 			
 		case IKS_GLOBAL_VET: //vetor global
 			if(searchToken(declarationList, dictNode->token) == NULL)
@@ -348,12 +357,14 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
 
             variableTypeGlobal = getDeclarationDataType(IKS_GLOBAL_VAR, variableName->symbol->token, declarationList, NULL);
             variableTypeLocal = getDeclarationDataType(IKS_LOCAL, variableName->symbol->token, declarationList, lastFunction->symbol->token);
+            variableTypeFuncParamLocal = getDeclarationDataType(IKS_FUNC_PARAM, variableName->symbol->token, declarationList, lastFunction->symbol->token);
             variableTypeVector = getDeclarationDataType(IKS_GLOBAL_VET, variableName->symbol->token, declarationList, NULL);
             variableTypeFunction = getDeclarationDataType(IKS_FUNCTION, variableName->symbol->token, declarationList, NULL);
 
             // Checking if the variable was declared.
             if ((variableTypeGlobal == -1)
                 && (variableTypeLocal == -1)
+                && (variableTypeFuncParamLocal == -1)
                 && (variableTypeVector == -1)
                 && (variableTypeFunction -1))
             {
@@ -377,6 +388,7 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
             {
                variableTypeGlobal = getDeclarationDataType(IKS_GLOBAL_VAR, variableName->symbol->token, declarationList, NULL);
                variableTypeLocal = getDeclarationDataType(IKS_LOCAL, variableName->symbol->token, declarationList, lastFunction->symbol->token);
+               variableTypeFuncParamLocal = getDeclarationDataType(IKS_FUNC_PARAM, variableName->symbol->token, declarationList, lastFunction->symbol->token);
                variableTypeVector = getDeclarationDataType(IKS_GLOBAL_VET, variableName->symbol->token, declarationList, NULL);
                variableTypeFunction = getDeclarationDataType(IKS_FUNCTION, variableName->symbol->token, declarationList, NULL);
 
@@ -394,6 +406,7 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
                {
                   int variableType;
                   variableType = ((variableTypeGlobal != -1) ? variableTypeGlobal : variableTypeLocal);
+                  variableType = ((variableType != -1) ? variableType : variableTypeFuncParamLocal);
 
                   int dataType;
                   // If this is an operation, the values will checked before perform coertion.
@@ -414,6 +427,7 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
             {
                variableTypeGlobal = getDeclarationDataType(IKS_GLOBAL_VAR, variableName->child->symbol->token, declarationList, NULL);
                variableTypeLocal = getDeclarationDataType(IKS_LOCAL, variableName->child->symbol->token, declarationList, lastFunction->symbol->token);
+               variableTypeFuncParamLocal = getDeclarationDataType(IKS_FUNC_PARAM, variableName->child->symbol->token, declarationList, lastFunction->symbol->token);
                variableTypeVector = getDeclarationDataType(IKS_GLOBAL_VET, variableName->child->symbol->token, declarationList, NULL);
                variableTypeFunction = getDeclarationDataType(IKS_FUNCTION, variableName->child->symbol->token, declarationList, NULL);
 
@@ -425,6 +439,11 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
                else if(variableTypeLocal != -1)
                {
                   printf("Vetor declarada como variável local.\n");
+                  exit(IKS_ERROR_VARIABLE);
+               }
+               else if(variableTypeFuncParamLocal != -1)
+               {
+                  printf("Vetor declarada como parametro de funcao.\n");
                   exit(IKS_ERROR_VARIABLE);
                }
                else if(variableTypeFunction != -1)

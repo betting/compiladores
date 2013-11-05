@@ -168,7 +168,10 @@ decl_local:
    ;
 
 decl_var_local:
-    parametro ';' decl_local
+    decl_var ';' decl_local
+      {
+         insertDeclarations($1, IKS_LOCAL);
+      }
    |
    ;
 
@@ -243,7 +246,7 @@ lista_parametros_nao_vazia:
 parametro:
     decl_var
       {
-         insertDeclarations($1, IKS_LOCAL);
+         insertDeclarations($1, IKS_FUNC_PARAM);
          //printf("Local(Param):%d:%s\n", $1->type, $1->token);
       }
   ;

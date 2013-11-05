@@ -220,9 +220,9 @@ int getDeclarationDataType(int declarationType, char* token, comp_list_t* declar
 {
    // If it's expected to search LOCAL declarations then the list will be updated
    // with all declarations available for the function given.
-   if ((functionName != NULL) && (declarationType == IKS_LOCAL))
+   if ((functionName != NULL) && ((declarationType == IKS_LOCAL) || (declarationType == IKS_FUNC_PARAM)))
    {
-      declarationList = getLocalDeclarations(functionName, declarationList);
+      declarationList = getLocalDeclarations(functionName, declarationList, declarationType);
    }
 
    while (declarationList != NULL)
@@ -243,9 +243,10 @@ int getDeclarationDataType(int declarationType, char* token, comp_list_t* declar
  *
  * @param   *functionName     Name of the function
  * @param   *declarationList  List with all declarations
+ * @param   declarationType   Specify if this variable/function local or global
  * @return                    All local declarations found
  */
-comp_list_t* getLocalDeclarations(char *functionName, comp_list_t* declarationList)
+comp_list_t* getLocalDeclarations(char *functionName, comp_list_t* declarationList, int declarationType)
 {
    comp_list_t* auxList = (comp_list_t *)malloc(sizeof(comp_list_t));
    auxList = NULL;
@@ -262,7 +263,7 @@ comp_list_t* getLocalDeclarations(char *functionName, comp_list_t* declarationLi
          while (declarationList != NULL)
          {
             // Getting all local declarations found for the function given
-            if (declarationList->tipoGlobal == IKS_LOCAL)
+            if (declarationList->tipoGlobal == declarationType)
             {
                comp_list_t* new;
                new = (comp_list_t *)malloc(sizeof(comp_list_t));
