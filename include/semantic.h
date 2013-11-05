@@ -49,7 +49,9 @@ comp_list_t* listFunctions;
 
 comp_list_t* listGlobal;
 
-STACK* pointer, lastFunction;
+comp_tree_t* lastFunction;
+
+STACK* pointer;
 
 comp_dict_item_t* tk_var;
 

@@ -457,23 +457,35 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
             }
             */
            
-			if(lastFunction->disc->type != pointer->disc->child->symbol->type)
+			if(lastFunction->node_type != pointer->disc->child->symbol->type)
 			{
 					if((pointer->disc->child->symbol->type == IKS_SIMBOLO_LITERAL_CHAR) ||(pointer->disc->child->symbol->type == IKS_SIMBOLO_LITERAL_STRING)){
 							printf("Tipo do comando return e tipo da funcao diferentes\n");
 							exit(IKS_ERROR_WRONG_PAR_RETURN);
 					}
 					else{
-							lastFunction->disc->type = coertion(lastFunction->disc->node_type,pointer->disc->child->symbol->type);
+							lastFunction->node_type = coertion(lastFunction->node_type,pointer->disc->child->symbol->type);
 					}        pointer->disc->node_type = pointer->disc->child->symbol->type;
 			}
 			else{
 					pointer->disc->node_type = pointer->disc->child->symbol->type;
 			}
-            
+           
             
             
             break;
+
+         case IKS_AST_FUNCAO:
+			printf("\nIKS_AST_FUNCAO");
+			//printf("\n TYPE: %d",pointer->disc->symbol->type);
+			//printf("\n TOKEN: %s",pointer->disc->symbol->token);
+			
+			variableName = pointer->disc;
+			//printf("=== Nome da função: %s", variableName->symbol->token);
+			variableTypeFunction = getDeclarationDataType(IKS_FUNCTION, variableName->symbol->token, declarationList);
+			pointer->disc->node_type = variableTypeFunction;
+			lastFunction = pointer->disc;
+			break;
 
          default:
             printf("\nCAIU NO DEFAULT");
