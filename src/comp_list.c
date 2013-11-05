@@ -217,7 +217,7 @@ comp_list_t* getLocalList(comp_list_t* list, comp_list_t* function)
  */
 int getDeclarationDataType(int declarationType, char* token, comp_list_t* declarationList)
 {
-   while (declarationList->next != NULL)
+   while (declarationList != NULL)
    {
       if ((strcmp(declarationList->nomeVar, token) == 0)
             && (declarationList->tipoGlobal == declarationType))
