@@ -488,21 +488,61 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
 
             }
             */
-           
+            
 			if(lastFunction->node_type != pointer->disc->child->symbol->type)
 			{
 					if((pointer->disc->child->symbol->type == IKS_SIMBOLO_LITERAL_CHAR) ||(pointer->disc->child->symbol->type == IKS_SIMBOLO_LITERAL_STRING)){
 							printf("Tipo do comando return e tipo da funcao diferentes\n");
 							exit(IKS_ERROR_WRONG_PAR_RETURN);
 					}
-					else{
-							lastFunction->node_type = coertion(lastFunction->node_type,pointer->disc->child->symbol->type);
-					}        pointer->disc->node_type = pointer->disc->child->symbol->type;
-			}
-			else{
+					else
+					{
+						 if(pointer->disc->child->symbol->type == IKS_SIMBOLO_INDEFINIDO)
+						 {
+							 //testa se é booleano
+							 aux_type1 = isBOOL(pointer->disc->child->symbol->token);
+							 if(aux_type1 == 1)  pointer->disc->child->symbol->type = IKS_SIMBOLO_LITERAL_BOOL;
+							 
+						 }
+						 else if(pointer->disc->child->symbol->type == IKS_SIMBOLO_IDENTIFICADOR)
+						 {
+							 printf("\nIDENTIFICADOR");
+							//variableName = pointer->disc;
+							/*
+							variableTypeGlobal = getDeclarationDataType(IKS_GLOBAL_VAR, variableName->symbol->token, declarationList);
+							variableTypeLocal = getDeclarationDataType(IKS_LOCAL, variableName->symbol->token, declarationList);
+							variableTypeVector = getDeclarationDataType(IKS_GLOBAL_VET, variableName->symbol->token, declarationList);
+							variableTypeFunction = getDeclarationDataType(IKS_FUNCTION, variableName->symbol->token, declarationList);
+
+							// Checking if the variable was declared.
+							if ((variableTypeGlobal == -1)
+								&& (variableTypeLocal == -1)
+								&& (variableTypeVector == -1)
+								&& (variableTypeFunction -1))
+							{
+							   printf("Variavel '%s' nao declarada.\n", variableName->symbol->token);
+							   exit(IKS_ERROR_UNDECLARED);
+							}
+							else
+							{
+								printf("Variavel '%s' nao declarada.\n", variableName->symbol->token);
+							   
+							}
+							*/
+							 
+						 }
+						 
+						 
+						 lastFunction->node_type = coertion(lastFunction->node_type,pointer->disc->child->symbol->type);
+					}        
 					pointer->disc->node_type = pointer->disc->child->symbol->type;
 			}
-           
+			else
+			{
+					pointer->disc->node_type = pointer->disc->child->symbol->type;
+			}
+            if(pointer->disc->child!=NULL) printf("\nReturn: type-CHILD -%d === token - %s",pointer->disc->child->symbol->type, pointer->disc->child->symbol->token);
+            printf("\nTipo: %d - SIZE: %d - Node_type: %d\n",pointer->disc->type, pointer->disc->size, pointer->disc->node_type);
             
             
             break;
@@ -535,4 +575,13 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
    {
       printf("\nPOINTER NULL");
    }
+}
+
+int isBOOL(char* text)
+{
+	int retorno = 0;
+	
+	if((text == "true")||(text == "false")) retorno = 1;
+	
+	return retorno;
 }

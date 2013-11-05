@@ -123,4 +123,8 @@ STACK* addElementStack(STACK* stack, STACK* newElement);
  * @return                       The data type returned by inference function
  */
 int validateOperation(comp_tree_t* operationNode);
+
+
+int isBOOL(char* text);
+
 #endif
