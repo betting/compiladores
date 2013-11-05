@@ -274,7 +274,7 @@ comp_list_t* getLocalDeclarations(char *functionName, comp_list_t* declarationLi
 
                auxList = add(auxList, new);
             }
-            else
+            else if (!((declarationList->tipoGlobal == IKS_LOCAL) || (declarationList->tipoGlobal == IKS_FUNC_PARAM)))
             {
                // Return the local declarations for the function (this list
                // can be null if, after the actual function declaration, we
