@@ -50,7 +50,6 @@ void printStack(STACK* stack_l)
       else
       {
          printf("Op Type: %d\n", stack_l->disc->type);
-         if(stack_l->disc->type == IKS_AST_RETURN) printf("IKS_AST_RETURN\n\n");
       }
 
       stack_l = stack_l->next;
@@ -537,19 +536,31 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
             break;
 
          case IKS_AST_CHAMADA_DE_FUNCAO:
-            actualFunctionName = (char*)calloc(strlen(pointer->disc->child->child->symbol->token)+1,sizeof(char));
-            strcpy(actualFunctionName, pointer->disc->child->child->symbol->token);
+            actualFunctionName = (char*)calloc(strlen(pointer->disc->child->symbol->token)+1,sizeof(char));
+            strcpy(actualFunctionName, pointer->disc->child->symbol->token);
 
             variableTypeFunction = getDeclarationDataType(IKS_FUNCTION, actualFunctionName, declarationList, NULL);
             if (variableTypeFunction != -1)
             {
                comp_list_t* paramList;
                paramList = getLocalDeclarations(actualFunctionName, declarationList, IKS_FUNC_PARAM);
+               
+               int numParam = countParam(paramList, pointer->disc->child->sibling);
+               if (numParam < 0)
+               {
+                  printf("Numero de paremetros excedido em '%s'.\n", actualFunctionName);
+                  exit(IKS_ERROR_EXCESS_ARGS);
+               }
+               else if (numParam > 0)
+               {
+                  printf("Faltam argumentos na chamada da funcao '%s'.\n", actualFunctionName);
+                  exit(IKS_ERROR_MISSING_ARGS);
+               }
 
             }
             else
             {
-               printf("Funcao '%s' nao declarada\n", pointer->disc->child->child->symbol->token);
+               printf("Funcao '%s' nao declarada.\n", actualFunctionName);
                exit(IKS_ERROR_UNDECLARED);
             }
 
@@ -570,4 +581,33 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
    {
       printf("\nPOINTER NULL");
    }
+}
+
+/**
+ * Calculate the difference between parameter list and parameters found in the function call.
+ *
+ * @param   *paramList           List with all parameters declared
+ * @param   *paramFoundInCall    All parameters added in the function call
+ * @return                       If result < 0 then the number of parameters used in the function call exceed the expected.
+ *                               If result == 0 then both lists have the number of parameters.
+ *                               Finally, if result > 0 then it was declared more parameters than the provided in the function call.
+ */
+int countParam(comp_list_t* paramList, comp_tree_t* paramFoundInCall)
+{
+   int countParamList = 0;
+
+   while (paramList != NULL)
+   {
+      countParamList++;
+      paramList = paramList->next;
+   }
+
+   int countParamFoundInCall = 0;
+   while (paramFoundInCall != NULL)
+   {
+      countParamFoundInCall++;
+      paramFoundInCall = paramFoundInCall->child;
+   }
+
+   return (countParamList - countParamFoundInCall);
 }

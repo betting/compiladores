@@ -285,10 +285,15 @@ comp_list_t* getLocalDeclarations(char *functionName, comp_list_t* declarationLi
             declarationList = declarationList->next;
          }
       }
-      declarationList = declarationList->next;
+      
+      // Avoiding segmentation failure if there's no more values in the list. (Last value of declarationList was gotten).
+      if (declarationList != NULL)
+      {
+         declarationList = declarationList->next;
+      }
    }
 
    // The function was not found in the declaration list
-   return NULL;
+   return auxList;
 }
 
