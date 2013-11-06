@@ -15,5 +15,7 @@ typedef struct tac{
 }TAC;
 
 
+TAC* CodeGenerate(ASTREE* node,TAC* code, int iloc_code);
+
 
 #endif
