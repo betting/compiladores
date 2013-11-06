@@ -8,6 +8,7 @@
  */
 
 #include <stdlib.h>
+#include <string.h>
 #include "comp_tree.h"
 #include "iks_ast.h"
 #include "semantic.h"
@@ -22,6 +23,8 @@ int variableTypeLocal;
 int variableTypeVector;
 int variableTypeFunction;
 int variableTypeFuncParamLocal;
+
+char *actualFunctionName;
 
 /**
  *  Initiate Stack
@@ -47,7 +50,6 @@ void printStack(STACK* stack_l)
       else
       {
          printf("Op Type: %d\n", stack_l->disc->type);
-         if(stack_l->disc->type == IKS_AST_RETURN) printf("IKS_AST_RETURN\n\n");
       }
 
       stack_l = stack_l->next;
@@ -366,7 +368,7 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
                 && (variableTypeLocal == -1)
                 && (variableTypeFuncParamLocal == -1)
                 && (variableTypeVector == -1)
-                && (variableTypeFunction -1))
+                && (variableTypeFunction == -1))
             {
                printf("Variavel '%s' nao declarada.\n", variableName->symbol->token);
                exit(IKS_ERROR_UNDECLARED);
@@ -410,9 +412,15 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
 
                   int dataType;
                   // If this is an operation, the values will checked before perform coertion.
-                  if ((data->type != IKS_AST_LITERAL) || (data->type != IKS_AST_IDENTIFICADOR))
+                  if (!((data->type == IKS_AST_LITERAL) || (data->type == IKS_AST_IDENTIFICADOR)))
                   {
                      dataType = validateOperation(data->child);
+                  }
+                  else if (data->type == IKS_AST_IDENTIFICADOR)
+                  {
+                     variableTypeGlobal = getDeclarationDataType(IKS_GLOBAL_VAR, data->symbol->token, declarationList, NULL);
+                     variableTypeLocal = getDeclarationDataType(IKS_LOCAL, data->symbol->token, declarationList, lastFunction->symbol->token);
+                     dataType = (variableTypeLocal != -1) ? variableTypeLocal : variableTypeGlobal;
                   }
                   // Simple value attribution
                   else
@@ -456,7 +464,7 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
 
                   int dataType;
                   // If this is an operation, the values will checked before perform coertion.
-                  if ((data->type != IKS_AST_LITERAL) || (data->type != IKS_AST_IDENTIFICADOR))
+                  if (!((data->type == IKS_AST_LITERAL) || (data->type == IKS_AST_IDENTIFICADOR)))
                   {
                      dataType = validateOperation(data->child);
                   }
@@ -495,63 +503,96 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
             break;
 
          case IKS_AST_RETURN:
-            printf("\nIKS_AST_RETURN");
-			
-			if(lastFunction->node_type != pointer->disc->child->symbol->type)
-			{
-					if((pointer->disc->child->symbol->type == IKS_SIMBOLO_LITERAL_CHAR) ||(pointer->disc->child->symbol->type == IKS_SIMBOLO_LITERAL_STRING)){
-							printf("Tipo do comando return e tipo da funcao diferentes\n");
-							exit(IKS_ERROR_WRONG_PAR_RETURN);
-					}
-					//tá dando erro aqui!
-					/*else
-					{
-						 if(pointer->disc->child->symbol->type == IKS_SIMBOLO_INDEFINIDO)
-						 {
-							 //testa se é booleano
-							 aux_type1 = isBOOL(pointer->disc->child->symbol->token);
-							 if(aux_type1 == 1)  pointer->disc->child->symbol->type = IKS_SIMBOLO_LITERAL_BOOL;
-							 
-						 }
-						 else if(pointer->disc->child->symbol->type == IKS_SIMBOLO_IDENTIFICADOR)
-						 {
-							
-							variableTypeFuncParamLocal = getDeclarationDataType(IKS_FUNC_PARAM, pointer->disc->child->symbol->token, declarationList, lastFunction->symbol->token);
-							 pointer->disc->child->symbol->type = variableTypeFuncParamLocal;
-						 }
-						 
-						 
-						 lastFunction->node_type = coertion(lastFunction->node_type,pointer->disc->child->symbol->type);
-					}*/
-					        
-					pointer->disc->node_type = pointer->disc->child->symbol->type;
-			}
-			else
-			{
-					pointer->disc->node_type = pointer->disc->child->symbol->type;
-			}
-			 
-			
-            if(pointer->disc->child!=NULL) printf("\nReturn: type-CHILD -%d === token - %s",pointer->disc->child->symbol->type, pointer->disc->child->symbol->token);
-            printf("\nTipo: %d - SIZE: %d - Node_type: %d\n",pointer->disc->type, pointer->disc->size, pointer->disc->node_type);
-			
-
+            if(pointer->disc->child->type == IKS_AST_CHAMADA_DE_FUNCAO)
+            {
+               variableTypeFunction = getDeclarationDataType(IKS_FUNCTION, pointer->disc->child->child->symbol->token, declarationList, NULL);
+               if(((variableTypeFunction == IKS_SIMBOLO_LITERAL_CHAR)
+                     ||(variableTypeFunction == IKS_SIMBOLO_LITERAL_STRING))
+                  && (lastFunction->node_type != variableTypeFunction))
+               {
+                     printf("Tipo do comando return e tipo da funcao diferentes\n");
+                     exit(IKS_ERROR_WRONG_PAR_RETURN);
+               }
+               pointer->disc->node_type = coertion(lastFunction->node_type, variableTypeFunction);
+            }
+            else if(lastFunction->node_type != pointer->disc->child->symbol->type)
+            {
+               if((pointer->disc->child->symbol->type == IKS_SIMBOLO_LITERAL_CHAR)
+                  ||(pointer->disc->child->symbol->type == IKS_SIMBOLO_LITERAL_STRING))
+               {
+                     printf("Tipo do comando return e tipo da funcao diferentes\n");
+                     exit(IKS_ERROR_WRONG_PAR_RETURN);
+               }
+               else
+               {
+                  int dataType;
+                  // If this is an operation, the values will checked before perform coertion.
+                  if ((pointer->disc->type != IKS_AST_LITERAL) || (pointer->disc->type != IKS_AST_IDENTIFICADOR))
+                  {
+                     dataType = validateOperation(pointer->disc->child);
+                  }
+                  // Simple value attribution
+                  else
+                  {
+                     dataType = pointer->disc->symbol->type;
+                  }
+                  pointer->disc->node_type = coertion(lastFunction->node_type, dataType);
+               }
+            }
             break;
 
          case IKS_AST_FUNCAO:
-			printf("\nIKS_AST_FUNCAO");
-			printf("\n TYPE: %d",pointer->disc->symbol->type);
-			printf("\n TOKEN: %s",pointer->disc->symbol->token);
-			lastFunction = pointer->disc;
-			variableName = pointer->disc;
+            lastFunction = pointer->disc;
 			
-			printf("=== Nome da função: %s", variableName->symbol->token);
-			
-			variableTypeFunction = getDeclarationDataType(IKS_FUNCTION, pointer->disc->symbol->token, declarationList, NULL);
-			pointer->disc->node_type = variableTypeFunction;
-			printf("\n\n=== Nome da função: %s", variableName->symbol->token);
-			
-			break;
+            variableTypeFunction = getDeclarationDataType(IKS_FUNCTION, lastFunction->symbol->token, declarationList, NULL);
+            lastFunction->node_type = variableTypeFunction;
+            break;
+
+         case IKS_AST_CHAMADA_DE_FUNCAO:
+            actualFunctionName = (char*)calloc(strlen(pointer->disc->child->symbol->token)+1,sizeof(char));
+            strcpy(actualFunctionName, pointer->disc->child->symbol->token);
+
+            variableTypeFunction = getDeclarationDataType(IKS_FUNCTION, actualFunctionName, declarationList, NULL);
+            if (variableTypeFunction != -1)
+            {
+               comp_list_t* paramList;
+               paramList = getLocalDeclarations(actualFunctionName, declarationList, IKS_FUNC_PARAM);
+               
+               int numParam = countParam(paramList, pointer->disc->child->sibling);
+               if (numParam < 0)
+               {
+                  printf("Numero de paremetros excedido em '%s'.\n", actualFunctionName);
+                  exit(IKS_ERROR_EXCESS_ARGS);
+               }
+               else if (numParam > 0)
+               {
+                  printf("Faltam argumentos na chamada da funcao '%s'.\n", actualFunctionName);
+                  exit(IKS_ERROR_MISSING_ARGS);
+               }
+
+            }
+            else
+            {
+               printf("Funcao '%s' nao declarada.\n", actualFunctionName);
+               exit(IKS_ERROR_UNDECLARED);
+            }
+            break;
+
+         case IKS_AST_VETOR_INDEXADO:
+            dataChild = pointer->disc->child;
+            if(dataChild->sibling->symbol->type == IKS_SIMBOLO_LITERAL_STRING)
+            {
+               printf("Coercao impossivel do tipo string");
+               exit(IKS_ERROR_STRING_TO_X);
+            }
+
+            if(dataChild->sibling->symbol->type == IKS_SIMBOLO_LITERAL_CHAR)
+            {
+               printf("Coercao impossivel do tipo char");
+               exit(IKS_ERROR_CHAR_TO_X);
+            }
+
+            break;
 
          default:
             printf("\nCAIU NO DEFAULT");
@@ -571,11 +612,78 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
    }
 }
 
-int isBOOL(char* text)
+/**
+ * Calculate the difference between parameter list and parameters found in the function call.
+ *
+ * @param   *paramList           List with all parameters declared
+ * @param   *paramFoundInCall    All parameters added in the function call
+ * @return                       If result < 0 then the number of parameters used in the function call exceed the expected.
+ *                               If result == 0 then both lists have the number of parameters.
+ *                               Finally, if result > 0 then it was declared more parameters than the provided in the function call.
+ */
+int countParam(comp_list_t* paramList, comp_tree_t* paramFoundInCall)
 {
-	int retorno = 0;
-	
-	if((text == "true")||(text == "false")) retorno = 1;
-	
-	return retorno;
+   int countParamList = 0;
+
+   while (paramList != NULL)
+   {
+      countParamList++;
+      paramList = paramList->next;
+   }
+
+   int countParamFoundInCall = 0;
+   while (paramFoundInCall != NULL)
+   {
+      countParamFoundInCall++;
+      paramFoundInCall = paramFoundInCall->child;
+   }
+
+   return (countParamList - countParamFoundInCall);
+}
+
+/**
+ * Validates the list of the parameters used in a function call
+ *
+ * @param   *paramList           List with all parameters declared
+ * @param   *paramFoundInCall    All parameters added in the function call
+ * @return                       Return TRUE if the parameters used are compatible
+ */
+int validateParam(comp_list_t* paramList, comp_tree_t* paramFoundInCall)
+{
+   while (paramList != NULL)
+   {
+      // Getting parameter type (used in the function call)
+      int paramType;
+
+      // Checking if they are compatibles
+      if (paramList->tipoVar != paramType)
+      {
+         printf("Tipo invalido na chamada de funcao. (Argumento: %s).\n", paramList->nomeVar);
+         exit(IKS_ERROR_WRONG_TYPE_ARGS);
+      }
+
+      // Getting next parameter
+      paramList = paramList->next;
+      paramFoundInCall = paramFoundInCall->child;
+   }
+
+   return TRUE;
+}
+
+/**
+ * Get the parameter type based on the list given
+ *
+ * @param   *parameter     All paramters declared
+ * @result                 PArameter type
+ */
+int getParamType(comp_tree_t* parameter)
+{
+   if (parameter->type == IKS_AST_CHAMADA_DE_FUNCAO)
+   {
+      return getDeclarationDataType(IKS_FUNCTION, parameter->symbol->token, declarationList, NULL);
+   }
+   else if ((parameter->type == IKS_AST_IDENTIFICADOR) || (parameter->type == IKS_AST_LITERAL))
+   {
+      return parameter->symbol->type;
+   }
 }

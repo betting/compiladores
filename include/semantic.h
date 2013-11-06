@@ -124,7 +124,31 @@ STACK* addElementStack(STACK* stack, STACK* newElement);
  */
 int validateOperation(comp_tree_t* operationNode);
 
+/**
+ * Calculate the difference between parameter list and parameters found in the function call.
+ *
+ * @param   *paramList           List with all parameters declared
+ * @param   *paramFoundInCall    All parameters added in the function call
+ * @return                       If result < 0 then the number of parameters used in the function call exceed the expected.
+ *                               If result == 0 then both lists have the number of parameters.
+ *                               Finally, if result > 0 then it was declared more parameters than the provided in the function call.
+ */
+int countParam(comp_list_t* paramList, comp_tree_t* paramFoundInCall);
 
-int isBOOL(char* text);
+/**
+ * Validates the list of the parameters used in a function call
+ *
+ * @param   *paramList           List with all parameters declared
+ * @param   *paramFoundInCall    All parameters added in the function call
+ * @return                       Return TRUE if the parameters used are compatible
+ */
+int validateParam(comp_list_t* paramList, comp_tree_t* paramFoundInCall);
 
+/**
+ * Get the parameter type based on the list given
+ *
+ * @param   *parameter     All paramters declared
+ * @result                 PArameter type
+ */
+int getParamType(comp_tree_t* parameter);
 #endif
