@@ -143,4 +143,12 @@ int countParam(comp_list_t* paramList, comp_tree_t* paramFoundInCall);
  * @return                       Return TRUE if the parameters used are compatible
  */
 int validateParam(comp_list_t* paramList, comp_tree_t* paramFoundInCall);
+
+/**
+ * Get the parameter type based on the list given
+ *
+ * @param   *parameter     All paramters declared
+ * @result                 PArameter type
+ */
+int getParamType(comp_tree_t* parameter);
 #endif
