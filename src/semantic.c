@@ -611,3 +611,37 @@ int countParam(comp_list_t* paramList, comp_tree_t* paramFoundInCall)
 
    return (countParamList - countParamFoundInCall);
 }
+
+/**
+ * Validates the list of the parameters used in a function call
+ *
+ * @param   *paramList           List with all parameters declared
+ * @param   *paramFoundInCall    All parameters added in the function call
+ * @return                       Return TRUE if the parameters used are compatible
+ */
+int validateParam(comp_list_t* paramList, comp_tree_t* paramFoundInCall)
+{
+   while (paramList != NULL)
+   {
+      // Getting parameter type (used in the function call)
+      int paramType;
+
+      // Checking if they are compatibles
+      if (paramList->tipoVar != paramType)
+      {
+         printf("Tipo invalido na chamada de funcao. (Argumento: %s).\n", paramList->nomeVar);
+         exit(IKS_ERROR_WRONG_TYPE_ARGS);
+      }
+
+      // Getting next parameter
+      paramList = paramList->next;
+      paramFoundInCall = paramFoundInCall->child;
+   }
+
+   return TRUE;
+}
+
+int getParamType(comp_tree_t* parameter)
+{
+//   if (parameter->type == 
+}

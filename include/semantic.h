@@ -135,4 +135,12 @@ int validateOperation(comp_tree_t* operationNode);
  */
 int countParam(comp_list_t* paramList, comp_tree_t* paramFoundInCall);
 
+/**
+ * Validates the list of the parameters used in a function call
+ *
+ * @param   *paramList           List with all parameters declared
+ * @param   *paramFoundInCall    All parameters added in the function call
+ * @return                       Return TRUE if the parameters used are compatible
+ */
+int validateParam(comp_list_t* paramList, comp_tree_t* paramFoundInCall);
 #endif
