@@ -24,6 +24,8 @@ int variableTypeVector;
 int variableTypeFunction;
 int variableTypeFuncParamLocal;
 
+int dataType;
+
 char *actualFunctionName;
 
 /**
@@ -503,9 +505,11 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
             break;
 
          case IKS_AST_RETURN:
-            if(pointer->disc->child->type == IKS_AST_CHAMADA_DE_FUNCAO)
+            data = pointer->disc->child;
+
+            if(data->type == IKS_AST_CHAMADA_DE_FUNCAO)
             {
-               variableTypeFunction = getDeclarationDataType(IKS_FUNCTION, pointer->disc->child->child->symbol->token, declarationList, NULL);
+               variableTypeFunction = getDeclarationDataType(IKS_FUNCTION, data->child->symbol->token, declarationList, NULL);
                if(((variableTypeFunction == IKS_SIMBOLO_LITERAL_CHAR)
                      ||(variableTypeFunction == IKS_SIMBOLO_LITERAL_STRING))
                   && (lastFunction->node_type != variableTypeFunction))
@@ -515,30 +519,32 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
                }
                pointer->disc->node_type = coertion(lastFunction->node_type, variableTypeFunction);
             }
-            else if(lastFunction->node_type != pointer->disc->child->symbol->type)
+            // If this is an operation, the values will checked before perform coertion.
+            else if (!((data->type == IKS_AST_LITERAL) || (data->type == IKS_AST_IDENTIFICADOR)))
             {
-               if((pointer->disc->child->symbol->type == IKS_SIMBOLO_LITERAL_CHAR)
-                  ||(pointer->disc->child->symbol->type == IKS_SIMBOLO_LITERAL_STRING))
-               {
-                     printf("Tipo do comando return e tipo da funcao diferentes\n");
-                     exit(IKS_ERROR_WRONG_PAR_RETURN);
-               }
-               else
-               {
-                  int dataType;
-                  // If this is an operation, the values will checked before perform coertion.
-                  if ((pointer->disc->type != IKS_AST_LITERAL) || (pointer->disc->type != IKS_AST_IDENTIFICADOR))
-                  {
-                     dataType = validateOperation(pointer->disc->child);
-                  }
-                  // Simple value attribution
-                  else
-                  {
-                     dataType = pointer->disc->symbol->type;
-                  }
-                  pointer->disc->node_type = coertion(lastFunction->node_type, dataType);
-               }
+               dataType = validateOperation(data->child);
             }
+            else if (data->type == IKS_AST_IDENTIFICADOR)
+            {
+               variableTypeGlobal = getDeclarationDataType(IKS_GLOBAL_VAR, data->symbol->token, declarationList, NULL);
+               variableTypeLocal = getDeclarationDataType(IKS_LOCAL, data->symbol->token, declarationList, lastFunction->symbol->token);
+               dataType = (variableTypeLocal != -1) ? variableTypeLocal : variableTypeGlobal;
+            }
+            // Simple value attribution
+            else
+            {
+               dataType = data->symbol->type;
+            }
+
+            if((lastFunction->node_type != dataType)
+               && ((pointer->disc->child->symbol->type == IKS_SIMBOLO_LITERAL_CHAR)
+                  ||(pointer->disc->child->symbol->type == IKS_SIMBOLO_LITERAL_STRING)))
+            {
+               printf("Tipo do comando return e tipo da funcao diferentes\n");
+               exit(IKS_ERROR_WRONG_PAR_RETURN);
+            }
+            pointer->disc->node_type = coertion(lastFunction->node_type, dataType);
+
             break;
 
          case IKS_AST_FUNCAO:
