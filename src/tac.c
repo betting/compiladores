@@ -1,12 +1,17 @@
+#include "tac.h"
+#include "comp_tree.h"
+
+
 TAC* CodeGenerate(comp_tree_t* node,TAC* code, int iloc_code)
 {
 
 	switch(iloc_code)
 	{
 		case ILOC_NOP:
+				break;
 		case ILOC_ADD:
 					code = Operator2(node, ILOC_ADD);
-					code = CODE_Insert(node);
+					code = insertTAC(node);
 					return code;
 				break;
 		case ILOC_SUB:
