@@ -595,6 +595,7 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
                   exit(IKS_ERROR_MISSING_ARGS);
                }
 
+               validateParam(paramList, pointer->disc->child->sibling);
             }
             else
             {
@@ -678,7 +679,7 @@ int validateParam(comp_list_t* paramList, comp_tree_t* paramFoundInCall)
    while (paramList != NULL)
    {
       // Getting parameter type (used in the function call)
-      int paramType;
+      int paramType = getParamType(paramFoundInCall);
 
       // Checking if they are compatibles
       if (paramList->tipoVar != paramType)
