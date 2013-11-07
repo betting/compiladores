@@ -85,7 +85,6 @@ FILE *yyin;
             s
             saida
             seq_comando
-            valor_entrada
             vetor
 
 %type<symbol> cabecalho
@@ -391,7 +390,7 @@ nome_var:
 
  /* Entrada e Saida (Input e Output) */
 entrada:
-    TK_PR_INPUT valor_entrada
+    TK_PR_INPUT expressao
       {
          $$ = createNode(IKS_AST_INPUT, 0);
          insertChild($$, $2);
@@ -399,13 +398,6 @@ entrada:
       }
   ;
 
-valor_entrada:
-   TK_IDENTIFICADOR
-      {
-         $$ = createNode(IKS_AST_IDENTIFICADOR, $1);
-         pointer=sPush(pointer,$$);
-      }
-  ;
 
 saida:
     TK_PR_OUTPUT lista_expressoes_nao_vazia
