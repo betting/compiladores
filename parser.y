@@ -8,6 +8,7 @@
 #include "iks_ast.h"
 #include "semantic.h"
 #include "stack.h"
+#include "tac.h"
 
 
 FILE *yyin;
@@ -19,7 +20,7 @@ FILE *yyin;
         comp_dict_item_t *symbol;      
         comp_tree_t *tree;
         int integer;
-        TAC *code;
+
 
 }
 

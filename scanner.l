@@ -1,9 +1,11 @@
 %{
 #include <stdlib.h>
 #include "comp_dict.h"
+#include "tac.h"
 #include "comp_tree.h"
 #include "parser.h"
 #include "iks_ast.h"
+
 
 int lineNumber = 1;
 

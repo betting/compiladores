@@ -1,8 +1,7 @@
 #include "tac.h"
-#include "comp_tree.h"
 
 
-TAC* CodeGenerate(comp_tree_t* node,TAC* code, int iloc_code)
+TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code)
 {
 
 	switch(iloc_code)
@@ -10,10 +9,11 @@ TAC* CodeGenerate(comp_tree_t* node,TAC* code, int iloc_code)
 		case ILOC_NOP:
 				break;
 		case ILOC_ADD:
-					code = Operator2(node, ILOC_ADD);
-					code = insertTAC(node);
+					code = Operator2(nodo, ILOC_ADD);
+					code = insertTAC(nodo);
 					return code;
 				break;
+				
 		case ILOC_SUB:
 		case ILOC_MULT:
 		case ILOC_DIV:
@@ -66,15 +66,15 @@ TAC* CodeGenerate(comp_tree_t* node,TAC* code, int iloc_code)
 }
 
 
-TAC* Operator2(comp_tree_t* node, int code)
+TAC* Operator2(comp_tree_t* nodo, int operatorCode)
 {
-        node->code = initTac();
-        node->code->r1 = node->child->code->r3;
-        node->code->r2 = node->child->sibling->code->r3;
+        nodo->code = initTac();
+        nodo->code->r1 = nodo->child->code->r3;
+        nodo->code->r2 = nodo->child->sibling->code->r3;
         //fazer registradores
         //node->code->r3 = registradores;
-        node->code->code = code;
-        return node->code;
+        nodo->code->code = operatorCode;
+        return nodo->code;
 }
 
 TAC* initTac()
@@ -88,12 +88,13 @@ TAC* initTac()
         new->constant=0;
         new->code = 0;
         new->next = NULL;
-        return New;
+        return new;
 }
 
 
-TAC* insertTAC(comp_tree_t* node)
+TAC* insertTAC(comp_tree_t* nodo)
 {
 		//montar a inserção do TAC nos nodos		
-        return node->code;
+        return nodo->code;
 }
+

@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "comp_dict.h"
-#include "tac.h"
+
 
 struct comp_dict_item_t;
 
@@ -17,7 +17,7 @@ typedef struct _tree
 	int type;
 	int node_type;
 	int size;
-	TAC* code;
+	struct tac* code;
 	comp_dict_item_t* symbol;
 	struct _tree *child,*sibling;
 } comp_tree_t;
