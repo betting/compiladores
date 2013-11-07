@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "iks_ast.h"
-//#include "Registers.h"
 #include "comp_tree.h"
 #include "comp_list.h"
 #include "iloc.h"
+#include "labelsnregisters.h"
 
 #ifndef tac_H
 #define tac_H
@@ -23,6 +23,10 @@ typedef struct tac{
 }TAC;
 
 TAC *code;
+
+//registradores e labels
+int reg;
+int label;
 
 TAC* initTac();
 TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code);

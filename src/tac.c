@@ -68,33 +68,43 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code)
 
 TAC* Operator2(comp_tree_t* nodo, int operatorCode)
 {
-        nodo->code = initTac();
-        nodo->code->r1 = nodo->child->code->r3;
-        nodo->code->r2 = nodo->child->sibling->code->r3;
-        //fazer registradores
-        //node->code->r3 = registradores;
-        nodo->code->code = operatorCode;
-        return nodo->code;
+	nodo->code = initTac();
+	nodo->code->r1 = nodo->child->code->r3;
+	nodo->code->r2 = nodo->child->sibling->code->r3;
+	reg = RegGenerator(reg);
+	nodo->code->r3 = reg;
+	nodo->code->code = operatorCode;
+	return nodo->code;
 }
 
 TAC* initTac()
 {
-        TAC* new =(TAC*)malloc(sizeof(TAC));
-        new->r1=0;
-        new->r2=0;
-        new->r3=0;
-        new->r1=0;
-        new->label=0;
-        new->constant=0;
-        new->code = 0;
-        new->next = NULL;
-        return new;
+	TAC* new =(TAC*)malloc(sizeof(TAC));
+	new->r1=0;
+	new->r2=0;
+	new->r3=0;
+	new->r1=0;
+	new->label=0;
+	new->constant=0;
+	new->code = 0;
+	new->next = NULL;
+	return new;
 }
 
 
 TAC* insertTAC(comp_tree_t* nodo)
 {
-		//montar a inserção do TAC nos nodos		
-        return nodo->code;
+	//montar a inserção do TAC nos nodos		
+	if(nodo->child != NULL)
+		concatTAC(nodo->code,nodo->child->code);
+    return nodo->code;
 }
 
+
+TAC* concatTAC(TAC* parent,TAC* child){
+	TAC* aux_tac = parent;
+	while(aux_tac->next!= NULL)
+			aux_tac = aux_tac->next;
+	aux_tac->next = child;
+	return parent;
+}
