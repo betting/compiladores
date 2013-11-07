@@ -309,7 +309,23 @@ int validateOperation(comp_tree_t* operationNode)
    {
       if (operationNode->sibling != NULL)
       {
-         return inference(operationNode->symbol->type, operationNode->sibling->symbol->type);
+         if (operationNode->sibling->type == IKS_AST_CHAMADA_DE_FUNCAO)
+         {
+            variableTypeFunction = getDeclarationDataType(IKS_FUNCTION, operationNode->sibling->child->symbol->token, declarationList, NULL);
+            return inference(operationNode->symbol->type, variableTypeFunction);
+         }
+         else if (operationNode->sibling->symbol != NULL)
+         {
+            return inference(operationNode->symbol->type, operationNode->sibling->symbol->type);
+         }
+         else if (operationNode->sibling->child->symbol != NULL)
+         {
+            return inference(operationNode->symbol->type, operationNode->sibling->child->symbol->type);
+         }
+         else if (operationNode->child->symbol != NULL)
+         {
+            return inference(operationNode->symbol->type, operationNode->child->symbol->type);
+         }
       }
       // Function calls without any parameter
       else
@@ -517,7 +533,7 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
                      printf("Tipo do comando return e tipo da funcao diferentes\n");
                      exit(IKS_ERROR_WRONG_PAR_RETURN);
                }
-               pointer->disc->node_type = coertion(lastFunction->node_type, variableTypeFunction);
+               dataType = coertion(lastFunction->node_type, variableTypeFunction);
             }
             // If this is an operation, the values will checked before perform coertion.
             else if (!((data->type == IKS_AST_LITERAL) || (data->type == IKS_AST_IDENTIFICADOR)))
@@ -537,11 +553,14 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
             }
 
             if((lastFunction->node_type != dataType)
-               && ((pointer->disc->child->symbol->type == IKS_SIMBOLO_LITERAL_CHAR)
-                  ||(pointer->disc->child->symbol->type == IKS_SIMBOLO_LITERAL_STRING)))
+               && (pointer->disc->child->symbol != NULL))
             {
-               printf("Tipo do comando return e tipo da funcao diferentes\n");
-               exit(IKS_ERROR_WRONG_PAR_RETURN);
+               if((pointer->disc->child->symbol->type == IKS_SIMBOLO_LITERAL_CHAR)
+                  ||(pointer->disc->child->symbol->type == IKS_SIMBOLO_LITERAL_STRING))
+               {
+                  printf("Tipo do comando return e tipo da funcao diferentes\n");
+                  exit(IKS_ERROR_WRONG_PAR_RETURN);
+               }
             }
             pointer->disc->node_type = coertion(lastFunction->node_type, dataType);
 
