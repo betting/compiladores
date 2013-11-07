@@ -14,8 +14,8 @@ typedef struct tac{
         
 }TAC;
 
-
-TAC* CodeGenerate(ASTREE* node,TAC* code, int iloc_code);
-
+TAC* initTac();
+TAC* CodeGenerate(comp_tree_t* node,TAC* code, int iloc_code);
+TAC* insertTAC(comp_tree_t* node);
 
 #endif

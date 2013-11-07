@@ -16,6 +16,7 @@ typedef struct _tree
 	int type;
 	int node_type;
 	int size;
+	TAC* code;
 	comp_dict_item_t* symbol;
 	struct _tree *child,*sibling;
 } comp_tree_t;
