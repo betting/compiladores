@@ -583,7 +583,7 @@ expressao:
          insertChild($$, $3);
          
          pointer=sPush(pointer,$$);
-         code=CodeGenerate($$,code,ILOC_ADD);
+         //code=CodeGenerate($$,code,ILOC_ADD);
       }
 
   | expressao '-' expressao

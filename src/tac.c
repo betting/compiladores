@@ -10,7 +10,7 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code)
 				break;
 		case ILOC_ADD:
 					code = Operator2(nodo, ILOC_ADD);
-					code = insertTAC(nodo);
+					//code = insertTAC(nodo);
 					return code;
 				break;
 				
@@ -69,11 +69,36 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code)
 TAC* Operator2(comp_tree_t* nodo, int operatorCode)
 {
 	nodo->code = initTac();
-	nodo->code->r1 = nodo->child->code->r3;
-	nodo->code->r2 = nodo->child->sibling->code->r3;
+	printf("\n\n\n\n================ETAPA 5==========================");
+	printf("\nType: %d", nodo->type);
+	printf("\nNode Type: %d", nodo->node_type);
+	printf("\nType: %d", nodo->type);
+	printf("\nSize: %d", nodo->size);
+	//if(nodo->symbol!=NULL) 	printf("SYMBOL-TOKEN %s",nodo->symbol->token);
+	if(nodo->child!=NULL)
+	{
+		 printf("\nCHILD->token %s",nodo->child->symbol->token);
+		 if(nodo->child->code!=NULL)
+			printf("\nCHILD-code->r3 %d",nodo->child->code->r3);
+	}
+
+	if(nodo->sibling!=NULL)
+	{
+		 printf("\nSIBLING->token %s",nodo->sibling->child->symbol->token);
+		 if(nodo->sibling->child->code!=NULL)
+			printf("\nSIBLING-code->r3 %d",nodo->sibling->child->code->r3);
+	}
+	//struct tac* code;
+	//comp_dict_item_t* symbol;
+	//struct _tree *child,*sibling;
+	
+	//if(nodo->child!=NULL) printf("CHILD->CODE %d",nodo->child->code->r3);
+	/*if(nodo->child!=NULL)
+		nodo->code->r1 = nodo->child->code->r3;
+	/*nodo->code->r2 = nodo->child->sibling->code->r3;
 	reg = RegGenerator(reg);
 	nodo->code->r3 = reg;
-	nodo->code->code = operatorCode;
+	nodo->code->code = operatorCode;*/
 	return nodo->code;
 }
 
