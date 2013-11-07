@@ -190,12 +190,27 @@ decl_var:
   ;
 
 decl_vetor:
-    tipo_var ':' TK_IDENTIFICADOR '[' TK_LIT_INT ']'
+    tipo_var ':' TK_IDENTIFICADOR decl_vetor_dimensao
       {
          $3->type = $1;
          $$ = $3;
       }
   ;
+  
+decl_vetor: 
+	TK_IDENTIFICADOR ':' tipo_var decl_vetor_dimensao 
+		{ 
+			$3->type = $1;
+			$$ = $3;
+		}
+	;
+
+decl_vetor_dimensao: decl_vetor_dimensao '[' decl_vetor_dimensao_tamanho ']' { /*insere na lista de dimensões($3);*/ }
+        | '[' decl_vetor_dimensao_tamanho ']' { /*$$ = inicializa lista de dimensões insere na lista de dimensões($2);*/ }
+        ;
+
+decl_vetor_dimensao_tamanho: TK_LIT_INTEIRO { $$ = atoi($1->getText().c_str());//seta o literal tamanho da dimensão como inteiro }
+        ;
 
 tipo_var:
     TK_PR_INT { $$ = IKS_SIMBOLO_LITERAL_INT; }
@@ -711,7 +726,7 @@ expressao:
 
 
 vetor:
-    nome_vetor '[' expressao ']'
+    nome_vetor vetor_dimensoes
       {
          $$ = createNode(IKS_AST_VETOR_INDEXADO, 0);
          insertChild($$, $1);
@@ -727,6 +742,10 @@ nome_vetor:
          pointer=sPush(pointer,$$);
       }
   ;
+  
+vetor_dimensoes: vetor_dimensoes '[' expressao ']' { /*insere na lista de dimensões($3);*/ }
+        | '[' expressao ']' { /*inicializa lista de expressões; insere na lista de dimensões($2); */}
+        ;
 
 lista_expressoes:
     lista_expressoes_nao_vazia
