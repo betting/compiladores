@@ -80,6 +80,7 @@ FILE *yyin;
             nome_func
             nome_var
             nome_vetor
+            vetor_dimensoes
             p
             retorna
             s
@@ -93,6 +94,7 @@ FILE *yyin;
               decl_vetor
               parametro
               TK_IDENTIFICADOR
+              decl_vetor_dimensao
 
 %type<integer> tipo_var
 
@@ -190,12 +192,16 @@ decl_var:
   ;
 
 decl_vetor:
-    tipo_var ':' TK_IDENTIFICADOR '[' TK_LIT_INT ']'
+    tipo_var ':' TK_IDENTIFICADOR decl_vetor_dimensao
       {
          $3->type = $1;
          $$ = $3;
       }
   ;
+
+decl_vetor_dimensao: '[' TK_LIT_INT ']' decl_vetor_dimensao { /*insere na lista de dimensões($3);*/ }
+        | '[' TK_LIT_INT ']' { /*$$ = inicializa lista de dimensões insere na lista de dimensões($2);*/ }
+        ;
 
 tipo_var:
     TK_PR_INT { $$ = IKS_SIMBOLO_LITERAL_INT; }
@@ -711,11 +717,11 @@ expressao:
 
 
 vetor:
-    nome_vetor '[' expressao ']'
+    nome_vetor vetor_dimensoes
       {
          $$ = createNode(IKS_AST_VETOR_INDEXADO, 0);
          insertChild($$, $1);
-         insertChild($$, $3);
+         insertChild($$, $2);
          pointer=sPush(pointer,$$);
       }
   ;
@@ -727,6 +733,10 @@ nome_vetor:
          pointer=sPush(pointer,$$);
       }
   ;
+  
+vetor_dimensoes: '[' expressao ']' vetor_dimensoes { /*insere na lista de dimensões($3);*/ }
+        | '[' expressao ']' { /*inicializa lista de expressões; insere na lista de dimensões($2); */}
+        ;
 
 lista_expressoes:
     lista_expressoes_nao_vazia
