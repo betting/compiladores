@@ -80,6 +80,7 @@ FILE *yyin;
             nome_func
             nome_var
             nome_vetor
+            vetor_dimensoes
             p
             retorna
             s
@@ -93,6 +94,7 @@ FILE *yyin;
               decl_vetor
               parametro
               TK_IDENTIFICADOR
+              decl_vetor_dimensao
 
 %type<integer> tipo_var
 
@@ -196,20 +198,9 @@ decl_vetor:
          $$ = $3;
       }
   ;
-  
-decl_vetor: 
-	TK_IDENTIFICADOR ':' tipo_var decl_vetor_dimensao 
-		{ 
-			$3->type = $1;
-			$$ = $3;
-		}
-	;
 
-decl_vetor_dimensao: decl_vetor_dimensao '[' decl_vetor_dimensao_tamanho ']' { /*insere na lista de dimensões($3);*/ }
-        | '[' decl_vetor_dimensao_tamanho ']' { /*$$ = inicializa lista de dimensões insere na lista de dimensões($2);*/ }
-        ;
-
-decl_vetor_dimensao_tamanho: TK_LIT_INTEIRO { $$ = atoi($1->getText().c_str());//seta o literal tamanho da dimensão como inteiro }
+decl_vetor_dimensao: '[' TK_LIT_INT ']' decl_vetor_dimensao { /*insere na lista de dimensões($3);*/ }
+        | '[' TK_LIT_INT ']' { /*$$ = inicializa lista de dimensões insere na lista de dimensões($2);*/ }
         ;
 
 tipo_var:
@@ -730,7 +721,7 @@ vetor:
       {
          $$ = createNode(IKS_AST_VETOR_INDEXADO, 0);
          insertChild($$, $1);
-         insertChild($$, $3);
+         insertChild($$, $2);
          pointer=sPush(pointer,$$);
       }
   ;
@@ -743,7 +734,7 @@ nome_vetor:
       }
   ;
   
-vetor_dimensoes: vetor_dimensoes '[' expressao ']' { /*insere na lista de dimensões($3);*/ }
+vetor_dimensoes: '[' expressao ']' vetor_dimensoes { /*insere na lista de dimensões($3);*/ }
         | '[' expressao ']' { /*inicializa lista de expressões; insere na lista de dimensões($2); */}
         ;
 
