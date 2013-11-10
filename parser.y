@@ -199,9 +199,12 @@ decl_vetor:
       }
   ;
 
-decl_vetor_dimensao: '[' TK_LIT_INT ']' decl_vetor_dimensao { /*insere na lista de dimensões($3);*/ }
-        | '[' TK_LIT_INT ']' { /*$$ = inicializa lista de dimensões insere na lista de dimensões($2);*/ }
-        ;
+decl_vetor_dimensao:
+    '[' TK_LIT_INT ']' decl_vetor_dimensao
+      { /*insere na lista de dimensões($3);*/ }
+  | '[' TK_LIT_INT ']'
+      { /*$$ = inicializa lista de dimensões insere na lista de dimensões($2);*/ }
+  ;
 
 tipo_var:
     TK_PR_INT { $$ = IKS_SIMBOLO_LITERAL_INT; }
