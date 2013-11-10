@@ -19,6 +19,6 @@ ADD_EXECUTABLE(main
   src/semantic.c
   src/stack.c
   src/tac.c
-  src/labelsnregisters.c
+  src/labelreg.c
 )
 TARGET_LINK_LIBRARIES(main ${FLEX_LIBRARIES})

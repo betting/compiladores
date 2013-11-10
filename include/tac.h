@@ -4,23 +4,22 @@
 #include "comp_tree.h"
 #include "comp_list.h"
 #include "iloc.h"
-#include "labelsnregisters.h"
+#include "labelreg.h"
 
 #ifndef tac_H
 #define tac_H
 
 
-typedef struct tac{
-
-        int r1;
-        int r2;
-        int r3;
-        int label;
-        int constant;
-        int code;
-        struct tac* next;        
-        
-}TAC;
+typedef struct tac
+{
+   int r1;
+   int r2;
+   int r3;
+   int label;
+   int constant;
+   int code;
+   struct tac* next;
+} TAC;
 
 TAC *code;
 

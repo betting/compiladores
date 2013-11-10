@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include "comp_dict.h"
 #include "comp_list.h"
-#include "labelsnregisters.h"
+#include "labelreg.h"
 #include "tac.h"
 #include "comp_tree.h"
 #include "comp_graph.h"
