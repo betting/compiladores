@@ -387,6 +387,7 @@ nome_var:
       {
          $$ = createNode(IKS_AST_IDENTIFICADOR, $1);
          pointer = sPush(pointer, $$);
+         code = CodeGenerate($$, code, ILOC_LOADAI);
       }
   ;
 
@@ -588,7 +589,7 @@ expressao:
          insertChild($$, $3);
          
          pointer = sPush(pointer, $$);
-//         code = CodeGenerate($$, code, ILOC_ADD);
+         code = CodeGenerate($$, code, ILOC_ADD);
       }
 
   | expressao '-' expressao
@@ -598,6 +599,7 @@ expressao:
          insertChild($$, $3);
 
          pointer = sPush(pointer, $$);
+         code = CodeGenerate($$, code, ILOC_SUB);
       }
 
   | expressao '*' expressao
@@ -607,6 +609,7 @@ expressao:
          insertChild($$, $3);
 
          pointer = sPush(pointer, $$);
+         code = CodeGenerate($$, code, ILOC_MULT);
       }
 
   | expressao '/' expressao
@@ -616,6 +619,7 @@ expressao:
          insertChild($$, $3);
          
          pointer = sPush(pointer, $$);
+         code = CodeGenerate($$, code, ILOC_DIV);
       }
 
   | expressao '<' expressao
@@ -701,6 +705,7 @@ expressao:
          insertChild($$, $3);
          
          pointer = sPush(pointer, $$);
+         code = CodeGenerate($$, code, ILOC_OR);
       }
 
   | expressao TK_OC_AND expressao
@@ -710,6 +715,7 @@ expressao:
          insertChild($$, $3);
          
          pointer = sPush(pointer, $$);
+         code = CodeGenerate($$, code, ILOC_AND);
       }
 
   ;
@@ -730,6 +736,8 @@ nome_vetor:
       {
          $$ = createNode(IKS_AST_IDENTIFICADOR, $1);
          pointer = sPush(pointer, $$);
+
+         code = CodeGenerate($$, code, ILOC_LOADAI);
       }
   ;
   

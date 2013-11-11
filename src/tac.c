@@ -15,12 +15,21 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code)
          break;
 
       case ILOC_SUB:
+         code = Operator2(nodo, ILOC_SUB);
+         code = insertTAC(nodo);
+         return code;
          break;
 
       case ILOC_MULT:
+         code = Operator2(nodo, ILOC_MULT);
+         code = insertTAC(nodo);
+         return code;
          break;
 
       case ILOC_DIV:
+         code = Operator2(nodo, ILOC_DIV);
+         code = insertTAC(nodo);
+         return code;
          break;
 
       case ILOC_ADDI:
@@ -54,12 +63,18 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code)
          break;
 
       case ILOC_AND:
+         code = Operator2(nodo, ILOC_AND);
+         code = insertTAC(nodo);
+         return code;
          break;
 
       case ILOC_ANDI:
          break;
 
       case ILOC_OR:
+         code = Operator2(nodo, ILOC_OR);
+         code = insertTAC(nodo);
+         return code;
          break;
 
       case ILOC_ORI:
@@ -85,6 +100,17 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code)
          break;
 
       case ILOC_LOADAI:
+         //int varType;
+//         int variableTypeGlobal = getDeclarationDataType(IKS_GLOBAL_VAR, nodo->symbol->token, declarationList, NULL);
+//         int variableTypeLocal = getDeclarationDataType(IKS_LOCAL, nodo->symbol->token, declarationList, lastFunction->symbol->token);
+         nodo->code = initTac();
+         reg = getLabelReg(reg);
+//         nodo->code->r1 = varType;
+         nodo->code->r3 = reg;
+//         nodo->code->constant = ; // Tamanho da variável (?)
+         nodo->code->code = ILOC_LOADAI;
+         code = insertTAC(nodo);
+         return code;
          break;
 
       case ILOC_LOADAO:
@@ -101,8 +127,8 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code)
 
       case ILOC_STORE:
          nodo->code = initTac();
-         nodo->code->r1 = nodo->child->sibling->child->code->r3;
-         nodo->code->r3 = nodo->child->sibling->child->sibling->code->r3;
+         nodo->code->r1 = nodo->child->sibling->code->r3;
+         nodo->code->r3 = nodo->child->code->r3;
          nodo->code->code = ILOC_STORE;
          code = insertTAC(nodo);
          return code;
@@ -168,46 +194,11 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code)
 TAC* Operator2(comp_tree_t* nodo, int operatorCode)
 {
    nodo->code = initTac();
-   comp_tree_t* currentChild;
-   if(nodo->child!=NULL)
-   {
-      currentChild = nodo->child;
-      printf("Operator2 CHILD eh != NULL");
-      if(currentChild->code!=NULL) printf("Operator2 CODE eh != NULL");
-
-//      printf("Operator2 CHILD - r3: %d",currentChild->code->r3);
-   /*
-      while(currentChild->sibling != NULL)
-      {
-         //faz algo
-         printf("Operator2 SIBLING - r3: %d",currentChild->sibling->code->r3);
-         currentChild = currentChild->sibling;
-      }
-      //if(nodo->symbol!=NULL)    printf("SYMBOL-TOKEN %s",nodo->symbol->token);
-      if(nodo->child!=NULL)
-      {
-          printf("\nCHILD->token %s",nodo->child->symbol->token);
-          if(nodo->child->code!=NULL)
-         printf("\nCHILD-code->r3 %d",nodo->child->code->r3);
-      }*/
-   }
-   /*if(nodo->sibling!=NULL)
-   {
-       printf("\nSIBLING->token %s",nodo->sibling->child->symbol->token);
-       if(nodo->sibling->child->code!=NULL)
-         printf("\nSIBLING-code->r3 %d",nodo->sibling->child->code->r3);
-   }*/
-   //struct tac* code;
-   //comp_dict_item_t* symbol;
-   //struct _tree *child,*sibling;
-
-   //if(nodo->child!=NULL) printf("CHILD->CODE %d",nodo->child->code->r3);
-   /*if(nodo->child!=NULL)
-      nodo->code->r1 = nodo->child->code->r3;
+   nodo->code->r1 = nodo->child->code->r3;
    nodo->code->r2 = nodo->child->sibling->code->r3;
-   reg = RegGenerator(reg);
+   nodo->code->code = operatorCode;
+   reg = getLabelReg(reg);
    nodo->code->r3 = reg;
-   nodo->code->code = operatorCode;*/
    return nodo->code;
 }
 
@@ -240,10 +231,11 @@ TAC* insertTAC(comp_tree_t* nodo)
 TAC* concatTAC(TAC* parent,TAC* child)
 {
    TAC* aux_tac = parent;
-   while(aux_tac->next!= NULL)
+   while(aux_tac->next != NULL)
    {
       aux_tac = aux_tac->next;
    }
    aux_tac->next = child;
+   parent = aux_tac;
    return parent;
 }
