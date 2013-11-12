@@ -11,24 +11,36 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code)
       case ILOC_ADD:
          code = Operator2(nodo, ILOC_ADD);
          code = insertTAC(nodo);
+
+         printLabel(code);
+         printf("add r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
          return code;
          break;
 
       case ILOC_SUB:
          code = Operator2(nodo, ILOC_SUB);
          code = insertTAC(nodo);
+
+         printLabel(code);
+         printf("sub r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
          return code;
          break;
 
       case ILOC_MULT:
          code = Operator2(nodo, ILOC_MULT);
          code = insertTAC(nodo);
+
+         printLabel(code);
+         printf("mult r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
          return code;
          break;
 
       case ILOC_DIV:
          code = Operator2(nodo, ILOC_DIV);
          code = insertTAC(nodo);
+
+         printLabel(code);
+         printf("div r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
          return code;
          break;
 
@@ -65,6 +77,9 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code)
       case ILOC_AND:
          code = Operator2(nodo, ILOC_AND);
          code = insertTAC(nodo);
+
+         printLabel(code);
+         printf("and r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
          return code;
          break;
 
@@ -74,6 +89,9 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code)
       case ILOC_OR:
          code = Operator2(nodo, ILOC_OR);
          code = insertTAC(nodo);
+
+         printLabel(code);
+         printf("or r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
          return code;
          break;
 
@@ -93,6 +111,9 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code)
          nodo->code->constant = atoi(nodo->symbol->token);
          nodo->code->code = ILOC_LOADI;
          code = insertTAC(nodo);
+
+         printLabel(code);
+         printf("loadI %d => r%d\n",code->constant,code->r3);
          return code;
          break;
 
@@ -110,6 +131,9 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code)
 //         nodo->code->constant = ; // Tamanho da variável (?)
          nodo->code->code = ILOC_LOADAI;
          code = insertTAC(nodo);
+
+         printLabel(code);
+         printf("loadAI r%d, %d => r%d\n",reg,code->constant,code->r3);
          return code;
          break;
 
@@ -131,6 +155,9 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code)
          nodo->code->r3 = nodo->child->code->r3;
          nodo->code->code = ILOC_STORE;
          code = insertTAC(nodo);
+
+         printLabel(code);
+         printf("store r%d => r%d\n",code->r1,code->r3);
          return code;
          break;
 
@@ -238,4 +265,12 @@ TAC* concatTAC(TAC* parent,TAC* child)
    aux_tac->next = child;
    parent = aux_tac;
    return parent;
+}
+
+void printLabel(TAC* code)
+{
+   if(code->label != 0) 
+   {
+      printf("l%d:\n",code->label);
+   }
 }

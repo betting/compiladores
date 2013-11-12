@@ -32,5 +32,5 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code);
 TAC* insertTAC(comp_tree_t* nodo);
 TAC* Operator2(comp_tree_t* nodo, int operatorCode);
 TAC* concatTAC(TAC* parent,TAC* child);
-
+void printLabel(TAC* code);
 #endif
