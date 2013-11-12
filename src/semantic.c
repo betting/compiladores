@@ -621,8 +621,8 @@ void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_ty
             break;
 
          default:
-            printf("\nCAIU NO DEFAULT");
-            printf("\nTipo: %d",pointer->disc->type);
+//            printf("\nCAIU NO DEFAULT");
+//            printf("\nTipo: %d",pointer->disc->type);
             break;
       }
       pointer = pointer->next;

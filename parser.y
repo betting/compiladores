@@ -743,9 +743,13 @@ nome_vetor:
   
 vetor_dimensoes:
     '[' expressao ']' vetor_dimensoes
-      { /*insere na lista de dimensões($3);*/ }
+      {
+         $$ = $2;
+      }
   | '[' expressao ']'
-      { /*inicializa lista de expressões; insere na lista de dimensões($2); */}
+      {
+         $$ = $2;
+      }
   ;
 
 lista_expressoes:
