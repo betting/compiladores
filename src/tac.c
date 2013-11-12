@@ -209,13 +209,13 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code)
 			nodo->code->l2 = label; 
 			nodo->code->next = NULL;
 			nodo->code->code = ILOC_CBR;
-			/*if(nodo->child->sibling->sibling->sibling == NULL)
+			if(nodo->child->sibling->sibling->sibling == NULL)
 					code = combineCTE(nodo,CTE_IF);
 			else{
 					getLabelReg(nodo->child->sibling->sibling->sibling);
 					code = CodeGenerate(nodo->child->sibling, code, ILOC_JUMPI);
 					code = combineCTE(nodo,CTE_IF_ELSE);
-			}*/
+			}
 			printf("CBR r%d, %d => r%d\n",reg,code->constant,code->r3);
 			return code;
          break;
@@ -294,6 +294,8 @@ TAC* initTac()
    new->r1 = 0;
    new->r2 = 0;
    new->r3 = 0;
+   new->l1 = 0;
+   new->l2 = 0;
    new->label = 0;
    new->constant = 0;
    new->code = 0;
@@ -336,15 +338,34 @@ void printLabel(TAC* code)
 
 TAC* combineCTE(comp_tree_t* nodo, int caseCTE)
 {
+	TAC* aux;
+	comp_tree_t* aux_nodo;
+	aux_nodo = nodo;
+	aux = nodo->code;
+	
 	switch(caseCTE)
 	{	//if simples
 		case CTE_IF:
+				if(aux_node->child->sibling->sibling != NULL)
+						nodo->code = aux_node->child->sibling->sibling->code;
+				concatTAC(nodo->code,aux_node->child->sibling->code);
+				concatTAC(nodo->code,aux);
+				concatTAC(nodo->code,aux_node->child->code);
+				return nodo->code;
 			break;
 		//if-else
 		case CTE_IF_ELSE:
+				nodo->code = aux_node->child->sibling->sibling->sibling->code;
+				concatTAC(nodo->code,aux_node->child->sibling->sibling->code);
+				concatTAC(nodo->code,aux_node->child->sibling->code);
+				concatTAC(nodo->code,aux);
+				concatTAC(nodo->code,aux_node->child->code);
+				return nodo->code;
 			break;
 		//while
 		case CTE_WHILE:
+				return nodo->code;
 			break;
 	}
 }
+
