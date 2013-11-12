@@ -198,21 +198,57 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code)
          break;
 
       case ILOC_CMP_LT:
+         code = Operator2(nodo, ILOC_CMP_LT);
+         code = insertTAC(nodo);
+
+         printLabel(code);
+         printf("cmp_lt r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
+         return code;
          break;
 
       case ILOC_CMP_LE:
+         code = Operator2(nodo, ILOC_CMP_LE);
+         code = insertTAC(nodo);
+
+         printLabel(code);
+         printf("cmp_le r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
+         return code;
          break;
 
       case ILOC_CMP_EQ:
+         code = Operator2(nodo, ILOC_CMP_EQ);
+         code = insertTAC(nodo);
+
+         printLabel(code);
+         printf("cmp_eq r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
+         return code;
          break;
 
       case ILOC_CMP_GE:
+         code = Operator2(nodo, ILOC_CMP_GE);
+         code = insertTAC(nodo);
+
+         printLabel(code);
+         printf("cmp_ge r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
+         return code;
          break;
 
       case ILOC_CMP_GT:
+         code = Operator2(nodo, ILOC_CMP_GT);
+         code = insertTAC(nodo);
+
+         printLabel(code);
+         printf("cmp_gt r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
+         return code;
          break;
 
       case ILOC_CMP_NE:
+         code = Operator2(nodo, ILOC_CMP_NE);
+         code = insertTAC(nodo);
+
+         printLabel(code);
+         printf("cmp_ne r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
+         return code;
          break;
    }
 }

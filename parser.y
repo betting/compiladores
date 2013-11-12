@@ -669,6 +669,7 @@ expressao:
          insertChild($$, $3);
 
          pointer = sPush(pointer, $$);
+         code = CodeGenerate($$, code, ILOC_CMP_LE);
       }
 
   | expressao TK_OC_GE expressao
@@ -678,6 +679,7 @@ expressao:
          insertChild($$, $3);
 
          pointer = sPush(pointer, $$);
+         code = CodeGenerate($$, code, ILOC_CMP_GE);
       }
 
   | expressao TK_OC_EQ expressao
@@ -687,6 +689,7 @@ expressao:
          insertChild($$, $3);
          
          pointer = sPush(pointer, $$);
+         code = CodeGenerate($$, code, ILOC_CMP_EQ);
       }
 
   | expressao TK_OC_NE expressao
@@ -696,6 +699,7 @@ expressao:
          insertChild($$, $3);
          
          pointer = sPush(pointer, $$);
+         code = CodeGenerate($$, code, ILOC_CMP_NE);
       }
 
   | expressao TK_OC_OR expressao
