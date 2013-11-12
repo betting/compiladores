@@ -9,7 +9,6 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code)
          break;
 
       case ILOC_ADD:
-		 printf("\nILOC ADD");         
          code = Operator2(nodo, ILOC_ADD);
          code = insertTAC(nodo);
 
@@ -19,7 +18,6 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code)
          break;
 
       case ILOC_SUB:
-		 printf("\nILOC SUB");         
          code = Operator2(nodo, ILOC_SUB);
          code = insertTAC(nodo);
 
@@ -29,7 +27,6 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code)
          break;
 
       case ILOC_MULT:
-		 printf("\nILOC MULT");         
          code = Operator2(nodo, ILOC_MULT);
          code = insertTAC(nodo);
 
@@ -39,7 +36,6 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code)
          break;
 
       case ILOC_DIV:
-		 printf("\nILOC DIV");         
          code = Operator2(nodo, ILOC_DIV);
          code = insertTAC(nodo);
 
@@ -79,7 +75,6 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code)
          break;
 
       case ILOC_AND:
-		 printf("\nILOC AND");         
 		 code = Operator2(nodo, ILOC_AND);
          code = insertTAC(nodo);
 
@@ -92,7 +87,6 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code)
          break;
 
       case ILOC_OR:
-		 printf("\nILOC OR");         
          code = Operator2(nodo, ILOC_OR);
          code = insertTAC(nodo);
 
@@ -111,7 +105,6 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code)
          break;
 
       case ILOC_LOADI:
-		 printf("\nILOC LOADI");
          nodo->code = initTac();
          reg = getLabelReg(reg);
          nodo->code->r3 = reg;
@@ -128,7 +121,6 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code)
          break;
 
       case ILOC_LOADAI:
-         printf("\nILOC LOADAI");
          //int varType;
 //         int variableTypeGlobal = getDeclarationDataType(IKS_GLOBAL_VAR, nodo->symbol->token, declarationList, NULL);
 //         int variableTypeLocal = getDeclarationDataType(IKS_LOCAL, nodo->symbol->token, declarationList, lastFunction->symbol->token);
@@ -159,7 +151,6 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code)
 
       case ILOC_STORE:
          nodo->code = initTac();
-         printf("\nILOC STORE");
          nodo->code->r1 = nodo->child->sibling->code->r3;
          nodo->code->r3 = nodo->child->code->r3;
          nodo->code->code = ILOC_STORE;
@@ -204,6 +195,29 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code)
          break;
 
       case ILOC_CBR:
+			printf("\nCBR");
+			nodo->code = initTac();
+			nodo->code->r3 = nodo->child->code->r3;
+			getLabelReg(nodo->child->sibling);
+			if(nodo->child->sibling->sibling == NULL)
+			{
+				nodo->child->sibling->sibling = (comp_tree_t*)malloc(sizeof(comp_tree_t));
+				code = CodeGenerate(nodo, code, ILOC_NOP);
+			}
+			getLabelReg(nodo->child->sibling->sibling);
+			nodo->code->l1 = label - 1; 
+			nodo->code->l2 = label; 
+			nodo->code->next = NULL;
+			nodo->code->code = ILOC_CBR;
+			/*if(nodo->child->sibling->sibling->sibling == NULL)
+					code = combineCTE(nodo,CTE_IF);
+			else{
+					getLabelReg(nodo->child->sibling->sibling->sibling);
+					code = CodeGenerate(nodo->child->sibling, code, ILOC_JUMPI);
+					code = combineCTE(nodo,CTE_IF_ELSE);
+			}*/
+			printf("CBR r%d, %d => r%d\n",reg,code->constant,code->r3);
+			return code;
          break;
 
       case ILOC_CMP_LT:
@@ -282,4 +296,19 @@ void printLabel(TAC* code)
    {
       printf("l%d:\n",code->label);
    }
+}
+
+TAC* combineCTE(comp_tree_t* nodo, int caseCTE)
+{
+	switch(caseCTE)
+	{	//if simples
+		case CTE_IF:
+			break;
+		//if-else
+		case CTE_IF_ELSE:
+			break;
+		//while
+		case CTE_WHILE:
+			break;
+	}
 }

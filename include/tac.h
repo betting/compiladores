@@ -9,12 +9,18 @@
 #ifndef tac_H
 #define tac_H
 
+#define CTE_IF 1
+#define CTE_IF_ELSE 2
+#define CTE_WHILE 3
+
 
 typedef struct tac
 {
    int r1;
    int r2;
    int r3;
+   int l1;
+   int l2;
    int label;
    int constant;
    int code;
@@ -32,5 +38,6 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code);
 TAC* insertTAC(comp_tree_t* nodo);
 TAC* Operator2(comp_tree_t* nodo, int operatorCode);
 TAC* concatTAC(TAC* parent,TAC* child);
+TAC* combineCTE(comp_tree_t* nodo, int caseCTE);
 void printLabel(TAC* code);
 #endif

@@ -443,6 +443,7 @@ controle_fluxo:
          insertChild($$, $3);
          insertChild($$, $6);
          pointer = sPush(pointer, $$);
+         code = CodeGenerate($$, code, ILOC_CBR);
       }
 
   | TK_PR_IF '(' expressao ')' TK_PR_THEN comando_simples ';' %prec LOWER_THAN_ELSE
