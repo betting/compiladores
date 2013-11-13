@@ -212,7 +212,7 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code)
 			if(nodo->child->sibling->sibling->sibling == NULL)
 					code = combineCTE(nodo,CTE_IF);
 			else{
-					getLabelReg(nodo->child->sibling->sibling->sibling);
+					getLabelReg(nodo->child->sibling->sibling->sibling->code);
 					code = CodeGenerate(nodo->child->sibling, code, ILOC_JUMPI);
 					code = combineCTE(nodo,CTE_IF_ELSE);
 			}
@@ -346,20 +346,20 @@ TAC* combineCTE(comp_tree_t* nodo, int caseCTE)
 	switch(caseCTE)
 	{	//if simples
 		case CTE_IF:
-				if(aux_node->child->sibling->sibling != NULL)
-						nodo->code = aux_node->child->sibling->sibling->code;
-				concatTAC(nodo->code,aux_node->child->sibling->code);
+				if(aux_nodo->child->sibling->sibling != NULL)
+						nodo->code = aux_nodo->child->sibling->sibling->code;
+				concatTAC(nodo->code,aux_nodo->child->sibling->code);
 				concatTAC(nodo->code,aux);
-				concatTAC(nodo->code,aux_node->child->code);
+				concatTAC(nodo->code,aux_nodo->child->code);
 				return nodo->code;
 			break;
 		//if-else
 		case CTE_IF_ELSE:
-				nodo->code = aux_node->child->sibling->sibling->sibling->code;
-				concatTAC(nodo->code,aux_node->child->sibling->sibling->code);
-				concatTAC(nodo->code,aux_node->child->sibling->code);
+				nodo->code = aux_nodo->child->sibling->sibling->sibling->code;
+				concatTAC(nodo->code,aux_nodo->child->sibling->sibling->code);
+				concatTAC(nodo->code,aux_nodo->child->sibling->code);
 				concatTAC(nodo->code,aux);
-				concatTAC(nodo->code,aux_node->child->code);
+				concatTAC(nodo->code,aux_nodo->child->code);
 				return nodo->code;
 			break;
 		//while
