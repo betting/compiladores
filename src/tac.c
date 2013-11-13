@@ -125,17 +125,26 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
 
       case ILOC_LOADAI:
          variableTypeGlobal = getDeclarationDataType(IKS_GLOBAL_VAR, nodo->symbol->token, declarations, NULL);
-         //variableTypeLocal = getDeclarationDataType(IKS_LOCAL, nodo->symbol->token, declarationList, lastFunction->symbol->token);
+         if (variableTypeGlobal == -1)
+         {
+            variableTypeLocal = getDeclarationDataType(IKS_LOCAL, nodo->symbol->token, declarations, actualFunction);
+            varType = IKS_LOCAL;
+         }
+         else
+         {
+            varType = IKS_GLOBAL_VAR;
+         }
+
          nodo->code = initTac();
          reg = getLabelReg(reg);
-//         nodo->code->r1 = varType;
+         nodo->code->r1 = varType;
          nodo->code->r3 = reg;
 //         nodo->code->constant = ; // Tamanho da variável (?)
          nodo->code->code = ILOC_LOADAI;
          code = insertTAC(nodo);
 
          printLabel(code);
-         printf("loadAI r%d, %d => r%d\n",reg,code->constant,code->r3);
+         printf("loadAI %s, %d => r%d\n", (varType == IKS_GLOBAL_VAR)?"global":"local", code->constant, code->r3);
          return code;
          break;
 
@@ -332,11 +341,13 @@ TAC* concatTAC(TAC* parent,TAC* child)
 
 void InsertLabel(comp_tree_t* nodo)
 {
-        TAC* aux = nodo->code;
-        while(aux->next != NULL)
-                aux = aux->next;
-        label = getLabelReg(label);
-        aux->label = label;
+   TAC* aux = nodo->code;
+   while(aux->next != NULL)
+   {
+      aux = aux->next;
+   }
+   label = getLabelReg(label);
+   aux->label = label;
 }
 
 
