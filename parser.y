@@ -452,6 +452,7 @@ controle_fluxo:
          insertChild($$, $3);
          insertChild($$, $6);
          pointer = sPush(pointer, $$);
+         code = CodeGenerate($$, code, ILOC_CBR);
       }
 
   | TK_PR_IF '(' expressao ')' TK_PR_THEN bloco_comando_fluxo_controle TK_PR_ELSE bloco_comando_fluxo_controle
@@ -462,6 +463,7 @@ controle_fluxo:
          insertChild($$, $6);
          insertChild($$, $8);
          pointer = sPush(pointer, $$);
+         code = CodeGenerate($$, code, ILOC_CBR);
       }
 
   | TK_PR_IF '(' expressao ')' TK_PR_THEN bloco_comando_fluxo_controle TK_PR_ELSE comando_simples ';'
@@ -471,6 +473,7 @@ controle_fluxo:
          insertChild($$, $6);
          insertChild($$, $8); 
          pointer = sPush(pointer, $$);
+         code = CodeGenerate($$, code, ILOC_CBR);
       }
 
   | TK_PR_IF '(' expressao ')' TK_PR_THEN comando_simples TK_PR_ELSE bloco_comando_fluxo_controle
@@ -480,6 +483,7 @@ controle_fluxo:
          insertChild($$, $6);
          insertChild($$, $8);
          pointer = sPush(pointer, $$);
+         code = CodeGenerate($$, code, ILOC_CBR);
       }
 
   | TK_PR_IF '(' expressao ')' TK_PR_THEN comando_simples TK_PR_ELSE comando_simples ';'
@@ -489,6 +493,7 @@ controle_fluxo:
          insertChild($$, $6);
          insertChild($$, $8);
          pointer = sPush(pointer, $$);
+         code = CodeGenerate($$, code, ILOC_CBR);
       }
 
   | TK_PR_WHILE '(' expressao ')' TK_PR_DO bloco_comando_fluxo_controle

@@ -212,7 +212,7 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code)
 			if(nodo->child->sibling->sibling->sibling == NULL)
 					code = combineCTE(nodo,CTE_IF);
 			else{
-					getLabelReg(nodo->child->sibling->sibling->sibling->code);
+					getLabelReg(nodo->child->sibling->sibling->sibling);
 					code = CodeGenerate(nodo->child->sibling, code, ILOC_JUMPI);
 					code = combineCTE(nodo,CTE_IF_ELSE);
 			}
