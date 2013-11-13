@@ -195,16 +195,16 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code)
          break;
 
       case ILOC_CBR:
-			printf("\nCBR");
+			printf("\nCBR ");
 			nodo->code = initTac();
 			nodo->code->r3 = nodo->child->code->r3;
-			getLabelReg(nodo->child->sibling);
+			InsertLabel(nodo->child->sibling);
 			if(nodo->child->sibling->sibling == NULL)
 			{
 				nodo->child->sibling->sibling = (comp_tree_t*)malloc(sizeof(comp_tree_t));
 				code = CodeGenerate(nodo, code, ILOC_NOP);
 			}
-			getLabelReg(nodo->child->sibling->sibling);
+			InsertLabel(nodo->child->sibling->sibling);
 			nodo->code->l1 = label - 1; 
 			nodo->code->l2 = label; 
 			nodo->code->next = NULL;
@@ -212,7 +212,7 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code)
 			if(nodo->child->sibling->sibling->sibling == NULL)
 					code = combineCTE(nodo,CTE_IF);
 			else{
-					getLabelReg(nodo->child->sibling->sibling->sibling);
+					InsertLabel(nodo->child->sibling->sibling->sibling);
 					code = CodeGenerate(nodo->child->sibling, code, ILOC_JUMPI);
 					code = combineCTE(nodo,CTE_IF_ELSE);
 			}
@@ -327,6 +327,16 @@ TAC* concatTAC(TAC* parent,TAC* child)
    parent = aux_tac;
    return parent;
 }
+
+void InsertLabel(comp_tree_t* nodo)
+{
+        TAC* aux = nodo->code;
+        while(aux->next != NULL)
+                aux = aux->next;
+        label = getLabelReg(label);
+        aux->label = label;
+}
+
 
 void printLabel(TAC* code)
 {

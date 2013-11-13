@@ -40,4 +40,6 @@ TAC* Operator2(comp_tree_t* nodo, int operatorCode);
 TAC* concatTAC(TAC* parent,TAC* child);
 TAC* combineCTE(comp_tree_t* nodo, int caseCTE);
 void printLabel(TAC* code);
+void InsertLabel(comp_tree_t* nodo);
+
 #endif
