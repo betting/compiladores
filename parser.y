@@ -20,8 +20,6 @@ FILE *yyin;
         comp_dict_item_t *symbol;      
         comp_tree_t *tree;
         int integer;
-
-
 }
 
 /* Declaração dos tokens da gramática da Linguagem K */
@@ -119,14 +117,13 @@ FILE *yyin;
 
 p: s
       {
-         
          $$ = createNode(IKS_AST_PROGRAMA,0);
          insertChild($$, $1);
          saveASTRoot($$);
 //         printList(declarationList);
 //         printList(listFunctions);
 //         printStack(pointer);
-         sPop(pointer, listFunctions, declarationList,0);
+         pointer = sPop(pointer, listFunctions, declarationList,0);
       }
   ;
 s:
@@ -356,6 +353,7 @@ nome_func:
       {
          $$ = createNode(IKS_AST_IDENTIFICADOR, $1);
          pointer = sPush(pointer, $$);
+         actualFunction = $1->token;
       }
   ;
 
@@ -368,7 +366,7 @@ atribuicao:
          insertChild($$, $1);
          insertChild($$, $3);
          pointer = sPush(pointer, $$);
-         code = CodeGenerate($$, code, ILOC_STORE);
+         code = CodeGenerate($$, code, ILOC_STORE, NULL, NULL);
 
       }
 
@@ -378,7 +376,7 @@ atribuicao:
          insertChild($$, $1);
          insertChild($$, $3);
          pointer = sPush(pointer, $$);
-         code = CodeGenerate($$, code, ILOC_STORE);
+         code = CodeGenerate($$, code, ILOC_STORE, NULL, NULL);
       }
   ;
 
@@ -387,7 +385,7 @@ nome_var:
       {
          $$ = createNode(IKS_AST_IDENTIFICADOR, $1);
          pointer = sPush(pointer, $$);
-         code = CodeGenerate($$, code, ILOC_LOADAI);
+         code = CodeGenerate($$, code, ILOC_LOADAI, declarationList, actualFunction);
       }
   ;
 
@@ -443,7 +441,7 @@ controle_fluxo:
          insertChild($$, $3);
          insertChild($$, $6);
          pointer = sPush(pointer, $$);
-         code = CodeGenerate($$, code, ILOC_CBR);
+         code = CodeGenerate($$, code, ILOC_CBR, NULL, NULL);
       }
 
   | TK_PR_IF '(' expressao ')' TK_PR_THEN comando_simples ';' %prec LOWER_THAN_ELSE
@@ -539,14 +537,14 @@ expressao:
       {
          $$ = createNode(IKS_AST_LITERAL, $1);
          pointer = sPush(pointer, $$);
-         code = CodeGenerate($$, code, ILOC_LOADI);
+         code = CodeGenerate($$, code, ILOC_LOADI, NULL, NULL);
       }
 
   | TK_LIT_FLOAT
       {
          $$ = createNode(IKS_AST_LITERAL, $1);
          pointer = sPush(pointer, $$);
-         code = CodeGenerate($$, code, ILOC_LOADI);
+         code = CodeGenerate($$, code, ILOC_LOADI, NULL, NULL);
       }
 
   | TK_LIT_FALSE
@@ -584,7 +582,7 @@ expressao:
       {
          $$ = createNode(IKS_AST_IDENTIFICADOR, $1);
          pointer = sPush(pointer, $$);
-         code = CodeGenerate($$, code, ILOC_LOADAI);
+         code = CodeGenerate($$, code, ILOC_LOADAI, declarationList, actualFunction);
       }
   | vetor
       { $$ = $1; }
@@ -596,7 +594,7 @@ expressao:
          insertChild($$, $3);
          
          pointer = sPush(pointer, $$);
-         code = CodeGenerate($$, code, ILOC_ADD);
+         code = CodeGenerate($$, code, ILOC_ADD, NULL, NULL);
       }
 
   | expressao '-' expressao
@@ -606,7 +604,7 @@ expressao:
          insertChild($$, $3);
 
          pointer = sPush(pointer, $$);
-         code = CodeGenerate($$, code, ILOC_SUB);
+         code = CodeGenerate($$, code, ILOC_SUB, NULL, NULL);
       }
 
   | expressao '*' expressao
@@ -616,7 +614,7 @@ expressao:
          insertChild($$, $3);
 
          pointer = sPush(pointer, $$);
-         code = CodeGenerate($$, code, ILOC_MULT);
+         code = CodeGenerate($$, code, ILOC_MULT, NULL, NULL);
       }
 
   | expressao '/' expressao
@@ -626,7 +624,7 @@ expressao:
          insertChild($$, $3);
          
          pointer = sPush(pointer, $$);
-         code = CodeGenerate($$, code, ILOC_DIV);
+         code = CodeGenerate($$, code, ILOC_DIV, NULL, NULL);
       }
 
   | expressao '<' expressao
@@ -676,7 +674,7 @@ expressao:
          insertChild($$, $3);
 
          pointer = sPush(pointer, $$);
-         code = CodeGenerate($$, code, ILOC_CMP_LE);
+         code = CodeGenerate($$, code, ILOC_CMP_LE, NULL, NULL);
       }
 
   | expressao TK_OC_GE expressao
@@ -686,7 +684,7 @@ expressao:
          insertChild($$, $3);
 
          pointer = sPush(pointer, $$);
-         code = CodeGenerate($$, code, ILOC_CMP_GE);
+         code = CodeGenerate($$, code, ILOC_CMP_GE, NULL, NULL);
       }
 
   | expressao TK_OC_EQ expressao
@@ -696,7 +694,7 @@ expressao:
          insertChild($$, $3);
          
          pointer = sPush(pointer, $$);
-         code = CodeGenerate($$, code, ILOC_CMP_EQ);
+         code = CodeGenerate($$, code, ILOC_CMP_EQ, NULL, NULL);
       }
 
   | expressao TK_OC_NE expressao
@@ -706,7 +704,7 @@ expressao:
          insertChild($$, $3);
          
          pointer = sPush(pointer, $$);
-         code = CodeGenerate($$, code, ILOC_CMP_NE);
+         code = CodeGenerate($$, code, ILOC_CMP_NE, NULL, NULL);
       }
 
   | expressao TK_OC_OR expressao
@@ -716,7 +714,7 @@ expressao:
          insertChild($$, $3);
          
          pointer = sPush(pointer, $$);
-         code = CodeGenerate($$, code, ILOC_OR);
+         code = CodeGenerate($$, code, ILOC_OR, NULL, NULL);
       }
 
   | expressao TK_OC_AND expressao
@@ -726,7 +724,7 @@ expressao:
          insertChild($$, $3);
          
          pointer = sPush(pointer, $$);
-         code = CodeGenerate($$, code, ILOC_AND);
+         code = CodeGenerate($$, code, ILOC_AND, NULL, NULL);
       }
 
   ;
@@ -748,7 +746,7 @@ nome_vetor:
          $$ = createNode(IKS_AST_IDENTIFICADOR, $1);
          pointer = sPush(pointer, $$);
 
-         code = CodeGenerate($$, code, ILOC_LOADAI);
+         code = CodeGenerate($$, code, ILOC_LOADAI, declarationList, actualFunction);
       }
   ;
   
