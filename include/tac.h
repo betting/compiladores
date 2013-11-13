@@ -32,9 +32,10 @@ TAC *code;
 //registradores e labels
 int reg;
 int label;
+char *actualFunction;
 
 TAC* initTac();
-TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code);
+TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* declarations, char *actualFunction);
 TAC* insertTAC(comp_tree_t* nodo);
 TAC* Operator2(comp_tree_t* nodo, int operatorCode);
 TAC* concatTAC(TAC* parent,TAC* child);

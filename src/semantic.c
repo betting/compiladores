@@ -342,7 +342,7 @@ int validateOperation(comp_tree_t* operationNode)
 }
 
 
-void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_type)
+STACK* sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_type)
 {
    int flag = 0;	// 1- global var ----- 2- global vector ------- 3- local var
    comp_list_t* aux_list;

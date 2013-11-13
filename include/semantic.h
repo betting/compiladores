@@ -105,7 +105,7 @@ int sizeDeclarations(int type);
  * @param func_type
  * @return void
  */
-void sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_type);
+STACK* sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_type);
 
 /**
  * Add element stack?

@@ -1,7 +1,10 @@
 #include "tac.h"
 
+int varType;
+int variableTypeGlobal;
+int variableTypeLocal;
 
-TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code)
+TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* declarations, char *actualFunction)
 {
    switch(iloc_code)
    {
@@ -121,9 +124,8 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code)
          break;
 
       case ILOC_LOADAI:
-         //int varType;
-//         int variableTypeGlobal = getDeclarationDataType(IKS_GLOBAL_VAR, nodo->symbol->token, declarationList, NULL);
-//         int variableTypeLocal = getDeclarationDataType(IKS_LOCAL, nodo->symbol->token, declarationList, lastFunction->symbol->token);
+         variableTypeGlobal = getDeclarationDataType(IKS_GLOBAL_VAR, nodo->symbol->token, declarations, NULL);
+         //variableTypeLocal = getDeclarationDataType(IKS_LOCAL, nodo->symbol->token, declarationList, lastFunction->symbol->token);
          nodo->code = initTac();
          reg = getLabelReg(reg);
 //         nodo->code->r1 = varType;
@@ -202,7 +204,7 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code)
 			if(nodo->child->sibling->sibling == NULL)
 			{
 				nodo->child->sibling->sibling = (comp_tree_t*)malloc(sizeof(comp_tree_t));
-				code = CodeGenerate(nodo, code, ILOC_NOP);
+				code = CodeGenerate(nodo, code, ILOC_NOP, NULL, NULL);
 			}
 			getLabelReg(nodo->child->sibling->sibling);
 			nodo->code->l1 = label - 1; 
@@ -213,7 +215,7 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code)
 					code = combineCTE(nodo,CTE_IF);
 			else{
 					getLabelReg(nodo->child->sibling->sibling->sibling->code);
-					code = CodeGenerate(nodo->child->sibling, code, ILOC_JUMPI);
+					code = CodeGenerate(nodo->child->sibling, code, ILOC_JUMPI, NULL, NULL);
 					code = combineCTE(nodo,CTE_IF_ELSE);
 			}
 			printf("CBR r%d, %d => r%d\n",reg,code->constant,code->r3);
