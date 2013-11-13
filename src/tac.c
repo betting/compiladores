@@ -124,24 +124,27 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
          break;
 
       case ILOC_LOADAI:
-         variableTypeGlobal = getDeclarationDataType(IKS_GLOBAL_VAR, nodo->symbol->token, declarations, NULL);
-         if (variableTypeGlobal == -1)
+         if (nodo->type == IKS_AST_IDENTIFICADOR)
          {
-            variableTypeLocal = getDeclarationDataType(IKS_LOCAL, nodo->symbol->token, declarations, actualFunction);
-            varType = IKS_LOCAL;
-         }
-         else
-         {
-            varType = IKS_GLOBAL_VAR;
-         }
+            variableTypeGlobal = getDeclarationDataType(IKS_GLOBAL_VAR, nodo->symbol->token, declarations, NULL);
+            if (variableTypeGlobal == -1)
+            {
+               variableTypeLocal = getDeclarationDataType(IKS_LOCAL, nodo->symbol->token, declarations, actualFunction);
+               varType = IKS_LOCAL;
+            }
+            else
+            {
+               varType = IKS_GLOBAL_VAR;
+            }
 
-         nodo->code = initTac();
-         reg = getLabelReg(reg);
-         nodo->code->r1 = varType;
-         nodo->code->r3 = reg;
-//         nodo->code->constant = ; // Tamanho da variável (?)
-         nodo->code->code = ILOC_LOADAI;
-         code = insertTAC(nodo);
+            nodo->code = initTac();
+            reg = getLabelReg(reg);
+            nodo->code->r1 = varType;
+            nodo->code->r3 = reg;
+            nodo->code->constant = sizeDeclarations(((variableTypeGlobal != -1) ? variableTypeGlobal : variableTypeLocal));
+            nodo->code->code = ILOC_LOADAI;
+            code = insertTAC(nodo);
+         }
 
          printLabel(code);
          printf("loadAI %s, %d => r%d\n", (varType == IKS_GLOBAL_VAR)?"global":"local", code->constant, code->r3);
