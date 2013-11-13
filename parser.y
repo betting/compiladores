@@ -579,6 +579,7 @@ expressao:
       {
          $$ = createNode(IKS_AST_IDENTIFICADOR, $1);
          pointer = sPush(pointer, $$);
+         code = CodeGenerate($$, code, ILOC_LOADAI);
       }
   | vetor
       { $$ = $1; }
