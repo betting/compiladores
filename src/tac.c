@@ -209,6 +209,7 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
 			printf("\nCBR ");
 			nodo->code = initTac();
 			nodo->code->r3 = nodo->child->code->r3;
+			if(nodo->child->sibling!=NULL) printf("NOT NULL!!");
 			InsertLabel(nodo->child->sibling);
 			if(nodo->child->sibling->sibling == NULL)
 			{
@@ -216,7 +217,7 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
 				code = CodeGenerate(nodo, code, ILOC_NOP, NULL, NULL);
 			}
 			InsertLabel(nodo->child->sibling->sibling);
-			nodo->code->l1 = label - 1; 
+			/*nodo->code->l1 = label - 1; 
 			nodo->code->l2 = label; 
 			nodo->code->next = NULL;
 			nodo->code->code = ILOC_CBR;
@@ -226,7 +227,7 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
 					InsertLabel(nodo->child->sibling->sibling->sibling);
 					code = CodeGenerate(nodo->child->sibling, code, ILOC_JUMPI, NULL, NULL);
 					code = combineCTE(nodo,CTE_IF_ELSE);
-			}
+			}*/
 			printf("CBR r%d, %d => r%d\n",reg,code->constant,code->r3);
 			return code;
          break;
@@ -341,12 +342,25 @@ TAC* concatTAC(TAC* parent,TAC* child)
 
 void InsertLabel(comp_tree_t* nodo)
 {
-   TAC* aux = nodo->code;
+   TAC* aux;
+   //printf("\nLABEL 1");
+   if(nodo->code != NULL)
+      aux = nodo->code;
+   //printCode(aux);
+   //printf("\nLABEL 2");
+//   printCode(aux);
+//   int cont = 0;
    while(aux->next != NULL)
    {
+//	  printf("\nNOT NULL");
+//	  printCode(aux);
       aux = aux->next;
+//      cont++;
+      //if(cont==100) break;
    }
+//   printf("\nLABEL 3");
    label = getLabelReg(label);
+//   printf("\nlabel: %d\n", label);   
    aux->label = label;
 }
 
@@ -392,3 +406,19 @@ TAC* combineCTE(comp_tree_t* nodo, int caseCTE)
 	}
 }
 
+void printCode(TAC* code)
+{
+   printf("\nr1: %d", code->r1);
+   printf("\nr2: %d", code->r2);
+   printf("\nr3: %d", code->r3);
+   printf("\nl1: %d", code->l1);
+   printf("\nl2: %d", code->l2);
+   printf("\nlabel: %d", code->label);
+   printf("\nconstant: %d", code->constant);
+   printf("\ncode: %d", code->code);
+   if(code->next==NULL)
+   {   printf("\nNEXT: NULL"); }
+   else
+	{	printf("\nNEXT: NOT NULL"); }
+
+}
