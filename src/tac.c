@@ -111,14 +111,6 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
          return code;
          break;
 
-      case ILOC_ORI:
-         break;
-
-      case ILOC_XOR:
-         break;
-
-      case ILOC_XORI:
-         break;
 
       case ILOC_LOADI:
          nodo->code = initTac();
@@ -164,17 +156,6 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
          return code;
          break;
 
-      case ILOC_LOADAO:
-         break;
-
-      case ILOC_CLOAD:
-         break;
-
-      case ILOC_CLOADAI:
-         break;
-
-      case ILOC_CLOADAO:
-         break;
 
       case ILOC_STORE:
          nodo->code = initTac();
@@ -188,33 +169,6 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
          return code;
          break;
 
-      case ILOC_STOREAI:
-         break;
-
-      case ILOC_STOREAO:
-         break;
-
-      case ILOC_CSTORE:
-         break;
-
-      case ILOC_CSTOREAI:
-         break;
-
-      case ILOC_CSTOREAO:
-         break;
-
-      case ILOC_I2I:
-         break;
-
-      case ILOC_C2C:
-         break;
-
-      case ILOC_C2I:
-         break;
-
-      case ILOC_I2C:
-         break;
-
       case ILOC_JUMPI:
 			nodo->code = initTac();
 			nodo->code->l1 = label;
@@ -223,8 +177,6 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
 			return code;
          break;
 
-      case ILOC_JUMP:
-         break;
 
       case ILOC_CBR:
 			nodo->code = initTac();
