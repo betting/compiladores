@@ -216,9 +216,12 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
 			InsertLabel(nodo->child->sibling);
 			if(nodo->child->sibling->sibling == NULL)
 			{
+				printf("\nnodo->child->sibling->sibling eh nulo ");
+				
 				nodo->child->sibling->sibling = (comp_tree_t*)malloc(sizeof(comp_tree_t));
 				code = CodeGenerate(nodo, code, ILOC_NOP, NULL, NULL);
 			}
+			printf("\nnodo->child->sibling->sibling nulo antes do insert \n ");
 			InsertLabel(nodo->child->sibling->sibling);
 			/*nodo->code->l1 = label - 1; 
 			nodo->code->l2 = label; 
