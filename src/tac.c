@@ -691,6 +691,7 @@ while(code != NULL)
          break;
       case ILOC_JUMPI:
          printLabel(code);
+			printf("jumpI => l%d\n", code->label);
          break;
       case ILOC_JUMP:
          printLabel(code);
