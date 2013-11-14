@@ -275,6 +275,7 @@ seq_comando:
          $$ = createNode(IKS_AST_BLOCO, 0);
          insertChild($$, $1);
          pointer = sPush(pointer, $$);
+         code = CodeGenerate($$, code, ILOC_NOP, NULL, NULL);
       }
   | bloco_comando ';' seq_comando
       {
@@ -282,6 +283,7 @@ seq_comando:
          insertChild($$, $1);
          insertChild($$, $3);
          pointer = sPush(pointer, $$);
+         code = CodeGenerate($$, code, ILOC_NOP, NULL, NULL);
       }
   | seq_comando comando_simples
       {
@@ -430,6 +432,8 @@ retorna:
          $$ = createNode(IKS_AST_RETURN, 0);
          insertChild($$, $2);
          pointer = sPush(pointer, $$);
+         
+         code = CodeGenerate($$, code, ILOC_NOP, NULL, NULL);
       }
   ;
 
@@ -517,6 +521,8 @@ bloco_comando_fluxo_controle:
          $$ = createNode(IKS_AST_BLOCO, 0);
          insertChild($$, $1);
          pointer = sPush(pointer, $$);
+
+         code = CodeGenerate($$, code, ILOC_NOP, NULL, NULL);
       }
 
   | bloco_comando ';'
@@ -524,6 +530,8 @@ bloco_comando_fluxo_controle:
          $$ = createNode(IKS_AST_BLOCO, 0);
          insertChild($$, $1);
          pointer = sPush(pointer, $$);
+
+         code = CodeGenerate($$, code, ILOC_NOP, NULL, NULL);
       }
 
   | comando
