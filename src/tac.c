@@ -222,12 +222,12 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
 			InsertLabel(nodo->child->sibling);
 			if(nodo->child->sibling->sibling == NULL)
 			{
-				printf("\nnodo->child->sibling->sibling eh nulo ");
+				//printf("\nnodo->child->sibling->sibling eh nulo ");
 				
 				nodo->child->sibling->sibling = (comp_tree_t*)malloc(sizeof(comp_tree_t));
 				code = CodeGenerate(nodo->child->sibling->sibling, code, ILOC_NOP, NULL, NULL);
 			}
-			printf("\nnodo->child->sibling->sibling nulo antes do insert \n ");
+			//printf("\nnodo->child->sibling->sibling nulo antes do insert \n ");
 			//InsertLabel(nodo->child->sibling->sibling);
 			InsertLabel(nodo->child->sibling->child);
 			nodo->code->l1 = label - 1; 
@@ -237,10 +237,12 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
 
 			if(nodo->child->sibling->sibling->child == NULL)
          {
+					//printf("\nENTROU NO CTE");
 					code = combineCTE(nodo,CTE_IF);
          }
 			else
          {
+					printf("\nENTROU NO CTE - 2  ");
 					InsertLabel(nodo->child->sibling->sibling->child);
 					code = CodeGenerate(nodo->child->sibling, code, ILOC_JUMPI, NULL, NULL);
 					code = combineCTE(nodo,CTE_IF_ELSE);
@@ -349,10 +351,24 @@ TAC* insertTAC(comp_tree_t* nodo)
 TAC* concatTAC(TAC* parent,TAC* child)
 {
    TAC* aux_tac = parent;
+	/*printf("\nPARENT ===================================");
+    printCode(parent);
+	printf("\nFIM PARENT ===================================");
+	printf("\nCHILD ===================================");
+    printCode(child);
+	printf("\nFIM CHILD ===================================");*/
+   int cont = 0;
    while(aux_tac->next != NULL)
    {
-      aux_tac = aux_tac->next;
+	   cont = cont+1;
+	   aux_tac = aux_tac->next;
+	   //printf("\nWHILE");
+	   if(cont == 10) break;
    }
+   //printf("\nAUX TAC ===================================");
+   
+    //printCode(aux_tac);
+	
    aux_tac->next = child;
    return parent;
 }
@@ -386,16 +402,31 @@ TAC* combineCTE(comp_tree_t* nodo, int caseCTE)
 	aux_nodo = nodo;
 	aux = nodo->code;
 	
+	//printf("\nCASE CTE: %d",caseCTE);
+	//printCode(aux);
+	
 	switch(caseCTE)
 	{	//if simples
 		case CTE_IF:
-            if(aux_nodo->child->sibling->sibling != NULL)
+            if(aux_nodo->child->sibling->child != NULL)
             {
-               nodo->code = aux_nodo->child->sibling->sibling->code;
+			   //printf("\n!=NULL\n");
+               nodo->code = aux_nodo->child->sibling->child->code;
             }
-				concatTAC(nodo->code,aux_nodo->child->sibling->code);
+               //printf("\nNODO CODE");
+            
+            	//printCode(aux_nodo->child->sibling->child->code);
+			
+               //printf("\nCONCATS...");
+            	concatTAC(nodo->code,aux_nodo->child->sibling->code);
+            	//printf("\nCONCATS - 1");
+            	//printCode(nodo->code);
 				concatTAC(nodo->code,aux);
+				//printf("\nCONCATS - 2");
+            	//printCode(nodo->code);
 				concatTAC(nodo->code,aux_nodo->child->code);
+				//printf("\nCONCATS - 3");
+            	//printCode(nodo->code);
 				return nodo->code;
 			break;
 		//if-else
