@@ -402,107 +402,14 @@ TAC* initTac()
 TAC* insertTAC(comp_tree_t* nodo)
 {
    //montar a inserção do TAC nos nodos
-   if (verifyIfElseCode(nodo) == TRUE)
-   {
-      if (nodo->child->sibling->sibling->child != NULL)
-      {
-         concatTAC(nodo->code, nodo->child->sibling->sibling->child->code);
-      }
-      if (nodo->child->sibling->child != NULL)
-      {
-         concatTAC(nodo->code, nodo->child->sibling->child->code);
-      }
-      if (nodo->child->sibling != NULL)
-      {
-         concatTAC(nodo->code, nodo->child->sibling->code);
-      }
-   }
-   else if (verifyIfElse(nodo) == TRUE)
-   {
-      if (nodo->child->sibling->child != NULL)
-      {
-         concatTAC(nodo->code, nodo->child->sibling->child->code);
-      }
-      if (nodo->child->sibling != NULL)
-      {
-         concatTAC(nodo->code, nodo->child->sibling->code);
-      }
-
-   }
-   else if (verifyIf(nodo) == TRUE)
-   {
-      if (nodo->child->sibling != NULL)
-      {
-         concatTAC(nodo->code, nodo->child->sibling->code);
-      }
-   }
-
    if(nodo->child != NULL)
    {
-      concatTAC(nodo->code, nodo->child->code);
+      concatTAC(nodo->code,nodo->child->code);
    }
-
 
    return nodo->code;
 }
 
-int verifyIf(comp_tree_t * nodo)
-{
-   if(nodo->child == NULL)
-   {
-      return FALSE;
-   }
-
-   if (nodo->child->sibling == NULL)
-   {
-      return FALSE;
-   }
-
-   return TRUE;
-
-}
-
-int verifyIfElse(comp_tree_t * nodo)
-{
-   if(nodo->child == NULL)
-   {
-      return FALSE;
-   }
-
-   if (nodo->child->sibling == NULL)
-   {
-      return FALSE;
-   }
-
-   if (nodo->child->sibling->child == NULL)
-   {
-      return FALSE;
-   }
-
-   return TRUE;
-}
-
-int verifyIfElseCode(comp_tree_t * nodo)
-{
-   if(nodo->child == NULL)
-   {
-      return FALSE;
-   }
-   if (nodo->child->sibling == NULL)
-   {
-      return FALSE;
-   }
-   if (nodo->child->sibling->child == NULL)
-   {
-      return FALSE;
-   }
-   if (nodo->child->sibling->sibling == NULL)
-   {
-      return FALSE;
-   }
-   
-   return TRUE;
-}
 
 TAC* concatTAC(TAC* parent,TAC* child)
 {
