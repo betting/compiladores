@@ -211,6 +211,11 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
          break;
 
       case ILOC_JUMPI:
+			nodo->code = initTac();
+			nodo->code->l1 = label;
+			nodo->code->code = ILOC_JUMPI;
+			code = insertTAC(nodo);
+			return code;
          break;
 
       case ILOC_JUMP:
