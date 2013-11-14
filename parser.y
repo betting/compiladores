@@ -505,6 +505,7 @@ controle_fluxo:
          insertChild($$, $3);
          insertChild($$, $6);
          pointer = sPush(pointer, $$);
+         code = CodeGenerate($$, code, ILOC_CBR_WHILE, NULL, NULL);
       }
 
   | TK_PR_DO bloco_comando_fluxo_controle TK_PR_WHILE '(' expressao ')'
@@ -513,6 +514,7 @@ controle_fluxo:
          insertChild($$, $2);
          insertChild($$, $5);
          pointer = sPush(pointer, $$);
+         code = CodeGenerate($$, code, ILOC_CBR_DO, NULL, NULL);
       }
   ;
 

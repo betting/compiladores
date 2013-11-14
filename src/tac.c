@@ -6,6 +6,10 @@ int variableTypeLocal;
 
 TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* declarations, char *actualFunction)
 {
+	TAC* aux_tac;
+	TAC* jump;
+			
+	
    switch(iloc_code)
    {
       case ILOC_NOP:
@@ -55,6 +59,7 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
          return code;
          break;
 
+/* Desnecessário no momento
       case ILOC_ADDI:
          break;
 
@@ -84,7 +89,7 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
 
       case ILOC_RSHIFTI:
          break;
-
+*/
       case ILOC_AND:
          code = Operator2(nodo, ILOC_AND);
          code = insertTAC(nodo);
@@ -241,12 +246,12 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
 			nodo->code->code = ILOC_CBR;
 
 			if(nodo->child->sibling->sibling->child == NULL)
-         {
+			{
 					//printf("\nENTROU NO CTE");
 					code = combineCTE(nodo,CTE_IF);
-         }
+			}
 			else
-         {
+			{
 					printf("\nENTROU NO CTE - 2  ");
 					InsertLabel(nodo->child->sibling->sibling->child);
 					code = CodeGenerate(nodo->child->sibling, code, ILOC_JUMPI, NULL, NULL);
@@ -256,6 +261,59 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
 //			printf("cbr r%d => l%d, l%d\n", nodo->code->r3, nodo->code->l1, nodo->code->l2);
 			return code;
          break;
+      
+      case ILOC_CBR_WHILE:
+			jump = initTac();
+			jump->code = ILOC_JUMPI;
+			nodo->code = initTac();
+			nodo->code->r3 = nodo->child->code->r3;
+			if(nodo->child->sibling->child == NULL)
+			{
+//				nodo->child->sibling->sibling = (comp_tree_t*)malloc(sizeof(comp_tree_t));
+				nodo->child->sibling->child = (comp_tree_t*)malloc(sizeof(comp_tree_t));
+				code = CodeGenerate(nodo->child->sibling->sibling, code, ILOC_NOP, NULL, NULL);
+			}
+			label = getLabelReg(label);
+			nodo->child->code->label = label;
+			jump->l1 = label;
+			InsertLabel(nodo->child->sibling);
+			InsertLabel(nodo->child->sibling->child);
+			nodo->code->l1 = label - 1; 
+			nodo->code->l2 = label; 
+			nodo->code->next = NULL;
+			nodo->code->code = ILOC_CBR;
+			aux_tac = nodo->child->sibling->code;
+			nodo->child->sibling->code = jump;
+			jump->next = aux_tac;
+			nodo->code = combineCTE(nodo, CTE_IF);
+			return nodo->code;
+		break;   
+
+      case ILOC_CBR_DO:
+			InsertLabel(nodo->child);
+			jump->code = ILOC_JUMPI;
+			jump->l1 = label;
+			nodo->code = initTac(); 
+			nodo->code->l2 = label; 
+			nodo->code->code = ILOC_CBR;
+			if(nodo->child->type == IKS_AST_BLOCO)
+				nodo->code->r3 = nodo->child->child->code->r3;
+			else
+				nodo->code->r3 = nodo->child->code->r3;
+			nodo->code->l1 = label;
+			if(nodo->child->sibling->child == NULL)
+			{
+				nodo->child->sibling->child = (comp_tree_t*)malloc(sizeof(comp_tree_t));
+				code = CodeGenerate(nodo->child->sibling->child, code, ILOC_NOP, NULL, NULL);
+			}
+			InsertLabel(nodo->child->sibling->child);
+			nodo->code->l2 = label; 
+			aux_tac = nodo->code;
+			nodo->code = jump;
+			nodo->code->next = aux_tac;
+			nodo->code = insertTAC(nodo);
+			return nodo->code;
+        break; 
 
       case ILOC_CMP_LT:
          code = Operator2(nodo, ILOC_CMP_LT);

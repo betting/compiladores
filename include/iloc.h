@@ -52,4 +52,9 @@
 #define ILOC_CMP_GE        44
 #define ILOC_CMP_GT        45
 #define ILOC_CMP_NE        46
+
+#define ILOC_CBR_WHILE		99
+#define ILOC_CBR_DO			999
+
+
 #endif
