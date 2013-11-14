@@ -9,6 +9,14 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
    switch(iloc_code)
    {
       case ILOC_NOP:
+         nodo->code = initTac();
+         nodo->code->code = ILOC_NOP;
+         code = insertTAC(nodo);
+
+         printLabel(code);
+//         printf("nop\n");
+
+         return code;
          break;
 
       case ILOC_ADD:
@@ -78,7 +86,7 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
          break;
 
       case ILOC_AND:
-		 code = Operator2(nodo, ILOC_AND);
+         code = Operator2(nodo, ILOC_AND);
          code = insertTAC(nodo);
 
          printLabel(code);
@@ -209,29 +217,32 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
          break;
 
       case ILOC_CBR:
-			printf("\nCBR ");
 			nodo->code = initTac();
 			nodo->code->r3 = nodo->child->code->r3;
-			if(nodo->child->sibling!=NULL) printf("NOT NULL!!");
 			InsertLabel(nodo->child->sibling);
 			if(nodo->child->sibling->sibling == NULL)
 			{
 				nodo->child->sibling->sibling = (comp_tree_t*)malloc(sizeof(comp_tree_t));
-				code = CodeGenerate(nodo, code, ILOC_NOP, NULL, NULL);
+				code = CodeGenerate(nodo->child->sibling->sibling, code, ILOC_NOP, NULL, NULL);
 			}
-			InsertLabel(nodo->child->sibling->sibling);
-			/*nodo->code->l1 = label - 1; 
+			InsertLabel(nodo->child->sibling->child);
+			nodo->code->l1 = label - 1; 
 			nodo->code->l2 = label; 
 			nodo->code->next = NULL;
 			nodo->code->code = ILOC_CBR;
+/*
 			if(nodo->child->sibling->sibling->sibling == NULL)
+         {
 					code = combineCTE(nodo,CTE_IF);
-			else{
+         }
+			else
+         {
 					InsertLabel(nodo->child->sibling->sibling->sibling);
 					code = CodeGenerate(nodo->child->sibling, code, ILOC_JUMPI, NULL, NULL);
 					code = combineCTE(nodo,CTE_IF_ELSE);
-			}*/
-			printf("CBR r%d, %d => r%d\n",reg,code->constant,code->r3);
+			}
+*/         
+			printf("cbr r%d => l%d, l%d\n", nodo->code->r3, nodo->code->l1, nodo->code->l2);
 			return code;
          break;
 
@@ -339,31 +350,19 @@ TAC* concatTAC(TAC* parent,TAC* child)
       aux_tac = aux_tac->next;
    }
    aux_tac->next = child;
-   parent = aux_tac;
    return parent;
 }
 
 void InsertLabel(comp_tree_t* nodo)
 {
    TAC* aux;
-   //printf("\nLABEL 1");
-   if(nodo->code != NULL)
-      aux = nodo->code;
-   //printCode(aux);
-   //printf("\nLABEL 2");
-//   printCode(aux);
-//   int cont = 0;
+   aux = nodo->code;
+   
    while(aux->next != NULL)
    {
-//	  printf("\nNOT NULL");
-//	  printCode(aux);
       aux = aux->next;
-//      cont++;
-      //if(cont==100) break;
    }
-//   printf("\nLABEL 3");
    label = getLabelReg(label);
-//   printf("\nlabel: %d\n", label);   
    aux->label = label;
 }
 
