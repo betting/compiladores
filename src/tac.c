@@ -12,6 +12,7 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
 	
    switch(iloc_code)
    {
+      
       case ILOC_NOP:
          nodo->code = initTac();
          nodo->code->code = ILOC_NOP;
@@ -59,7 +60,6 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
          return code;
          break;
 
-/* Desnecessário no momento
       case ILOC_ADDI:
          break;
 
@@ -89,7 +89,7 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
 
       case ILOC_RSHIFTI:
          break;
-*/
+
       case ILOC_AND:
          code = Operator2(nodo, ILOC_AND);
          code = insertTAC(nodo);
@@ -321,6 +321,7 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
          return code;
          break;
    }
+   
 }
 
 
@@ -354,9 +355,38 @@ TAC* initTac()
 TAC* insertTAC(comp_tree_t* nodo)
 {
    //montar a inserção do TAC nos nodos
+   int null = FALSE;
    if(nodo->child != NULL)
    {
       concatTAC(nodo->code,nodo->child->code);
+   }
+   else
+   {
+      null = TRUE;
+   }
+
+   if (null == FALSE)
+   {
+      if (nodo->child->sibling != NULL)
+      {
+         concatTAC(nodo->code,nodo->child->sibling->code);
+      }
+      else
+      {
+         null = TRUE;
+      }
+   }
+
+   if (null == FALSE)
+   {
+      if (nodo->child->sibling->sibling != NULL)
+      {
+         concatTAC(nodo->code,nodo->child->sibling->sibling->code);
+      }
+      else
+      {
+         null = TRUE;
+      }
    }
 
    return nodo->code;
@@ -366,24 +396,10 @@ TAC* insertTAC(comp_tree_t* nodo)
 TAC* concatTAC(TAC* parent,TAC* child)
 {
    TAC* aux_tac = parent;
-	/*printf("\nPARENT ===================================");
-    printCode(parent);
-	printf("\nFIM PARENT ===================================");
-	printf("\nCHILD ===================================");
-    printCode(child);
-	printf("\nFIM CHILD ===================================");*/
-   int cont = 0;
    while(aux_tac->next != NULL)
    {
-	   cont = cont+1;
 	   aux_tac = aux_tac->next;
-	   //printf("\nWHILE");
-	   if(cont == 10) break;
    }
-   //printf("\nAUX TAC ===================================");
-   
-    //printCode(aux_tac);
-	
    aux_tac->next = child;
    return parent;
 }
@@ -479,170 +495,187 @@ void printCode(TAC* code)
 
 void printAssembly(TAC* code)
 {
-while(code != NULL)
-{
-   switch(code->code)
+   while(code != NULL)
    {
-      case ILOC_NOP:
-         printLabel(code);
-         break;
-      case ILOC_ADD:
-         printLabel(code);
-         printf("add r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
-         break;
-      case ILOC_SUB:
-         printLabel(code);
-         printf("sub r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
-         break;
-      case ILOC_MULT:
-         printLabel(code);
-         printf("mult r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
-         break;
-      case ILOC_DIV:
-         printLabel(code);
-         printf("div r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
-         break;
-      case ILOC_ADDI:
-         printLabel(code);
-         break;
-      case ILOC_SUBI:
-         printLabel(code);
-         break;
-      case ILOC_RSUBI:
-         printLabel(code);
-         break;
-      case ILOC_MULTI:
-         printLabel(code);
-         break;
-      case ILOC_DIVI:
-         printLabel(code);
-         break;
-      case ILOC_RDIVI:
-         printLabel(code);
-         break;
-      case ILOC_LSHIFT:
-         printLabel(code);
-         break;
-      case ILOC_LSHIFTI:
-         printLabel(code);
-         break;
-      case ILOC_RSHIFT:
-         printLabel(code);
-         break;
-      case ILOC_RSHIFTI:
-         printLabel(code);
-         break;
-      case ILOC_AND:
-         printLabel(code);
-         printf("and r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
-         break;
-      case ILOC_ANDI:
-         printLabel(code);
-         break;
-      case ILOC_OR:
-         printLabel(code);
-         printf("or r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
-         break;
-      case ILOC_ORI:
-         printLabel(code);
-         break;
-      case ILOC_XOR:
-         printLabel(code);
-         break;
-      case ILOC_XORI:
-         printLabel(code);
-         break;
-      case ILOC_LOADI:
-         printLabel(code);
-         printf("loadI %d => r%d\n", code->constant, code->r3);
-         break;
-      case ILOC_LOAD:
-         printLabel(code);
-         break;
-      case ILOC_LOADAI:
-         printLabel(code);
-         printf("loadAI %s, %d => r%d\n", (code->r1 == IKS_GLOBAL_VAR)?"global":"local", code->constant, code->r3);
-         break;
-      case ILOC_LOADAO:
-         printLabel(code);
-         break;
-      case ILOC_CLOAD:
-         printLabel(code);
-         break;
-      case ILOC_CLOADAI:
-         printLabel(code);
-         break;
-      case ILOC_CLOADAO:
-         printLabel(code);
-         break;
-      case ILOC_STORE:
-         printLabel(code);
-         printf("store r%d => r%d\n",code->r1,code->r3);
-         break;
-      case ILOC_STOREAI:
-         printLabel(code);
-         break;
-      case ILOC_STOREAO:
-         printLabel(code);
-         break;
-      case ILOC_CSTORE:
-         printLabel(code);
-         break;
-      case ILOC_CSTOREAI:
-         printLabel(code);
-         break;
-      case ILOC_CSTOREAO:
-         printLabel(code);
-         break;
-      case ILOC_I2I:
-         printLabel(code);
-         break;
-      case ILOC_C2C:
-         printLabel(code);
-         break;
-      case ILOC_C2I:
-         printLabel(code);
-         break;
-      case ILOC_I2C:
-         printLabel(code);
-         break;
-      case ILOC_JUMPI:
-         printLabel(code);
-			printf("jumpI => l%d\n", code->label);
-         break;
-      case ILOC_JUMP:
-         printLabel(code);
-         break;
-      case ILOC_CBR:
-         printLabel(code);
-			printf("cbr r%d => l%d, l%d\n", code->r3, code->l1, code->l2);
-         break;
-      case ILOC_CMP_LT:
-         printLabel(code);
-         printf("cmp_lt r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
-         break;
-      case ILOC_CMP_LE:
-         printLabel(code);
-         printf("cmp_le r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
-         break;
-      case ILOC_CMP_EQ:
-         printLabel(code);
-         printf("cmp_eq r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
-         break;
-      case ILOC_CMP_GE:
-         printLabel(code);
-         printf("cmp_ge r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
-         break;
-      case ILOC_CMP_GT:
-         printLabel(code);
-         printf("cmp_gt r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
-         break;
-      case ILOC_CMP_NE:
-         printLabel(code);
-         printf("cmp_ne r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
-         break;
+      switch(code->code)
+      {
+         case ILOC_NOP:
+            printLabel(code);
+            break;
+         case ILOC_ADD:
+            printLabel(code);
+            printf("add r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
+            break;
+         case ILOC_SUB:
+            printLabel(code);
+            printf("sub r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
+            break;
+         case ILOC_MULT:
+            printLabel(code);
+            printf("mult r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
+            break;
+         case ILOC_DIV:
+            printLabel(code);
+            printf("div r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
+            break;
+         case ILOC_ADDI:
+            printLabel(code);
+            break;
+         case ILOC_SUBI:
+            printLabel(code);
+            break;
+         case ILOC_RSUBI:
+            printLabel(code);
+            break;
+         case ILOC_MULTI:
+            printLabel(code);
+            break;
+         case ILOC_DIVI:
+            printLabel(code);
+            break;
+         case ILOC_RDIVI:
+            printLabel(code);
+            break;
+         case ILOC_LSHIFT:
+            printLabel(code);
+            break;
+         case ILOC_LSHIFTI:
+            printLabel(code);
+            break;
+         case ILOC_RSHIFT:
+            printLabel(code);
+            break;
+         case ILOC_RSHIFTI:
+            printLabel(code);
+            break;
+         case ILOC_AND:
+            printLabel(code);
+            printf("and r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
+            break;
+         case ILOC_ANDI:
+            printLabel(code);
+            break;
+         case ILOC_OR:
+            printLabel(code);
+            printf("or r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
+            break;
+         case ILOC_ORI:
+            printLabel(code);
+            break;
+         case ILOC_XOR:
+            printLabel(code);
+            break;
+         case ILOC_XORI:
+            printLabel(code);
+            break;
+         case ILOC_LOADI:
+            printLabel(code);
+            printf("loadi %d => r%d\n", code->constant, code->r3);
+            break;
+         case ILOC_LOAD:
+            printLabel(code);
+            break;
+         case ILOC_LOADAI:
+            printLabel(code);
+            printf("loadai %s, %d => r%d\n", (code->r1 == IKS_GLOBAL_VAR)?"bss":"fp", code->constant, code->r3);
+            break;
+         case ILOC_LOADAO:
+            printLabel(code);
+            break;
+         case ILOC_CLOAD:
+            printLabel(code);
+            break;
+         case ILOC_CLOADAI:
+            printLabel(code);
+            break;
+         case ILOC_CLOADAO:
+            printLabel(code);
+            break;
+         case ILOC_STORE:
+            printLabel(code);
+            printf("store r%d => r%d\n",code->r1,code->r3);
+            break;
+         case ILOC_STOREAI:
+            printLabel(code);
+            break;
+         case ILOC_STOREAO:
+            printLabel(code);
+            break;
+         case ILOC_CSTORE:
+            printLabel(code);
+            break;
+         case ILOC_CSTOREAI:
+            printLabel(code);
+            break;
+         case ILOC_CSTOREAO:
+            printLabel(code);
+            break;
+         case ILOC_I2I:
+            printLabel(code);
+            break;
+         case ILOC_C2C:
+            printLabel(code);
+            break;
+         case ILOC_C2I:
+            printLabel(code);
+            break;
+         case ILOC_I2C:
+            printLabel(code);
+            break;
+         case ILOC_JUMPI:
+            printLabel(code);
+   			printf("jumpI => l%d\n", code->label);
+            break;
+         case ILOC_JUMP:
+            printLabel(code);
+            break;
+         case ILOC_CBR:
+            printLabel(code);
+   			printf("cbr r%d => l%d, l%d\n", code->r3, code->l1, code->l2);
+            break;
+         case ILOC_CMP_LT:
+            printLabel(code);
+            printf("cmp_lt r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
+            break;
+         case ILOC_CMP_LE:
+            printLabel(code);
+            printf("cmp_le r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
+            break;
+         case ILOC_CMP_EQ:
+            printLabel(code);
+            printf("cmp_eq r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
+            break;
+         case ILOC_CMP_GE:
+            printLabel(code);
+            printf("cmp_ge r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
+            break;
+         case ILOC_CMP_GT:
+            printLabel(code);
+            printf("cmp_gt r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
+            break;
+         case ILOC_CMP_NE:
+            printLabel(code);
+            printf("cmp_ne r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
+            break;
+      }
+      code = code->next;
    }
-   code = code->next;
 }
 
+TAC* invertTacList(TAC* list)
+{
+   
+/*   
+   TAC *newList = initTac();
+
+   while(list != NULL)
+   {
+      TAC* next = list->next;
+      list->next = newList;
+      newList = next;
+   }
+
+   return newList;
+*/
+   return list;
 }

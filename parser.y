@@ -124,6 +124,7 @@ p: s
 //         printList(listFunctions);
 //         printStack(pointer);
          pointer = sPop(pointer, listFunctions, declarationList,0);
+         code = invertTacList(code);
          printAssembly(code);
       }
   ;

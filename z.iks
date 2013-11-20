@@ -1,0 +1,31 @@
+/* a program named "unarios" by ta gf */
+int:positivo;
+int:negativo;
+bool: inverte()
+int:dobro;
+{
+	positivo = 2;
+	negativo = positivo;
+	dobro = positivo-negativo;
+}
+ /*
+int:matemagica(int:num1, int:num2, int:num3)
+{
+	if(num1 > 0)then	
+	{	
+	   num2 = num3;
+   	return num2;
+	}
+	else
+	{
+   	return 1;
+	}
+}
+
+int:main()
+int:indice;
+int:resultado;
+{
+	indice = 50;
+//	resultado = matemagica(50,10,40);
+}  */

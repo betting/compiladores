@@ -43,5 +43,6 @@ TAC* combineCTE(comp_tree_t* nodo, int caseCTE);
 void printLabel(TAC* code);
 void InsertLabel(comp_tree_t* nodo);
 void printCode(TAC* code);
+TAC* invertTacList(TAC* list);
 
 #endif
