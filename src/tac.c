@@ -356,9 +356,12 @@ TAC* insertTAC(comp_tree_t* nodo)
 {
    //montar a inserção do TAC nos nodos
    int null = FALSE;
+   //TAC* newCode = NULL;
+   TAC* newCode = initTac();
    if(nodo->child != NULL)
    {
-      concatTAC(nodo->code,nodo->child->code);
+//      concatTAC(nodo->code, nodo->child->code);
+      concatTAC(newCode, nodo->child->code);
    }
    else
    {
@@ -369,7 +372,8 @@ TAC* insertTAC(comp_tree_t* nodo)
    {
       if (nodo->child->sibling != NULL)
       {
-         concatTAC(nodo->code,nodo->child->sibling->code);
+//         concatTAC(nodo->code, nodo->child->sibling->code);
+         concatTAC(newCode, nodo->child->sibling->code);
       }
       else
       {
@@ -381,7 +385,8 @@ TAC* insertTAC(comp_tree_t* nodo)
    {
       if (nodo->child->sibling->sibling != NULL)
       {
-         concatTAC(nodo->code,nodo->child->sibling->sibling->code);
+//         concatTAC(nodo->code, nodo->child->sibling->sibling->code);
+         concatTAC(newCode, nodo->child->sibling->sibling->code);
       }
       else
       {
@@ -389,6 +394,21 @@ TAC* insertTAC(comp_tree_t* nodo)
       }
    }
 
+   if (null == FALSE)
+   {
+      if (nodo->child->sibling->sibling->sibling != NULL)
+      {
+//         concatTAC(nodo->code, nodo->child->sibling->sibling->sibling->code);
+         concatTAC(newCode, nodo->child->sibling->sibling->sibling->code);
+      }
+      else
+      {
+         null = TRUE;
+      }
+   }
+
+   newCode = invertTacList(newCode);
+   concatTAC(nodo->code, newCode);
    return nodo->code;
 }
 
@@ -664,18 +684,25 @@ void printAssembly(TAC* code)
 
 TAC* invertTacList(TAC* list)
 {
-   
-/*   
-   TAC *newList = initTac();
-
-   while(list != NULL)
+   TAC *current;
+   TAC *rest;
+   if(list == NULL)
    {
-      TAC* next = list->next;
-      list->next = newList;
-      newList = next;
+      return list;
    }
 
-   return newList;
-*/
-   return list;
+   current = list;
+   rest = list->next;
+
+   if(rest == NULL)
+   {
+      return current;
+   }
+
+   rest = invertTacList(rest);
+
+   current->next->next = current;
+   current->next = NULL;
+
+   return rest;
 }
