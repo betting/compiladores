@@ -240,7 +240,10 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
 			nodo->code->l2 = label; 
 			nodo->code->next = NULL;
 			nodo->code->code = ILOC_CBR;
-//			printf("\nANTES DO IF FINAL\n");
+
+			printf("\n\nCODE ANTES DE ENTRAR NO CTE");
+			printCode(nodo->code);
+            	
 			if(nodo->child->sibling->sibling->sibling == NULL)
 			{
 //					printf("\nENTROU NO CTE");
@@ -255,8 +258,13 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
 			}
 //			printf("\nPassou o IF FINAL\n");
 //			printf("cbr r%d => l%d, l%d\n", nodo->code->r3, nodo->code->l1, nodo->code->l2);
+			printf("\nNODO_>CODE");
+			printCode(nodo->code);
+			printf("\n\nNODO->CODE");
 			printCode(code);
-			return code;
+			
+			
+			return nodo->code;
 			
          break;
       
@@ -462,11 +470,14 @@ TAC* insertTAC(comp_tree_t* nodo)
 TAC* concatTAC(TAC* parent,TAC* child)
 {
    TAC* aux_tac = parent;
-   while(aux_tac->next != NULL)
+   if(parent!=NULL && child !=NULL)
    {
-	   aux_tac = aux_tac->next;
+	   while(aux_tac->next != NULL)
+	   {
+		   aux_tac = aux_tac->next;
+	   }
+	   aux_tac->next = child;
    }
-   aux_tac->next = child;
    return parent;
 }
 
@@ -500,30 +511,31 @@ TAC* combineCTE(comp_tree_t* nodo, int caseCTE)
 	aux = nodo->code;
 	
 	//printf("\nCASE CTE: %d",caseCTE);
-	//printCode(aux);
+
 	
 	switch(caseCTE)
 	{	//if simples
 		case CTE_IF:
-            if(aux_nodo->child->sibling->sibling != NULL)
+				printf("\n\nAUX DO CTE:");
+				printCode(aux);
+				printf("\n\naux_nodo->child->sibling->sibling->code:");
+				printCode(aux_nodo->child->sibling->sibling->code);
+            if(aux_nodo->child->sibling->sibling->code != NULL)
             {
-			   //printf("\n!=NULL\n");
+			   printf("\n!=NULL\n");
                nodo->code = aux_nodo->child->sibling->sibling->code;
             }
-               //printf("\nNODO CODE");
-            
-            	//printCode(aux_nodo->child->sibling->child->code);
-			
-               //printf("\nCONCATS...");
+             	printf("\n\nPÓS-IF");
+            	printCode(nodo->code);
+            	           
             	concatTAC(nodo->code,aux_nodo->child->sibling->code);
-            	//printf("\nCONCATS - 1");
-            	//printCode(nodo->code);
+				printf("\n\nPÓS-CONCATTAC 1");
+            	printCode(nodo->code);
+            	
 				concatTAC(nodo->code,aux);
-				//printf("\nCONCATS - 2");
-            	//printCode(nodo->code);
 				concatTAC(nodo->code,aux_nodo->child->code);
-				//printf("\nCONCATS - 3");
-            	//printCode(nodo->code);
+            	printf("\n\nNODO->CODE NO CTE");
+            	printCode(nodo->code);
 				return nodo->code;
 			break;
 		//if-else
