@@ -182,7 +182,7 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
 			nodo->code = initTac();
 			
 			nodo->code->r3 = nodo->child->code->r3;
-			if(nodo->child->sibling!= NULL)
+			//if(nodo->child->sibling!= NULL)
 				InsertLabel(nodo->child->sibling);
 			//1 - verificar se tem irmãos
 			/*int count = -1;
@@ -255,6 +255,7 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
 			}
 //			printf("\nPassou o IF FINAL\n");
 //			printf("cbr r%d => l%d, l%d\n", nodo->code->r3, nodo->code->l1, nodo->code->l2);
+			printCode(code);
 			return code;
 			
          break;
@@ -562,7 +563,7 @@ void printAssembly(TAC* code)
 {
    while(code != NULL)
    {
-	  printCode(code);
+	  //printCode(code);
       switch(code->code)
       {
          case ILOC_NOP:
