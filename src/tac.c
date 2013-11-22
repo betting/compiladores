@@ -503,7 +503,10 @@ TAC* insertTacEvaluated(comp_tree_t* nodo, TAC* code)
    while (aux->child != NULL)
    {
       aux = getLastSibling(aux->child);
-      concatTAC(nodo->code, aux->code);
+      if (countSiblings(aux) >= 2)
+      {
+         concatTAC(nodo->code, aux->code);
+      }
    }
    return nodo->code;
 }
@@ -515,8 +518,23 @@ comp_tree_t* getLastSibling(comp_tree_t* nodo)
       nodo = nodo->sibling;
    }
 
-//   return (nodo->sibling != NULL) ? nodo : NULL;
    return nodo;
+//   return (nodo->sibling != NULL) ? nodo : NULL;
+}
+
+int countSiblings(comp_tree_t* nodo)
+{
+   int count = 0;
+   nodo = nodo->child;
+   if (nodo != NULL)
+   {
+      while (nodo->sibling != NULL)
+      {
+         count++;
+         nodo = nodo->sibling;
+      }
+   }
+   return count;
 }
 
 void InsertLabel(comp_tree_t* nodo)

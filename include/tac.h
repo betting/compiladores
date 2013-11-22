@@ -46,4 +46,5 @@ void printCode(TAC* code);
 TAC* invertTacList(TAC* list);
 TAC* insertTacEvaluated(comp_tree_t* nodo, TAC* code);
 comp_tree_t* getLastSibling(comp_tree_t* nodo);
+int countSiblings(comp_tree_t* nodo);
 #endif
