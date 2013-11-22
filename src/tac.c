@@ -16,7 +16,7 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
       case ILOC_NOP:
          nodo->code = initTac();
          nodo->code->code = ILOC_NOP;
-         code = insertTAC(nodo);
+         code = insertTacEvaluated(nodo, code);
 
          printLabel(code);
 //         printf("nop\n");
@@ -162,7 +162,14 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
          nodo->code->r1 = nodo->child->sibling->code->r3;
          nodo->code->r3 = nodo->child->code->r3;
          nodo->code->code = ILOC_STORE;
-         code = insertTAC(nodo);
+//         if (nodo->child->sibling->sibling == NULL)
+//         {
+            code = insertTAC(nodo);
+//         }
+//         else
+//         {
+//            code = insertTacEvaluated(nodo, code);
+//         }
 
 //         printLabel(code);
 //         printf("store r%d => r%d\n",code->r1,code->r3);
@@ -408,26 +415,23 @@ TAC* initTac()
 
 TAC* insertTAC(comp_tree_t* nodo)
 {
-   //montar a inserção do TAC nos nodos
    int null = FALSE;
-   //TAC* newCode = NULL;
-   TAC* newCode = initTac();
+   int childExists_1 = FALSE;
    if(nodo->child != NULL)
    {
-//      concatTAC(nodo->code, nodo->child->code);
-      concatTAC(newCode, nodo->child->code);
+      childExists_1 = TRUE;
    }
    else
    {
       null = TRUE;
    }
 
+   int childExists_2 = FALSE;
    if (null == FALSE)
    {
       if (nodo->child->sibling != NULL)
       {
-//         concatTAC(nodo->code, nodo->child->sibling->code);
-         concatTAC(newCode, nodo->child->sibling->code);
+         childExists_2 = TRUE;
       }
       else
       {
@@ -435,12 +439,12 @@ TAC* insertTAC(comp_tree_t* nodo)
       }
    }
 
+   int childExists_3 = FALSE;
    if (null == FALSE)
    {
       if (nodo->child->sibling->sibling != NULL)
       {
-//         concatTAC(nodo->code, nodo->child->sibling->sibling->code);
-         concatTAC(newCode, nodo->child->sibling->sibling->code);
+         childExists_3 = TRUE;
       }
       else
       {
@@ -448,21 +452,23 @@ TAC* insertTAC(comp_tree_t* nodo)
       }
    }
 
-   if (null == FALSE)
+   
+   if (childExists_3 == TRUE)
    {
-      if (nodo->child->sibling->sibling->sibling != NULL)
-      {
-//         concatTAC(nodo->code, nodo->child->sibling->sibling->sibling->code);
-         concatTAC(newCode, nodo->child->sibling->sibling->sibling->code);
-      }
-      else
-      {
-         null = TRUE;
-      }
+      concatTAC(nodo->code, nodo->child->sibling->sibling->code);
    }
 
-   newCode = invertTacList(newCode);
-   concatTAC(nodo->code, newCode);
+   if (childExists_2 == TRUE)
+   {
+      concatTAC(nodo->code, nodo->child->sibling->code);
+   }
+
+   if (childExists_1 == TRUE)
+   {
+      concatTAC(nodo->code, nodo->child->code);
+   }
+
+   
    return nodo->code;
 }
 
@@ -470,15 +476,47 @@ TAC* insertTAC(comp_tree_t* nodo)
 TAC* concatTAC(TAC* parent,TAC* child)
 {
    TAC* aux_tac = parent;
-   if(parent!=NULL && child !=NULL)
+   int exists = FALSE;
+   while(aux_tac->next != NULL)
    {
-	   while(aux_tac->next != NULL)
-	   {
-		   aux_tac = aux_tac->next;
-	   }
-	   aux_tac->next = child;
+//      if (child != aux_tac->next)
+//      {
+   	   aux_tac = aux_tac->next;
+//      }
+//      else
+//      {
+//         exists = TRUE;
+//      }
    }
+//   if (exists == FALSE)
+//   {
+      aux_tac->next = child;
+//   }
    return parent;
+}
+
+TAC* insertTacEvaluated(comp_tree_t* nodo, TAC* code)
+{
+   
+//   concatTAC(nodo->code, nodo->child->code);
+   comp_tree_t* aux = getLastSibling(nodo->child);
+   while (aux->child != NULL)
+   {
+      aux = getLastSibling(aux->child);
+      concatTAC(nodo->code, aux->code);
+   }
+   return nodo->code;
+}
+
+comp_tree_t* getLastSibling(comp_tree_t* nodo)
+{
+   while (nodo->sibling != NULL)
+   {
+      nodo = nodo->sibling;
+   }
+
+//   return (nodo->sibling != NULL) ? nodo : NULL;
+   return nodo;
 }
 
 void InsertLabel(comp_tree_t* nodo)
@@ -580,6 +618,7 @@ void printAssembly(TAC* code)
       {
          case ILOC_NOP:
             printLabel(code);
+            printf("nop\n");
             break;
          case ILOC_ADD:
             printLabel(code);
