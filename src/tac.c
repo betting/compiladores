@@ -29,9 +29,10 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
 
       case ILOC_ADD:
          printf("\nADD: %d\n", ILOC_ADD);
-         //printCode(code);
-      
          code = Operator2(nodo, ILOC_ADD);
+         printCode(code);
+         printf("\nADD - 2 \n");
+         
          //code = insertTAC(nodo);
 
          printLabel(code);
@@ -399,13 +400,14 @@ TAC* Operator2(comp_tree_t* nodo, int operatorCode)
 { 
    printf("======== INIT OPERATOR 2");
    nodo->code = initTac();
-   printf("======== END OPERATOR 2");
-   printCode(nodo->code);
-   nodo->code->r1 = nodo->child[0]->code->r3;
-   nodo->code->r2 = nodo->child[1]->code->r3;
+   printf("nodo->child[0]->code->r3: %d",nodo->child[0]->code->r3);
+   //nodo->code->r1 = nodo->child[0]->code->r3;
+   //nodo->code->r2 = nodo->child[1]->code->r3;
    nodo->code->code = operatorCode;
    reg = getLabelReg(reg);
-   nodo->code->r3 = reg;
+   printf("======== END OPERATOR 2");
+   printCode(nodo->code);
+   //nodo->code->r3 = reg;
    return nodo->code;
    
 }
@@ -647,10 +649,10 @@ void printCode(TAC* code)
    printf("\nlabel: %d", code->label);
    printf("\nconstant: %d", code->constant);
    printf("\ncode: %d", code->code);
-   if(code->next==NULL)
+   /*if(code->next==NULL)
    {   printf("\nNEXT: NULL"); }
    else
-	{	printf("\nNEXT: NOT NULL"); }
+	{	printf("\nNEXT: NOT NULL"); }*/
 
 }
 
