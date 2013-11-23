@@ -17,28 +17,26 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
       case ILOC_NOP:
          nodo->code = initTac();
          nodo->code->code = ILOC_NOP;
-         printCode(nodo->code);
+         //printCode(nodo->code);
          //code = insertTacEvaluated(nodo, code);
-
          //printLabel(code);
-		 
          printf("\nnop: %d\n", ILOC_NOP);
 
          return nodo->code;
          break;
 
       case ILOC_ADD:
-         printf("\nADD: %d\n", ILOC_ADD);
+         //printf("\nADD: %d\n", ILOC_ADD);
          code = Operator2(nodo, ILOC_ADD);
-         printCode(code);
-         printf("\nADD - 2 \n");
+         //printCode(code);
+         //printf("\nADD - 2 \n");
          
-         //code = insertTAC(nodo);
+         code = insertTAC(nodo);
 
-         printLabel(code);
+         //printLabel(code);
          printCode(code);
 
-//         printf("add r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
+         printf("add r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
          return code;
          break;
 
@@ -47,7 +45,7 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
          code = insertTAC(nodo);
 
 //         printLabel(code);
-//         printf("sub r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
+         printf("sub r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
          return code;
          break;
 
@@ -56,7 +54,7 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
          code = insertTAC(nodo);
 
 //         printLabel(code);
-//         printf("mult r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
+         printf("mult r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
          return code;
          break;
 
@@ -65,7 +63,7 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
          code = insertTAC(nodo);
 
 //         printLabel(code);
-//         printf("div r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
+         printf("div r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
          return code;
          break;
 
@@ -104,7 +102,7 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
          code = insertTAC(nodo);
 
 //         printLabel(code);
-//         printf("and r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
+         printf("and r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
          return code;
          break;
 
@@ -116,7 +114,7 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
          code = insertTAC(nodo);
 
 //         printLabel(code);
-//         printf("or r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
+         printf("or r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
          return code;
          break;
 
@@ -130,7 +128,7 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
          code = insertTAC(nodo);
 
 //         printLabel(code);
-//         printf("loadI %d => r%d\n",code->constant,code->r3);
+         printf("loadI %d => r%d\n",code->constant,code->r3);
          return code;
          break;
 
@@ -161,7 +159,7 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
          }
 
 //         printLabel(code);
-//         printf("loadAI %s, %d => r%d\n", (varType == IKS_GLOBAL_VAR)?"global":"local", code->constant, code->r3);
+         printf("loadAI %s, %d => r%d\n", (varType == IKS_GLOBAL_VAR)?"global":"local", code->constant, code->r3);
          return code;
          break;
 
@@ -181,7 +179,7 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
 //         }
 
 //         printLabel(code);
-//         printf("store r%d => r%d\n",code->r1,code->r3);
+         printf("store r%d => r%d\n",code->r1,code->r3);
          return code;
          break;
 
@@ -342,7 +340,7 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
          code = insertTAC(nodo);
 
 //         printLabel(code);
-//         printf("cmp_lt r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
+         printf("cmp_lt r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
          return code;
          break;
 
@@ -351,7 +349,7 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
          code = insertTAC(nodo);
 
 //         printLabel(code);
-//         printf("cmp_le r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
+         printf("cmp_le r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
          return code;
          break;
 
@@ -360,7 +358,7 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
          code = insertTAC(nodo);
 
 //         printLabel(code);
-//         printf("cmp_eq r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
+         printf("cmp_eq r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
          return code;
          break;
 
@@ -369,7 +367,7 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
          code = insertTAC(nodo);
 
 //         printLabel(code);
-//         printf("cmp_ge r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
+         printf("cmp_ge r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
          return code;
          break;
 
@@ -378,7 +376,7 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
          code = insertTAC(nodo);
 
 //         printLabel(code);
-//         printf("cmp_gt r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
+         printf("cmp_gt r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
          return code;
          break;
 
@@ -387,7 +385,7 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
          code = insertTAC(nodo);
 
 //         printLabel(code);
-//         printf("cmp_ne r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
+         printf("cmp_ne r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
          return code;
          break;
    }
@@ -397,16 +395,16 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
 
 TAC* Operator2(comp_tree_t* nodo, int operatorCode)
 { 
-   printf("======== INIT OPERATOR 2");
+   //printf("======== INIT OPERATOR 2");
    nodo->code = initTac();
-   printf("nodo->child[0]->code->r3: %d",nodo->child[0]->code->r3);
-   //nodo->code->r1 = nodo->child[0]->code->r3;
-   //nodo->code->r2 = nodo->child[1]->code->r3;
+   nodo->code->r1 = nodo->child[0]->code->r3;
+   nodo->code->r2 = nodo->child[1]->code->r3;
    nodo->code->code = operatorCode;
    reg = getLabelReg(reg);
-   printf("======== END OPERATOR 2");
-   printCode(nodo->code);
-   //nodo->code->r3 = reg;
+   //printf("======== END OPERATOR 2");
+   nodo->code->r3 = reg;
+   //printCode(nodo->code);
+   
    return nodo->code;
    
 }
