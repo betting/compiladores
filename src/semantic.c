@@ -305,7 +305,10 @@ int inference(int type1, int type2)
  */
 int validateOperation(comp_tree_t* operationNode)
 {
-   if (operationNode->child[1] != NULL)
+   if ((operationNode->child[1] != NULL)
+         && ((operationNode->child[1]->type == IKS_AST_LITERAL)
+         || (operationNode->child[0]->type == IKS_AST_CHAMADA_DE_FUNCAO)
+         || (operationNode->child[1]->type == IKS_AST_CHAMADA_DE_FUNCAO)))
    {
       // FUNC op FUNC
       if ((operationNode->child[0]->type == IKS_AST_CHAMADA_DE_FUNCAO)
@@ -319,25 +322,22 @@ int validateOperation(comp_tree_t* operationNode)
       else if (operationNode->child[0]->type == IKS_AST_CHAMADA_DE_FUNCAO)
       {
          variableTypeFunction = getDeclarationDataType(IKS_FUNCTION, operationNode->child[0]->child[0]->symbol->token, declarationList, NULL);
-         return inference(variableTypeFunction, operationNode->symbol->type);
+         return inference(variableTypeFunction, operationNode->child[0]->symbol->type);
       }
       // any op FUNC
       else if (operationNode->child[1]->type == IKS_AST_CHAMADA_DE_FUNCAO)
       {
          variableTypeFunction = getDeclarationDataType(IKS_FUNCTION, operationNode->child[1]->child[0]->symbol->token, declarationList, NULL);
-         return inference(operationNode->symbol->type, variableTypeFunction);
+         return inference(operationNode->child[0]->symbol->type, variableTypeFunction);
       }
-      else if (operationNode->child[1]->symbol != NULL)
+      else if ((operationNode->child[0]->symbol != NULL)
+               && (operationNode->child[1]->symbol != NULL))
       {
          return inference(operationNode->child[0]->symbol->type, operationNode->child[1]->symbol->type);
       }
-      else if (operationNode->child[1]->child[0]->symbol != NULL)
+      else if (operationNode->child[1]->child[0] != NULL)
       {
-         return inference(operationNode->symbol->type, operationNode->child[1]->child[0]->symbol->type);
-      }
-      else if (operationNode->child[1]->symbol != NULL)
-      {
-         return inference(operationNode->symbol->type, operationNode->child[0]->symbol->type);
+         return inference(operationNode->child[0]->symbol->type, operationNode->child[1]->child[0]->symbol->type);
       }
    }
    // Function calls without any parameter
@@ -349,13 +349,14 @@ int validateOperation(comp_tree_t* operationNode)
          return inference(operationNode->child[0]->symbol->type, variableTypeFunction);
       }
    }
-      //return inference(operationNode->symbol->type, operationNode->symbol->type);
-//   }
-   else
+   else if (operationNode->child[1] != NULL)
    {
-      int nodeType;
-      nodeType = validateOperation(operationNode->child[0]);
-      return inference(nodeType, operationNode->child[1]->symbol->type);
+      if (operationNode->child[1]->type != IKS_AST_LITERAL)
+      {
+         int nodeType;
+         nodeType = validateOperation(operationNode->child[1]);
+         return inference(nodeType, operationNode->child[1]->symbol->type);
+      }
    }
 }
 
@@ -558,7 +559,7 @@ STACK* sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_
             // If this is an operation, the values will be checked before perform coertion.
             else if (!((data->child[0]->type == IKS_AST_LITERAL) || (data->child[0]->type == IKS_AST_IDENTIFICADOR)))
             {
-               dataType = validateOperation(data->child[0]->child[0]);
+               dataType = validateOperation(data->child[0]);
             }
             else if (data->child[0]->type == IKS_AST_IDENTIFICADOR)
             {
