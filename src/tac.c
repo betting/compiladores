@@ -872,3 +872,18 @@ TAC* invertTacList(TAC* list)
 
    return rest;
 }
+
+TAC* Address(comp_tree_t* nodo)
+{
+/*
+ *	1 - testar se o nodo é nulo
+ *    - não sendo nulo, verifica se é um nop
+ * 		- 	se for nop vai incrementando o valor
+ *  2 - criar cópia da árvore
+ * 		- remover os nops existente na cópia da árvore
+ * 	3 - se o incremento > 0
+ * 		- fazer o load dos registradores
+ * 		- concatenar o nodo
+ *  4 - tá faltando alguma coisa?
+ */
+}
