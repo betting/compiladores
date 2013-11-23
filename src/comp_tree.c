@@ -13,6 +13,7 @@
  */
 comp_tree_t* search(comp_tree_t* root, int type)
 {
+/*   
     if(root == NULL)
     {
       return;
@@ -30,6 +31,7 @@ comp_tree_t* search(comp_tree_t* root, int type)
       t = search(root->sibling,type);
     }
     return t;
+*/    
 }
 
 /**
@@ -45,11 +47,15 @@ comp_tree_t* createNode(int type, comp_dict_item_t *symbol)
 {
    // Creating new node
    comp_tree_t* newnode = (comp_tree_t*)malloc(sizeof(comp_tree_t));
-   newnode->child=NULL;
-   newnode->sibling=NULL;
    newnode->type=type;
    newnode->symbol=symbol;
-   
+  
+   int i;
+   for (i=0; i < NUM_CHILD; i++)
+   {
+      newnode->child[i] = NULL;
+   }
+
    switch(type)
    {
       case IKS_AST_FUNCAO:
@@ -77,17 +83,16 @@ void insertChild(comp_tree_t* parent, comp_tree_t* child)
 {
    if (child != NULL)
    {	   
-      if(parent->child == NULL)
+      int i;
+      for (i=0; i < NUM_CHILD; i++)
       {
-		//printf("\nInserindo Child = %s",child->symbol->token);
-         parent->child = child;
+         if (parent->child[i] == NULL)
+         {
+            parent->child[i] = child;
+            break;
+         }
       }
-      else
-      {
- 		//printf("\nINSERINDO NO SIBLING = %s",child->symbol->token);
-         addSiblings(parent->child, child);
-      }
-
+      
       // Connect nodes in the graph
       gv_connect(parent, child);
    }
@@ -103,6 +108,7 @@ void insertChild(comp_tree_t* parent, comp_tree_t* child)
  */
 void addSiblings(comp_tree_t* first, comp_tree_t* newNode)
 {
+/*   
    if(first->sibling == NULL)
    {
 	//printf("\nInserindo dentro do addSiblings = %s",newNode->symbol->token);
@@ -113,6 +119,7 @@ void addSiblings(comp_tree_t* first, comp_tree_t* newNode)
    {
       addSiblings(first->sibling, newNode);
    }
+*/   
 }
 
 
@@ -127,6 +134,7 @@ void addSiblings(comp_tree_t* first, comp_tree_t* newNode)
  */
 comp_tree_t* createNewNode(int type, char *token)
 {
+   /*
    // Creating new node
    comp_tree_t* newnode = (comp_tree_t*)malloc(sizeof(comp_tree_t));
    newnode->child=NULL;
@@ -135,5 +143,5 @@ comp_tree_t* createNewNode(int type, char *token)
    newnode->symbol = createDictionaryItem(token, "", type);
    
    return newnode;
+   */
 }
-

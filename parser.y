@@ -124,6 +124,7 @@ p: s
 //         printList(listFunctions);
 //         printStack(pointer);
          pointer = sPop(pointer, listFunctions, declarationList,0);
+         code = CodeGenerate($$, code, ILOC_NOP, NULL, NULL);
          code = invertTacList(code);
          printAssembly(code);
       }
@@ -213,6 +214,7 @@ def_funcao:
          $$ = createNode(IKS_AST_FUNCAO, $1);
          insertChild($$, $3);
          pointer = sPush(pointer, $$);
+         code = CodeGenerate($$, code, ILOC_NOP, NULL, NULL);
       }
   ;
 
@@ -349,6 +351,7 @@ chamada_funcao:
          insertChild($$, $1);
          insertChild($$, $3);
          pointer = sPush(pointer, $$);
+         code = CodeGenerate($$, code, ILOC_NOP, NULL, NULL);
       }
   ;
 
@@ -358,6 +361,7 @@ nome_func:
          $$ = createNode(IKS_AST_IDENTIFICADOR, $1);
          pointer = sPush(pointer, $$);
          actualFunction = $1->token;
+         code = CodeGenerate($$, code, ILOC_NOP, NULL, NULL);
       }
   ;
 
@@ -418,8 +422,6 @@ lista_expressoes_nao_vazia:
     expressao ',' lista_expressoes_nao_vazia
       {
          insertChild($$, $3);
-         
-//         pointer = sPush(pointer, $$); // Não utilizado, duplica os valores.
       }
 
   | expressao
@@ -616,7 +618,7 @@ expressao:
          insertChild($$, $3);
 
          pointer = sPush(pointer, $$);
-         code = CodeGenerate($$, code, ILOC_SUB, NULL, NULL);
+         CodeGenerate($$, code, ILOC_SUB, NULL, NULL);
       }
 
   | expressao '*' expressao

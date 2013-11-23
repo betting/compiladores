@@ -6,6 +6,7 @@ int variableTypeLocal;
 
 TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* declarations, char *actualFunction)
 {
+/*   
 	TAC* aux_tac;
 	TAC* jump;
 	comp_tree_t* currentNodo;		
@@ -16,7 +17,7 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
       case ILOC_NOP:
          nodo->code = initTac();
          nodo->code->code = ILOC_NOP;
-         code = insertTAC(nodo);
+         code = insertTacEvaluated(nodo, code);
 
          printLabel(code);
 //         printf("nop\n");
@@ -162,7 +163,14 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
          nodo->code->r1 = nodo->child->sibling->code->r3;
          nodo->code->r3 = nodo->child->code->r3;
          nodo->code->code = ILOC_STORE;
-         code = insertTAC(nodo);
+//         if (nodo->child->sibling->sibling == NULL)
+//         {
+            code = insertTAC(nodo);
+//         }
+//         else
+//         {
+//            code = insertTacEvaluated(nodo, code);
+//         }
 
 //         printLabel(code);
 //         printf("store r%d => r%d\n",code->r1,code->r3);
@@ -226,7 +234,7 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
 				}
 			}
 			*/
-			if(nodo->child->sibling->sibling == NULL)
+/*			if(nodo->child->sibling->sibling == NULL)
 			{
 //				printf("\nnodo->child->sibling->sibling eh nulo ");
 				
@@ -375,12 +383,12 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
          return code;
          break;
    }
-   
+*/   
 }
 
 
 TAC* Operator2(comp_tree_t* nodo, int operatorCode)
-{
+{ /*
    nodo->code = initTac();
    nodo->code->r1 = nodo->child->code->r3;
    nodo->code->r2 = nodo->child->sibling->code->r3;
@@ -388,6 +396,7 @@ TAC* Operator2(comp_tree_t* nodo, int operatorCode)
    reg = getLabelReg(reg);
    nodo->code->r3 = reg;
    return nodo->code;
+   */
 }
 
 TAC* initTac()
@@ -408,26 +417,24 @@ TAC* initTac()
 
 TAC* insertTAC(comp_tree_t* nodo)
 {
-   //montar a inserção do TAC nos nodos
+   /*
    int null = FALSE;
-   //TAC* newCode = NULL;
-   TAC* newCode = initTac();
+   int childExists_1 = FALSE;
    if(nodo->child != NULL)
    {
-//      concatTAC(nodo->code, nodo->child->code);
-      concatTAC(newCode, nodo->child->code);
+      childExists_1 = TRUE;
    }
    else
    {
       null = TRUE;
    }
 
+   int childExists_2 = FALSE;
    if (null == FALSE)
    {
       if (nodo->child->sibling != NULL)
       {
-//         concatTAC(nodo->code, nodo->child->sibling->code);
-         concatTAC(newCode, nodo->child->sibling->code);
+         childExists_2 = TRUE;
       }
       else
       {
@@ -435,12 +442,12 @@ TAC* insertTAC(comp_tree_t* nodo)
       }
    }
 
+   int childExists_3 = FALSE;
    if (null == FALSE)
    {
       if (nodo->child->sibling->sibling != NULL)
       {
-//         concatTAC(nodo->code, nodo->child->sibling->sibling->code);
-         concatTAC(newCode, nodo->child->sibling->sibling->code);
+         childExists_3 = TRUE;
       }
       else
       {
@@ -448,41 +455,101 @@ TAC* insertTAC(comp_tree_t* nodo)
       }
    }
 
-   if (null == FALSE)
+   
+   if (childExists_3 == TRUE)
    {
-      if (nodo->child->sibling->sibling->sibling != NULL)
-      {
-//         concatTAC(nodo->code, nodo->child->sibling->sibling->sibling->code);
-         concatTAC(newCode, nodo->child->sibling->sibling->sibling->code);
-      }
-      else
-      {
-         null = TRUE;
-      }
+      concatTAC(nodo->code, nodo->child->sibling->sibling->code);
    }
 
-   newCode = invertTacList(newCode);
-   concatTAC(nodo->code, newCode);
+   if (childExists_2 == TRUE)
+   {
+      concatTAC(nodo->code, nodo->child->sibling->code);
+   }
+
+   if (childExists_1 == TRUE)
+   {
+      concatTAC(nodo->code, nodo->child->code);
+   }
+
+   
    return nodo->code;
+   */
 }
 
 
 TAC* concatTAC(TAC* parent,TAC* child)
 {
+   /*
    TAC* aux_tac = parent;
-   if(parent!=NULL && child !=NULL)
+   int exists = FALSE;
+   while(aux_tac->next != NULL)
    {
-	   while(aux_tac->next != NULL)
-	   {
-		   aux_tac = aux_tac->next;
-	   }
-	   aux_tac->next = child;
+//      if (child != aux_tac->next)
+//      {
+   	   aux_tac = aux_tac->next;
+//      }
+//      else
+//      {
+//         exists = TRUE;
+//      }
    }
+//   if (exists == FALSE)
+//   {
+      aux_tac->next = child;
+//   }
    return parent;
+   */
+}
+
+TAC* insertTacEvaluated(comp_tree_t* nodo, TAC* code)
+{
+/*   
+//   concatTAC(nodo->code, nodo->child->code);
+   comp_tree_t* aux = getLastSibling(nodo->child);
+   while (aux->child != NULL)
+   {
+      aux = getLastSibling(aux->child);
+      if (countSiblings(aux) > 1)
+      {
+         concatTAC(nodo->code, aux->code);
+      }
+   }
+   return nodo->code;
+*/   
+}
+
+comp_tree_t* getLastSibling(comp_tree_t* nodo)
+{
+   /*
+   while (nodo->sibling != NULL)
+   {
+      nodo = nodo->sibling;
+   }
+
+   return nodo;
+//   return (nodo->sibling != NULL) ? nodo : NULL;
+*/
+}
+
+int countSiblings(comp_tree_t* nodo)
+{ /*
+   int count = 0;
+   nodo = nodo->child;
+   if (nodo != NULL)
+   {
+      while (nodo->sibling != NULL)
+      {
+         count++;
+         nodo = nodo->sibling;
+      }
+   }
+   return count;
+   */
 }
 
 void InsertLabel(comp_tree_t* nodo)
 {
+   /*
    TAC* aux;
    aux = nodo->code;
    
@@ -492,19 +559,23 @@ void InsertLabel(comp_tree_t* nodo)
    }
    label = getLabelReg(label);
    aux->label = label;
+   */
 }
 
 
 void printLabel(TAC* code)
 {
+   /*
    if(code->label != 0) 
    {
       printf("l%d:\n",code->label);
    }
+   */
 }
 
 TAC* combineCTE(comp_tree_t* nodo, int caseCTE)
 {
+   /*
 	TAC* aux;
 	comp_tree_t* aux_nodo;
 	aux_nodo = nodo;
@@ -552,10 +623,12 @@ TAC* combineCTE(comp_tree_t* nodo, int caseCTE)
 				return nodo->code;
 			break;
 	}
+   */
 }
 
 void printCode(TAC* code)
 {
+   /*
    printf("\nr1: %d", code->r1);
    printf("\nr2: %d", code->r2);
    printf("\nr3: %d", code->r3);
@@ -568,11 +641,12 @@ void printCode(TAC* code)
    {   printf("\nNEXT: NULL"); }
    else
 	{	printf("\nNEXT: NOT NULL"); }
-
+*/
 }
 
 void printAssembly(TAC* code)
 {
+   /*
    while(code != NULL)
    {
 	  //printCode(code);
@@ -580,6 +654,7 @@ void printAssembly(TAC* code)
       {
          case ILOC_NOP:
             printLabel(code);
+            printf("nop\n");
             break;
          case ILOC_ADD:
             printLabel(code);
@@ -739,10 +814,12 @@ void printAssembly(TAC* code)
       }
       code = code->next;
    }
+   */
 }
 
 TAC* invertTacList(TAC* list)
 {
+   /*
    TAC *current;
    TAC *rest;
    if(list == NULL)
@@ -764,4 +841,5 @@ TAC* invertTacList(TAC* list)
    current->next = NULL;
 
    return rest;
+   */
 }
