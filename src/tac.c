@@ -28,6 +28,9 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
          break;
 
       case ILOC_ADD:
+         printf("\nADD: %d\n", ILOC_ADD);
+         //printCode(code);
+      
          code = Operator2(nodo, ILOC_ADD);
          //code = insertTAC(nodo);
 
@@ -394,7 +397,10 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
 
 TAC* Operator2(comp_tree_t* nodo, int operatorCode)
 { 
+   printf("======== INIT OPERATOR 2");
    nodo->code = initTac();
+   printf("======== END OPERATOR 2");
+   printCode(nodo->code);
    nodo->code->r1 = nodo->child[0]->code->r3;
    nodo->code->r2 = nodo->child[1]->code->r3;
    nodo->code->code = operatorCode;
