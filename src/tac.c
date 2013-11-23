@@ -7,9 +7,9 @@ int variableTypeLocal;
 TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* declarations, char *actualFunction)
 {
    
-	TAC* aux_tac;
-	TAC* jump;
-	comp_tree_t* currentNodo;		
+   TAC* aux_tac;
+   TAC* jump;
+   comp_tree_t* currentNodo;
 	
    switch(iloc_code)
    {
@@ -41,7 +41,7 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
 //         printf("add r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
          return code;
          break;
-/*
+
       case ILOC_SUB:
          code = Operator2(nodo, ILOC_SUB);
          code = insertTAC(nodo);
@@ -168,8 +168,8 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
 
       case ILOC_STORE:
          nodo->code = initTac();
-         nodo->code->r1 = nodo->child->sibling->code->r3;
-         nodo->code->r3 = nodo->child->code->r3;
+         nodo->code->r1 = nodo->child[1]->code->r3;
+         nodo->code->r3 = nodo->child[0]->code->r3;
          nodo->code->code = ILOC_STORE;
 //         if (nodo->child->sibling->sibling == NULL)
 //         {
@@ -193,7 +193,7 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
 			return code;
          break;
 
-
+/*
       case ILOC_CBR:
 			nodo->code = initTac();
 			
@@ -336,7 +336,7 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
 			nodo->code = insertTAC(nodo);
 			return nodo->code;
         break; 
-
+*/
       case ILOC_CMP_LT:
          code = Operator2(nodo, ILOC_CMP_LT);
          code = insertTAC(nodo);
@@ -390,7 +390,6 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
 //         printf("cmp_ne r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
          return code;
          break;
-*/
    }
    
 }
@@ -430,6 +429,26 @@ TAC* initTac()
 
 TAC* insertTAC(comp_tree_t* nodo)
 {
+   if (nodo->child[3] != NULL)
+   {
+      concatTAC(nodo->code, nodo->child[3]->code);
+   }
+
+   if (nodo->child[2] != NULL)
+   {
+      concatTAC(nodo->code, nodo->child[2]->code);
+   }
+
+   if (nodo->child[1] != NULL)
+   {
+      concatTAC(nodo->code, nodo->child[1]->code);
+   }
+
+   if (nodo->child[0] != NULL)
+   {
+      concatTAC(nodo->code, nodo->child[0]->code);
+   }
+
    /*
    int null = FALSE;
    int childExists_1 = FALSE;
