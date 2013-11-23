@@ -505,7 +505,7 @@ STACK* sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_
                   // If this is an operation, the values will checked before perform coertion.
                   if (!((data->type == IKS_AST_LITERAL) || (data->type == IKS_AST_IDENTIFICADOR)))
                   {
-//                     dataType = validateOperation(data->child);
+                     dataType = validateOperation(data->child[0]);
                   }
                   // Simple value attribution
                   else
@@ -627,18 +627,20 @@ STACK* sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_
 
          case IKS_AST_VETOR_INDEXADO:
             dataChild = pointer->disc;
-            if(dataChild->child[1]->symbol->type == IKS_SIMBOLO_LITERAL_STRING)
+            if (dataChild->child[1]->symbol != NULL)
             {
-               printf("Coercao impossivel do tipo string");
-               exit(IKS_ERROR_STRING_TO_X);
-            }
+               if(dataChild->child[1]->symbol->type == IKS_SIMBOLO_LITERAL_STRING)
+               {
+                  printf("Coercao impossivel do tipo string");
+                  exit(IKS_ERROR_STRING_TO_X);
+               }
 
-            if(dataChild->child[1]->symbol->type == IKS_SIMBOLO_LITERAL_CHAR)
-            {
-               printf("Coercao impossivel do tipo char");
-               exit(IKS_ERROR_CHAR_TO_X);
+               if(dataChild->child[1]->symbol->type == IKS_SIMBOLO_LITERAL_CHAR)
+               {
+                  printf("Coercao impossivel do tipo char");
+                  exit(IKS_ERROR_CHAR_TO_X);
+               }
             }
-
             break;
 
          default:
