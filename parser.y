@@ -618,7 +618,7 @@ expressao:
          insertChild($$, $3);
 
          pointer = sPush(pointer, $$);
-         CodeGenerate($$, code, ILOC_SUB, NULL, NULL);
+         code = CodeGenerate($$, code, ILOC_SUB, NULL, NULL);
       }
 
   | expressao '*' expressao

@@ -17,25 +17,24 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
       case ILOC_NOP:
          nodo->code = initTac();
          nodo->code->code = ILOC_NOP;
-         printCode(nodo->code);
-         //code = insertTacEvaluated(nodo, code);
+         code = insertTAC(nodo);
 
+         //printCode(nodo->code);
          //printLabel(code);
-		 
-         printf("\nnop: %d\n", ILOC_NOP);
+         //printf("\nnop: %d\n", ILOC_NOP);
 
          return nodo->code;
          break;
 
       case ILOC_ADD:
-         printf("\nADD: %d\n", ILOC_ADD);
+         //printf("\nADD: %d\n", ILOC_ADD);
          //printCode(code);
       
          code = Operator2(nodo, ILOC_ADD);
-         //code = insertTAC(nodo);
+         code = insertTAC(nodo);
 
-         printLabel(code);
-         printCode(code);
+         //printLabel(code);
+         //printCode(code);
 
 //         printf("add r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
          return code;
@@ -396,10 +395,10 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
 
 TAC* Operator2(comp_tree_t* nodo, int operatorCode)
 { 
-   printf("======== INIT OPERATOR 2");
+   //printf("======== INIT OPERATOR 2");
    nodo->code = initTac();
-   printf("======== END OPERATOR 2");
-   printCode(nodo->code);
+   //printf("======== END OPERATOR 2");
+   //printCode(nodo->code);
    nodo->code->r1 = nodo->child[0]->code->r3;
    nodo->code->r2 = nodo->child[1]->code->r3;
    nodo->code->code = operatorCode;
@@ -509,14 +508,12 @@ TAC* insertTAC(comp_tree_t* nodo)
 
 TAC* concatTAC(TAC* parent,TAC* child)
 {
-   /*
-   TAC* aux_tac = parent;
-   int exists = FALSE;
-   while(aux_tac->next != NULL)
+//   int exists = FALSE;
+   while(parent->next != NULL)
    {
 //      if (child != aux_tac->next)
 //      {
-   	   aux_tac = aux_tac->next;
+   	   parent = parent->next;
 //      }
 //      else
 //      {
@@ -525,10 +522,9 @@ TAC* concatTAC(TAC* parent,TAC* child)
    }
 //   if (exists == FALSE)
 //   {
-      aux_tac->next = child;
+   parent->next = child;
 //   }
    return parent;
-   */
 }
 
 TAC* insertTacEvaluated(comp_tree_t* nodo, TAC* code)
@@ -675,7 +671,6 @@ void printCode(TAC* code)
 
 void printAssembly(TAC* code)
 {
-   /*
    while(code != NULL)
    {
 	  //printCode(code);
@@ -843,12 +838,10 @@ void printAssembly(TAC* code)
       }
       code = code->next;
    }
-   */
 }
 
 TAC* invertTacList(TAC* list)
 {
-   /*
    TAC *current;
    TAC *rest;
    if(list == NULL)
@@ -870,5 +863,4 @@ TAC* invertTacList(TAC* list)
    current->next = NULL;
 
    return rest;
-   */
 }
