@@ -273,17 +273,17 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
 			jump->code = ILOC_JUMPI;
 			nodo->code = initTac();
 			nodo->code->r3 = nodo->child->code->r3;
-			if(nodo->child->sibling->child == NULL)
+			if(nodo->child->sibling->sibling == NULL)
 			{
-//				nodo->child->sibling->sibling = (comp_tree_t*)malloc(sizeof(comp_tree_t));
-				nodo->child->sibling->child = (comp_tree_t*)malloc(sizeof(comp_tree_t));
+				nodo->child->sibling->sibling = (comp_tree_t*)malloc(sizeof(comp_tree_t));
+//				nodo->child->sibling->child = (comp_tree_t*)malloc(sizeof(comp_tree_t));
 				code = CodeGenerate(nodo->child->sibling->sibling, code, ILOC_NOP, NULL, NULL);
 			}
 			label = getLabelReg(label);
 			nodo->child->code->label = label;
 			jump->l1 = label;
 			InsertLabel(nodo->child->sibling);
-			InsertLabel(nodo->child->sibling->child);
+			InsertLabel(nodo->child->sibling->sibling);
 			nodo->code->l1 = label - 1; 
 			nodo->code->l2 = label; 
 			nodo->code->next = NULL;
@@ -303,16 +303,16 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
 			nodo->code->l2 = label; 
 			nodo->code->code = ILOC_CBR;
 			if(nodo->child->type == IKS_AST_BLOCO)
-				nodo->code->r3 = nodo->child->child->code->r3;
+				nodo->code->r3 = nodo->child->sibling->code->r3;
 			else
 				nodo->code->r3 = nodo->child->code->r3;
 			nodo->code->l1 = label;
-			if(nodo->child->sibling->child == NULL)
+			if(nodo->child->sibling->sibling == NULL)
 			{
-				nodo->child->sibling->child = (comp_tree_t*)malloc(sizeof(comp_tree_t));
-				code = CodeGenerate(nodo->child->sibling->child, code, ILOC_NOP, NULL, NULL);
+				nodo->child->sibling->sibling = (comp_tree_t*)malloc(sizeof(comp_tree_t));
+				code = CodeGenerate(nodo->child->sibling->sibling, code, ILOC_NOP, NULL, NULL);
 			}
-			InsertLabel(nodo->child->sibling->child);
+			InsertLabel(nodo->child->sibling->sibling);
 			nodo->code->l2 = label; 
 			aux_tac = nodo->code;
 			nodo->code = jump;
