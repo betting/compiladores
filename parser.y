@@ -68,6 +68,7 @@ FILE *yyin;
             bloco_comando_fluxo_controle
             chamada_funcao
             comando
+            comandos
             comando_simples
             controle_fluxo
             def_funcao
@@ -109,7 +110,7 @@ FILE *yyin;
 %nonassoc LOWER_THAN_ELSE
 %nonassoc TK_PR_ELSE
 
-%expect 70
+%expect 19
 
 %start p
 %%
@@ -255,24 +256,27 @@ parametro:
   ;
 
 bloco_comando:
-    '{' comando_simples '}'
-      {
-         $$ = $2;
-      }
-  | '{' seq_comando '}'
+    '{' comandos '}'
       {
          $$ = $2;
       }
   ;
 
+comandos:
+    comando_simples
+      {
+         $$ = $1;
+      }
+  | seq_comando
+      {
+         $$ = $1;
+      }
+  ;
+     
 seq_comando:
-    comando seq_comando
+    comando comandos
       {
          insertChild($$, $2);
-      }
-  | comando_simples
-      {
-         insertChild($$, $1);
       }
   | bloco_comando
       {
@@ -281,23 +285,13 @@ seq_comando:
          pointer = sPush(pointer, $$);
          code = CodeGenerate($$, code, ILOC_NOP, NULL, NULL);
       }
-  | bloco_comando ';' seq_comando
+  | bloco_comando ';' comandos
       {
          $$ = createNode(IKS_AST_BLOCO, 0);
          insertChild($$, $1);
          insertChild($$, $3);
          pointer = sPush(pointer, $$);
          code = CodeGenerate($$, code, ILOC_NOP, NULL, NULL);
-      }
-  | seq_comando comando_simples
-      {
-         insertChild($$, $1);
-         insertChild($$, $2);
-      }
-  | seq_comando bloco_comando
-      {
-         insertChild($$, $1);
-         insertChild($$, $2);
       }
   | ';'
       { $$ = NULL; }
