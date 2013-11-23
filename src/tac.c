@@ -6,7 +6,7 @@ int variableTypeLocal;
 
 TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* declarations, char *actualFunction)
 {
-/*   
+   
 	TAC* aux_tac;
 	TAC* jump;
 	comp_tree_t* currentNodo;		
@@ -17,23 +17,27 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
       case ILOC_NOP:
          nodo->code = initTac();
          nodo->code->code = ILOC_NOP;
-         code = insertTacEvaluated(nodo, code);
+         printCode(nodo->code);
+         //code = insertTacEvaluated(nodo, code);
 
-         printLabel(code);
-//         printf("nop\n");
+         //printLabel(code);
+		 
+         printf("\nnop: %d\n", ILOC_NOP);
 
-         return code;
+         return nodo->code;
          break;
 
       case ILOC_ADD:
          code = Operator2(nodo, ILOC_ADD);
-         code = insertTAC(nodo);
+         //code = insertTAC(nodo);
 
-//         printLabel(code);
+         printLabel(code);
+         printCode(code);
+
 //         printf("add r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
          return code;
          break;
-
+/*
       case ILOC_SUB:
          code = Operator2(nodo, ILOC_SUB);
          code = insertTAC(nodo);
@@ -382,21 +386,22 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
 //         printf("cmp_ne r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
          return code;
          break;
+*/
    }
-*/   
+   
 }
 
 
 TAC* Operator2(comp_tree_t* nodo, int operatorCode)
-{ /*
+{ 
    nodo->code = initTac();
-   nodo->code->r1 = nodo->child->code->r3;
-   nodo->code->r2 = nodo->child->sibling->code->r3;
+   nodo->code->r1 = nodo->child[0]->code->r3;
+   nodo->code->r2 = nodo->child[1]->code->r3;
    nodo->code->code = operatorCode;
    reg = getLabelReg(reg);
    nodo->code->r3 = reg;
    return nodo->code;
-   */
+   
 }
 
 TAC* initTac()
@@ -513,9 +518,8 @@ TAC* insertTacEvaluated(comp_tree_t* nodo, TAC* code)
       {
          concatTAC(nodo->code, aux->code);
       }
-   }
-   return nodo->code;
-*/   
+   }*/
+   return nodo->code;  
 }
 
 comp_tree_t* getLastSibling(comp_tree_t* nodo)
@@ -628,7 +632,7 @@ TAC* combineCTE(comp_tree_t* nodo, int caseCTE)
 
 void printCode(TAC* code)
 {
-   /*
+   
    printf("\nr1: %d", code->r1);
    printf("\nr2: %d", code->r2);
    printf("\nr3: %d", code->r3);
@@ -641,7 +645,7 @@ void printCode(TAC* code)
    {   printf("\nNEXT: NULL"); }
    else
 	{	printf("\nNEXT: NOT NULL"); }
-*/
+
 }
 
 void printAssembly(TAC* code)
