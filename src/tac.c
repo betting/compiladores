@@ -893,18 +893,32 @@ TAC* Address(comp_tree_t* nodo)
  *  4 - tá faltando alguma coisa?
  */
 	 //pegar valores e colocar numa lista
+	 comp_list_t* lista_auxiliar, list;
+	 //lista_auxiliar = searchToken(,nodo->child[0]->symbol->text);
 	 int count = 0;
 	 comp_tree_t* aux;
 	 aux = nodo;
-	 if(aux!=NULL)
+	 if(lista_auxiliar!=NULL)
 	 {
-		 while(aux->symbol->text=="nop")
+		 while(lista_auxiliar->symbol->text=="nop")
 		 {
 			 printf("\nNOP encontrado");
-			 //aux=aux->next;
+			 lista_auxiliar=lista_auxiliar->next;
 			 count++;
 		 }
 		 printf("\nQTD NOPS: %d", count);
+		 lista_auxiliar = list;
+		 
+		 //procura valor nulo
+		 while(lista_auxiliar->next != NULL)
+			lista_auxiliar = lista_auxiliar->next;
+		 
+		 lista = removeItem(searchToken(lista,lista_auxiliar->text));
+		 lista_auxiliar = list;
+		 
 	 }
+
+	//tratar o resultado e devolver pro nodo
 	return nodo->code;
+
 }
