@@ -4,9 +4,13 @@ int:negativo;
 bool: inverte()
 int:dobro;
 {
-	positivo = 2;
-	negativo = positivo;
-	dobro = positivo-negativo;
+   positivo = 2;
+   negativo = positivo;
+   dobro = positivo-negativo;
+   if(negativo > 0)then
+   {
+      negativo = 5;
+   }
 }
  /*
 int:matemagica(int:num1, int:num2, int:num3)
