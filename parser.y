@@ -124,7 +124,7 @@ p: s
 //         printList(listFunctions);
 //         printStack(pointer);
          pointer = sPop(pointer, listFunctions, declarationList,0);
-         code = CodeGenerate($$, code, ILOC_NOP, NULL, NULL);
+//         code = CodeGenerate($$, code, ILOC_NOP, NULL, NULL);
          code = invertTacList(code);
          printAssembly(code);
       }
@@ -214,7 +214,7 @@ def_funcao:
          $$ = createNode(IKS_AST_FUNCAO, $1);
          insertChild($$, $3);
          pointer = sPush(pointer, $$);
-         code = CodeGenerate($$, code, ILOC_NOP, NULL, NULL);
+//         code = CodeGenerate($$, code, ILOC_NOP, NULL, NULL);
       }
   ;
 
@@ -279,17 +279,17 @@ seq_comando:
       }
   | nome_var '=' expressao ';' comandos
       {
-         printf("\n## CODE - ANTES ##\n");
-         printAssembly(code);
+//         printf("\n## CODE - ANTES ##\n");
+//         printAssembly(code);
          $$ = createNode(IKS_AST_ATRIBUICAO, 0);
          insertChild($$, $1);
          insertChild($$, $3);
          insertChild($$, $5);
          pointer = sPush(pointer, $$);
          code = CodeGenerate($$, code, ILOC_STORE, NULL, NULL);
-         printf("\n## CODE - DEPOIS ##\n");
-         printAssembly(code);
-         printf("\n===================\n");
+//         printf("\n## CODE - DEPOIS ##\n");
+//         printAssembly(code);
+//         printf("\n===================\n");
       }
   | vetor '=' expressao ';' comandos
       {

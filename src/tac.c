@@ -552,7 +552,7 @@ TAC* insertTacEvaluated(comp_tree_t* nodo, TAC* code)
       }
    }*/
    return code;
-   //return nodo->code;
+//   return nodo->child[2]->code;
 }
 
 comp_tree_t* getLastSibling(comp_tree_t* nodo)
