@@ -155,6 +155,8 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
             nodo->code->r3 = reg;
             nodo->code->constant = sizeDeclarations(((variableTypeGlobal != -1) ? variableTypeGlobal : variableTypeLocal));
             nodo->code->code = ILOC_LOADAI;
+            code = Address(nodo);
+            
             code = insertTAC(nodo);
          }
 
@@ -886,4 +888,19 @@ TAC* Address(comp_tree_t* nodo)
  * 		- concatenar o nodo
  *  4 - tá faltando alguma coisa?
  */
+	 //pegar valores e colocar numa lista
+	 int count = 0;
+	 comp_tree_t* aux;
+	 aux = nodo;
+	 if(aux!=NULL)
+	 {
+		 while(aux->symbol->text=="nop")
+		 {
+			 printf("\nNOP encontrado");
+			 //aux=aux->next;
+			 count++;
+		 }
+		 printf("\nQTD NOPS: %d", count);
+	 }
+	return nodo->code;
 }
