@@ -194,19 +194,19 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
 			return code;
          break;
 
-/*
+
       case ILOC_CBR:
 			nodo->code = initTac();
 			
-			nodo->code->r3 = nodo->child->code->r3;
+			nodo->code->r3 = nodo->child[0]->code->r3;
 			//if(nodo->child->sibling!= NULL)
-				InsertLabel(nodo->child->sibling);
+				InsertLabel(nodo->child[1]);
 			//1 - verificar se tem irmãos
-			/*int count = -1;
-			if(nodo->child != NULL)
+			int count = -1;
+			if(nodo->child[0] != NULL)
 			{
 				count++;
-				currentNodo = nodo->child;
+				currentNodo = nodo->child[0];
 				printf("\n%d child", count);
 			}
 			else
@@ -217,24 +217,24 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
 			
 			while(count != 99)
 			{
-				if(currentNodo->sibling != NULL)
+				if(currentNodo->child[0] != NULL)
 				{
 					count++;
 					printf("\nIrmão %d ", count);
 					if(count == 1)
 					{
-						InsertLabel(nodo->child->sibling);
+						InsertLabel(nodo->child[1]);
 					}
 					if(count == 2)
 					{
-						nodo->child->sibling->sibling = (comp_tree_t*)malloc(sizeof(comp_tree_t));
-						code = CodeGenerate(nodo->child->sibling->sibling, code, ILOC_NOP, NULL, NULL);
+						nodo->child[2] = (comp_tree_t*)malloc(sizeof(comp_tree_t));
+						code = CodeGenerate(nodo->child[2], code, ILOC_NOP, NULL, NULL);
 					}
 					if(count == 3)
 					{
-						InsertLabel(nodo->child->sibling);
+						InsertLabel(nodo->child[1]);
 					}
-					currentNodo = currentNodo->sibling;
+					currentNodo = currentNodo->child[0];
 				}
 				else
 				{
@@ -242,16 +242,15 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
 					printf("\n COUNT 99 dos IRMAOS");
 				}
 			}
-			*/
-/*			if(nodo->child->sibling->sibling == NULL)
+			if(nodo->child[2] == NULL)
 			{
 //				printf("\nnodo->child->sibling->sibling eh nulo ");
 				
-				nodo->child->sibling->sibling = (comp_tree_t*)malloc(sizeof(comp_tree_t));
-				code = CodeGenerate(nodo->child->sibling->sibling, code, ILOC_NOP, NULL, NULL);
+				nodo->child[2] = (comp_tree_t*)malloc(sizeof(comp_tree_t));
+				code = CodeGenerate(nodo->child[2], code, ILOC_NOP, NULL, NULL);
 			}
 //			printf("\nnodo->child->sibling->sibling nulo antes do insert \n ");
-			InsertLabel(nodo->child->sibling->sibling);
+			InsertLabel(nodo->child[2]);
 //			printf("\nPassou o InsertLabel dos 2 irmãos\n ");
 			nodo->code->l1 = label - 1; 
 			nodo->code->l2 = label; 
@@ -261,7 +260,7 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
 			printf("\n\nCODE ANTES DE ENTRAR NO CTE");
 			printCode(nodo->code);
             	
-			if(nodo->child->sibling->sibling->sibling == NULL)
+			if(nodo->child[3] == NULL)
 			{
 //					printf("\nENTROU NO CTE");
 					code = combineCTE(nodo,CTE_IF);
@@ -269,22 +268,22 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
 			else
 			{
 //					printf("\nENTROU NO CTE - 2  ");
-					InsertLabel(nodo->child->sibling->sibling->sibling);
-					code = CodeGenerate(nodo->child->sibling, code, ILOC_JUMPI, NULL, NULL);
+					InsertLabel(nodo->child[3]);
+					code = CodeGenerate(nodo->child[1], code, ILOC_JUMPI, NULL, NULL);
 					code = combineCTE(nodo,CTE_IF_ELSE);
 			}
 //			printf("\nPassou o IF FINAL\n");
 //			printf("cbr r%d => l%d, l%d\n", nodo->code->r3, nodo->code->l1, nodo->code->l2);
-			printf("\nNODO_>CODE");
-			printCode(nodo->code);
-			printf("\n\nNODO->CODE");
-			printCode(code);
+//			printf("\nNODO_>CODE");
+//			printCode(nodo->code);
+//			printf("\n\nNODO->CODE");
+//			printCode(code);
 			
 			
 			return nodo->code;
 			
          break;
-      
+/*
       case ILOC_CBR_WHILE:
 			jump = initTac();
 			jump->code = ILOC_JUMPI;
@@ -604,17 +603,15 @@ void InsertLabel(comp_tree_t* nodo)
 
 void printLabel(TAC* code)
 {
-   /*
    if(code->label != 0) 
    {
       printf("l%d:\n",code->label);
    }
-   */
 }
 
 TAC* combineCTE(comp_tree_t* nodo, int caseCTE)
 {
-   /*
+
 	TAC* aux;
 	comp_tree_t* aux_nodo;
 	aux_nodo = nodo;
@@ -629,32 +626,32 @@ TAC* combineCTE(comp_tree_t* nodo, int caseCTE)
 				printf("\n\nAUX DO CTE:");
 				printCode(aux);
 				printf("\n\naux_nodo->child->sibling->sibling->code:");
-				printCode(aux_nodo->child->sibling->sibling->code);
-            if(aux_nodo->child->sibling->sibling->code != NULL)
+				printCode(aux_nodo->child[2]->code);
+            if(aux_nodo->child[2]->code != NULL)
             {
 			   printf("\n!=NULL\n");
-               nodo->code = aux_nodo->child->sibling->sibling->code;
+               nodo->code = aux_nodo->child[2]->code;
             }
              	printf("\n\nPÓS-IF");
             	printCode(nodo->code);
             	           
-            	concatTAC(nodo->code,aux_nodo->child->sibling->code);
+            concatTAC(nodo->code,aux_nodo->child[1]->code);
 				printf("\n\nPÓS-CONCATTAC 1");
             	printCode(nodo->code);
-            	
+
 				concatTAC(nodo->code,aux);
-				concatTAC(nodo->code,aux_nodo->child->code);
+				concatTAC(nodo->code,aux_nodo->child[0]->code);
             	printf("\n\nNODO->CODE NO CTE");
             	printCode(nodo->code);
 				return nodo->code;
 			break;
 		//if-else
 		case CTE_IF_ELSE:
-				nodo->code = aux_nodo->child->sibling->sibling->sibling->code;
-				concatTAC(nodo->code,aux_nodo->child->sibling->sibling->code);
+				nodo->code = aux_nodo->child[3]->code;
+				concatTAC(nodo->code,aux_nodo->child[2]->code);
 //				concatTAC(nodo->code,aux_nodo->child->sibling->code);
 //				concatTAC(nodo->code,aux);
-				concatTAC(nodo->code,aux_nodo->child->code);
+				concatTAC(nodo->code,aux_nodo->child[0]->code);
 				return nodo->code;
 			break;
 		//while
@@ -662,7 +659,6 @@ TAC* combineCTE(comp_tree_t* nodo, int caseCTE)
 				return nodo->code;
 			break;
 	}
-   */
 }
 
 void printCode(TAC* code)
