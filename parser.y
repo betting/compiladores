@@ -725,6 +725,7 @@ expressao:
          insertChild($$, $3);
 
          pointer = sPush(pointer, $$);
+         code = CodeGenerate($$, code, ILOC_CMP_LT, NULL, NULL);
       }
 
   | expressao '>' expressao
@@ -734,6 +735,7 @@ expressao:
          insertChild($$, $3);
 
          pointer = sPush(pointer, $$);
+         code = CodeGenerate($$, code, ILOC_CMP_GE, NULL, NULL);
       }
 
   | '+' expressao
