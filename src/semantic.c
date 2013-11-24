@@ -123,11 +123,11 @@ int insertDeclarations(comp_dict_item_t* dictNode, int escopo)
          {
             if (escopo == IKS_LOCAL)
             {
-               declarationList = addItem(dictNode->type, dictNode->token, declarationList, IKS_LOCAL);
+               declarationList = addItem(dictNode->type, dictNode->token, declarationList, IKS_LOCAL, EMPTY, sizeDeclarations(dictNode->type));
             }
             else
             {
-               declarationList = addItem(dictNode->type, dictNode->token, declarationList, IKS_FUNC_PARAM);
+               declarationList = addItem(dictNode->type, dictNode->token, declarationList, IKS_FUNC_PARAM, EMPTY, sizeDeclarations(dictNode->type));
             }
 			}
          else
@@ -140,7 +140,7 @@ int insertDeclarations(comp_dict_item_t* dictNode, int escopo)
       case IKS_GLOBAL_VAR: //variavel global
          if(searchToken(declarationList, dictNode->token) == NULL)
          {
-            declarationList = addItem(dictNode->type, dictNode->token, declarationList, IKS_GLOBAL_VAR);
+            declarationList = addItem(dictNode->type, dictNode->token, declarationList, IKS_GLOBAL_VAR, EMPTY, sizeDeclarations(dictNode->type));
          }
          else
          {
@@ -153,7 +153,7 @@ int insertDeclarations(comp_dict_item_t* dictNode, int escopo)
 		case IKS_GLOBAL_VET: //vetor global
 			if(searchToken(declarationList, dictNode->token) == NULL)
 			{
-				declarationList = addItem(dictNode->type, dictNode->token, declarationList, IKS_GLOBAL_VET);
+				declarationList = addItem(dictNode->type, dictNode->token, declarationList, IKS_GLOBAL_VET, EMPTY, sizeDeclarations(dictNode->type));
 			}
 			else
 			{
@@ -167,8 +167,8 @@ int insertDeclarations(comp_dict_item_t* dictNode, int escopo)
 			if((searchToken(listFunctions, dictNode->token) == NULL)
             && (searchToken(declarationList, dictNode->token) == NULL)) 
 			{
-				listFunctions = addItem(dictNode->type, dictNode->token, listFunctions, IKS_FUNCTION);
-				declarationList = addItem(dictNode->type, dictNode->token, declarationList, IKS_FUNCTION);
+				listFunctions = addItem(dictNode->type, dictNode->token, listFunctions, IKS_FUNCTION, EMPTY, EMPTY);
+				declarationList = addItem(dictNode->type, dictNode->token, declarationList, IKS_FUNCTION, EMPTY, EMPTY);
 			}
 			else
 			{

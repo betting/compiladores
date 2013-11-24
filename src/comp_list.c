@@ -26,9 +26,11 @@ comp_list_t* initList()
  * @param tipoVar Type variable
  * @param num value to be inserted.
  * @param *node list.
+ * @param label Label of the function or size of the vector
+ * @param size Size of the vector/variable
  * @return The list with the new element.
  */
-comp_list_t* addItem(int tipoVar, char *nomeVar, comp_list_t* node, int tipoGlobal)
+comp_list_t* addItem(int tipoVar, char *nomeVar, comp_list_t* node, int tipoGlobal, int label, int size)
 {
 	
 	comp_list_t* new;
@@ -36,6 +38,8 @@ comp_list_t* addItem(int tipoVar, char *nomeVar, comp_list_t* node, int tipoGlob
 	new->tipoVar = tipoVar;
 	new->nomeVar = nomeVar;
 	new->tipoGlobal = tipoGlobal;
+   new->label = label;
+   new->size = size;
 	new->next = NULL;
 
    node = add(node, new);
@@ -129,11 +133,11 @@ comp_list_t* concatList(comp_list_t *l0, comp_list_t *l1)
 
 void printList(comp_list_t *list)
 {
-   printf("Tipo Declaracao \t Tipo de Dados \t Nome \n");
+   printf("Tipo Declaracao \t Tipo de Dados \t Nome \t Label \t Size\n");
 
    while( list != NULL)
    {
-      printf("%d \t %d \t %s \n", list->tipoGlobal, list->tipoVar, list->nomeVar);
+      printf("%d \t %d \t %s \t l%d \t %d\n", list->tipoGlobal, list->tipoVar, list->nomeVar, list->label, list->size);
       list = list->next;
    }  
    
