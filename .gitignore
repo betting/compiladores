@@ -12,3 +12,4 @@ parser.h
 parser.output
 parser.tab.c
 saida.png
+core
