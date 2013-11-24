@@ -158,6 +158,7 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
             code = Address(nodo);
             
             code = insertTAC(nodo);
+            //insertTAC(nodo);
          }
 
 //         printLabel(code);
@@ -171,14 +172,14 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
          nodo->code->r1 = nodo->child[1]->code->r3;
          nodo->code->r3 = nodo->child[0]->code->r3;
          nodo->code->code = ILOC_STORE;
-//         if (nodo->child->sibling->sibling == NULL)
-//         {
+         if (nodo->child[2] == NULL)
+         {
             code = insertTAC(nodo);
-//         }
-//         else
-//         {
-//            code = insertTacEvaluated(nodo, code);
-//         }
+         }
+         else
+         {
+            code = insertTacEvaluated(nodo, code);
+         }
 
 //         printLabel(code);
 //         printf("store r%d => r%d\n",code->r1,code->r3);
@@ -504,41 +505,43 @@ TAC* insertTAC(comp_tree_t* nodo)
    {
       concatTAC(nodo->code, nodo->child->code);
    }
-
+   */
    
    return nodo->code;
-   */
+   
 }
 
 
 TAC* concatTAC(TAC* parent,TAC* child)
 {
-//   int exists = FALSE;
-
-	if(parent != NULL && child!=NULL)
-	{
-		TAC* aux = parent;
-		while(aux->next != NULL)
-		{
-//      if (child != aux_tac->next)
-//      {
-			aux = aux->next;
-//      }
-//      else
-//      {
-//         exists = TRUE;
-//      }
-		}
-//   if (exists == FALSE)
-//   {
-		aux->next = child;
-//   }
-	}
+   if ((parent != NULL) 
+      && (child != NULL))
+   {
+//    int exists = FALSE;
+      while(parent->next != NULL)
+      {
+//       if (child != aux_tac->next)
+//       {
+   	   parent = parent->next;
+//       }
+//       else
+//       {
+//          exists = TRUE;
+//       }
+      }
+//    if (exists == FALSE)
+//    {
+      parent->next = child;
+   }
    return parent;
 }
 
 TAC* insertTacEvaluated(comp_tree_t* nodo, TAC* code)
 {
+      concatTAC(nodo->code, nodo->child[1]->code);
+      concatTAC(nodo->code, nodo->child[0]->code);
+//      concatTAC(nodo->child[2]->code, nodo->code);
+      concatTAC(code, nodo->code);
 /*   
 //   concatTAC(nodo->code, nodo->child->code);
    comp_tree_t* aux = getLastSibling(nodo->child);
@@ -550,7 +553,8 @@ TAC* insertTacEvaluated(comp_tree_t* nodo, TAC* code)
          concatTAC(nodo->code, aux->code);
       }
    }*/
-   return nodo->code;  
+   return code;
+   //return nodo->code;
 }
 
 comp_tree_t* getLastSibling(comp_tree_t* nodo)

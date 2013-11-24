@@ -63,16 +63,18 @@ FILE *yyin;
              TK_PR_STRING
 
 
-%type<tree> atribuicao
+%type<tree> 
             bloco_comando
             bloco_comando_fluxo_controle
             chamada_funcao
             comando
+            comandos
             comando_simples
             controle_fluxo
             def_funcao
             entrada
             expressao
+            funcao
             lista_expressoes
             lista_expressoes_nao_vazia
             nome_func
@@ -98,18 +100,16 @@ FILE *yyin;
 
 
 
-%right
-   TK_OC_AND
-   TK_OC_OR
-
-%left '<' '>' TK_OC_LE TK_OC_GE TK_OC_EQ TK_OC_NE
+%right TK_OC_AND ',' '!' ';'
+%left TK_OC_OR '<' '>'
 %left '+' '-'
 %left '*' '/'
-
+%left '=' ')' ']'
+%nonassoc TK_OC_LE TK_OC_GE TK_OC_EQ TK_OC_NE
 %nonassoc LOWER_THAN_ELSE
 %nonassoc TK_PR_ELSE
 
-%expect 70
+/*%expect 19*/
 
 %start p
 %%
@@ -255,25 +255,87 @@ parametro:
   ;
 
 bloco_comando:
-    '{' comando_simples '}'
-      {
-         $$ = $2;
-      }
-  | '{' seq_comando '}'
+    '{' comandos '}'
       {
          $$ = $2;
       }
   ;
 
+comandos:
+    comando_simples
+      {
+         $$ = $1;
+      }
+  | seq_comando
+      {
+         $$ = $1;
+      }
+  ;
+     
 seq_comando:
-    comando seq_comando
+    controle_fluxo comandos
       {
-         insertChild($$, $2);
+         $$ = $1;
       }
-  | comando_simples
+  | nome_var '=' expressao ';' comandos
       {
+         printf("\n## CODE - ANTES ##\n");
+         printAssembly(code);
+         $$ = createNode(IKS_AST_ATRIBUICAO, 0);
          insertChild($$, $1);
+         insertChild($$, $3);
+         insertChild($$, $5);
+         pointer = sPush(pointer, $$);
+         code = CodeGenerate($$, code, ILOC_STORE, NULL, NULL);
+         printf("\n## CODE - DEPOIS ##\n");
+         printAssembly(code);
+         printf("\n===================\n");
       }
+  | vetor '=' expressao ';' comandos
+      {
+         $$ = createNode(IKS_AST_ATRIBUICAO, 0);
+         insertChild($$, $1);
+         insertChild($$, $3);
+         insertChild($$, $5);
+         pointer = sPush(pointer, $$);
+         code = CodeGenerate($$, code, ILOC_STORE, NULL, NULL);
+      }
+  | nome_func '(' lista_expressoes ')' ';' comandos
+      {
+         $$ = createNode(IKS_AST_CHAMADA_DE_FUNCAO, 0);
+         insertChild($$, $1);
+         insertChild($$, $3);
+         insertChild($$, $6);
+         pointer = sPush(pointer, $$);
+         code = CodeGenerate($$, code, ILOC_NOP, NULL, NULL);
+      }
+  | TK_PR_INPUT expressao ';' comandos
+      {
+         $$ = createNode(IKS_AST_INPUT, 0);
+         insertChild($$, $2);
+         insertChild($$, $4);
+         pointer = sPush(pointer, $$);
+      }
+  | TK_PR_OUTPUT lista_expressoes_nao_vazia ';' comandos
+      {
+         $$ = createNode(IKS_AST_OUTPUT, 0);
+         insertChild($$, $2);
+         insertChild($$, $4);
+         pointer = sPush(pointer, $$);
+      }
+  | TK_PR_RETURN expressao ';' comandos
+      { 
+         $$ = createNode(IKS_AST_RETURN, 0);
+         insertChild($$, $2);
+         insertChild($$, $4);
+         pointer = sPush(pointer, $$);
+         
+         code = CodeGenerate($$, code, ILOC_NOP, NULL, NULL);
+      }
+  | decl_var ';' comandos
+      { }
+
+
   | bloco_comando
       {
          $$ = createNode(IKS_AST_BLOCO, 0);
@@ -281,7 +343,7 @@ seq_comando:
          pointer = sPush(pointer, $$);
          code = CodeGenerate($$, code, ILOC_NOP, NULL, NULL);
       }
-  | bloco_comando ';' seq_comando
+  | bloco_comando ';' comandos
       {
          $$ = createNode(IKS_AST_BLOCO, 0);
          insertChild($$, $1);
@@ -289,18 +351,6 @@ seq_comando:
          pointer = sPush(pointer, $$);
          code = CodeGenerate($$, code, ILOC_NOP, NULL, NULL);
       }
-  | seq_comando comando_simples
-      {
-         insertChild($$, $1);
-         insertChild($$, $2);
-      }
-  | seq_comando bloco_comando
-      {
-         insertChild($$, $1);
-         insertChild($$, $2);
-      }
-  | ';'
-      { $$ = NULL; }
   |
       { $$ = NULL; }
   ;
@@ -308,40 +358,69 @@ seq_comando:
 comando:
     controle_fluxo
       { $$ = $1; }
-  | atribuicao ';'
+  | nome_var '=' expressao ';'
+      {
+         $$ = createNode(IKS_AST_ATRIBUICAO, 0);
+         insertChild($$, $1);
+         insertChild($$, $3);
+         pointer = sPush(pointer, $$);
+         code = CodeGenerate($$, code, ILOC_STORE, NULL, NULL);
+      }
+  | vetor '=' expressao ';'
+      {
+         $$ = createNode(IKS_AST_ATRIBUICAO, 0);
+         insertChild($$, $1);
+         insertChild($$, $3);
+         pointer = sPush(pointer, $$);
+         code = CodeGenerate($$, code, ILOC_STORE, NULL, NULL);
+      }
+  | entrada
       { $$ = $1; }
-  | entrada ';'
+  | saida
       { $$ = $1; }
-  | saida ';'
+  | retorna
       { $$ = $1; }
-  | retorna ';'
-      { $$ = $1; }
-  | decl_var ';'
+  | declaracao
       { }
-  | chamada_funcao ';'
+  | funcao
       { $$ = $1; }
   ;
 
 comando_simples:
-    atribuicao
+    nome_var '=' expressao
+      {
+         $$ = createNode(IKS_AST_ATRIBUICAO, 0);
+         insertChild($$, $1);
+         insertChild($$, $3);
+         pointer = sPush(pointer, $$);
+         code = CodeGenerate($$, code, ILOC_STORE, NULL, NULL);
+      }
+  | vetor '=' expressao
+      {
+         $$ = createNode(IKS_AST_ATRIBUICAO, 0);
+         insertChild($$, $1);
+         insertChild($$, $3);
+         pointer = sPush(pointer, $$);
+         code = CodeGenerate($$, code, ILOC_STORE, NULL, NULL);
+      }
+  ;
+
+declaracao:
+    decl_var
+      { }
+  | decl_var ';'
+      { }
+  ;
+
+funcao:
+    chamada_funcao
       {
          $$ = $1;
       }
-
-  | entrada
-      { $$ = $1; }
-
-  | saida
-      { $$ = $1; }
-
-  | retorna
-      { $$ = $1; }
-
-  | decl_var
-      { }
-
-  | chamada_funcao
-      { $$ = $1; }
+  | chamada_funcao ';'
+      {
+         $$ = $1;
+      }
   ;
 
 chamada_funcao:
@@ -366,28 +445,6 @@ nome_func:
   ;
 
 
- /* Atribuicoes de variaveis */
-atribuicao:
-    nome_var '=' expressao
-      {
-         $$ = createNode(IKS_AST_ATRIBUICAO, 0);
-         insertChild($$, $1);
-         insertChild($$, $3);
-         pointer = sPush(pointer, $$);
-         code = CodeGenerate($$, code, ILOC_STORE, NULL, NULL);
-
-      }
-
-  | vetor '=' expressao
-      {
-         $$ = createNode(IKS_AST_ATRIBUICAO, 0);
-         insertChild($$, $1);
-         insertChild($$, $3);
-         pointer = sPush(pointer, $$);
-         code = CodeGenerate($$, code, ILOC_STORE, NULL, NULL);
-      }
-  ;
-
 nome_var:
    TK_IDENTIFICADOR
       {
@@ -406,11 +463,23 @@ entrada:
          insertChild($$, $2);
          pointer = sPush(pointer, $$);
       }
+  | TK_PR_INPUT expressao ';'
+      {
+         $$ = createNode(IKS_AST_INPUT, 0);
+         insertChild($$, $2);
+         pointer = sPush(pointer, $$);
+      }
   ;
 
 
 saida:
     TK_PR_OUTPUT lista_expressoes_nao_vazia
+      {
+         $$ = createNode(IKS_AST_OUTPUT, 0);
+         insertChild($$, $2);
+         pointer = sPush(pointer, $$);
+      }
+  | TK_PR_OUTPUT lista_expressoes_nao_vazia ';'
       {
          $$ = createNode(IKS_AST_OUTPUT, 0);
          insertChild($$, $2);
@@ -432,6 +501,14 @@ lista_expressoes_nao_vazia:
 
 retorna:
     TK_PR_RETURN expressao
+      { 
+         $$ = createNode(IKS_AST_RETURN, 0);
+         insertChild($$, $2);
+         pointer = sPush(pointer, $$);
+         
+         code = CodeGenerate($$, code, ILOC_NOP, NULL, NULL);
+      }
+  | TK_PR_RETURN expressao ';'
       { 
          $$ = createNode(IKS_AST_RETURN, 0);
          insertChild($$, $2);
