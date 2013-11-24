@@ -129,19 +129,20 @@ void addSiblings(comp_tree_t* first, comp_tree_t* newNode)
  * Create a new node given a value
  *
  * @param   type     Type of the element given (IKS_AST)
- * @param   *token   Token to be added in the dictionary
  * @return  newNode  New element (node) of the tree
  */
-comp_tree_t* createNewNode(int type, char *token)
+comp_tree_t* createNewNode(int type)
 {
-   /*
    // Creating new node
    comp_tree_t* newnode = (comp_tree_t*)malloc(sizeof(comp_tree_t));
-   newnode->child=NULL;
-   newnode->sibling=NULL;
-   newnode->type=type;
-   newnode->symbol = createDictionaryItem(token, "", type);
+
+   int i;
+   for (i = 0; i < NUM_CHILD; i++)
+   {
+      newnode->child[i] = NULL;
+   }
+   newnode->type = type;
+   newnode->symbol = NULL;
    
    return newnode;
-   */
 }

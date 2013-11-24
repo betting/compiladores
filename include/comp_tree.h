@@ -61,4 +61,14 @@ void insertChild(comp_tree_t* parent, comp_tree_t* child);
  * @return void
  */
 void addSiblings(comp_tree_t* first, comp_tree_t* newNode);
+
+/**
+ * Create a new node
+ *
+ * Create a new node given a value
+ *
+ * @param   type     Type of the element given (IKS_AST)
+ * @return  newNode  New element (node) of the tree
+ */
+comp_tree_t* createNewNode(int type);
 #endif
