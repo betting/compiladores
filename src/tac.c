@@ -176,7 +176,7 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
          }
          else
          {
-            code = insertTacEvaluated(nodo);
+            code = insertTacEvaluated(nodo, code);
          }
 
 //         printLabel(code);
@@ -534,11 +534,12 @@ TAC* concatTAC(TAC* parent,TAC* child)
    return parent;
 }
 
-TAC* insertTacEvaluated(comp_tree_t* nodo)
+TAC* insertTacEvaluated(comp_tree_t* nodo, TAC* code)
 {
       concatTAC(nodo->code, nodo->child[1]->code);
       concatTAC(nodo->code, nodo->child[0]->code);
-      concatTAC(nodo->child[2]->code, nodo->code);
+//      concatTAC(nodo->child[2]->code, nodo->code);
+      concatTAC(code, nodo->code);
 /*   
 //   concatTAC(nodo->code, nodo->child->code);
    comp_tree_t* aux = getLastSibling(nodo->child);
@@ -550,7 +551,7 @@ TAC* insertTacEvaluated(comp_tree_t* nodo)
          concatTAC(nodo->code, aux->code);
       }
    }*/
-   return nodo->child[2]->code;
+   return code;
    //return nodo->code;
 }
 
