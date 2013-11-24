@@ -896,7 +896,7 @@ TAC* Address(comp_tree_t* nodo)
 	 aux = nodo;
 	 if(lista_auxiliar!=NULL)
 	 {
-		 while(lista_auxiliar->symbol->text=="nop")
+		 /*while(lista_auxiliar->symbol->text=="nop")
 		 {
 			 printf("\nNOP encontrado");
 			 lista_auxiliar=lista_auxiliar->next;
@@ -909,9 +909,9 @@ TAC* Address(comp_tree_t* nodo)
 		 while(lista_auxiliar->next != NULL)
 			lista_auxiliar = lista_auxiliar->next;
 		 
-		 lista = removeItem(searchToken(lista,lista_auxiliar->text));
+		 list = removeItem(searchToken(lista,lista_auxiliar->text));
 		 lista_auxiliar = list;
-		 
+		 */
 	 }
 
 	//tratar o resultado e devolver pro nodo
