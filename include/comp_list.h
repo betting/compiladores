@@ -119,4 +119,6 @@ int getDeclarationDataType(int declarationType, char* token, comp_list_t* declar
  * @return                    All local declarations found
  */
 comp_list_t* getLocalDeclarations(char *functionName, comp_list_t* declarationList, int declarationType);
+
+int getSize(char* token, comp_list_t* declarationList);
 #endif
