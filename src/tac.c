@@ -23,7 +23,7 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
          //printLabel(code);
          //printf("\nnop: %d\n", ILOC_NOP);
 
-         return nodo->code;
+         return code;
          break;
 
       case ILOC_ADD:
@@ -204,7 +204,7 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
          InsertLabel(nodo->child[1]);
 
          // Adding code in the sibling
-         if (nodo->child[2] == NULL)
+         if(nodo->child[2] == NULL)
          {
             nodo->child[2] = createNewNode(0);
             code = CodeGenerate(nodo->child[2], code, ILOC_NOP, NULL, NULL);
@@ -215,15 +215,15 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
          // Updating parent node with children nodes.
 			nodo->code->l1 = label-1;
 			nodo->code->l2 = label; 
-			if(label>=1) printf("\n\nLABEL: %d", label);
+//			if(label>=1) printf("\n\nLABEL: %d", label);
 			nodo->code->next = NULL;
 			nodo->code->code = ILOC_CBR;
-/*
-			printf("\n\nCODE ANTES DE ENTRAR NO CTE");
-			printCode(nodo->code);*/
+
+//			printf("\n\nCODE ANTES DE ENTRAR NO CTE");
+//			printCode(nodo->code);
 //			printf("cbr r%d => l%d, l%d\n", nodo->code->r3, nodo->code->l1, nodo->code->l2);
 
-			code = concatTAC(code,nodo->code);
+			//code = concatTAC(code,nodo->code);
 			if(nodo->child[3] == NULL)
 			{
 					printf("\nENTROU NO CTE");
@@ -237,12 +237,7 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
 					code = combineCTE(nodo,CTE_IF_ELSE);
 			}
 
-//			printf("\nPassou o IF FINAL\n");
 //			printf("cbr r%d => l%d, l%d\n", nodo->code->r3, nodo->code->l1, nodo->code->l2);
-//			printf("\nNODO_>CODE");
-//			printCode(nodo->code);
-//			printf("\n\nNODO->CODE");
-//			printCode(code);
 			
 			
 			return code;
