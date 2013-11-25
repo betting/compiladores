@@ -563,8 +563,8 @@ STACK* sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_
             }
             else if (data->child[0]->type == IKS_AST_IDENTIFICADOR)
             {
-               variableTypeGlobal = getDeclarationDataType(IKS_GLOBAL_VAR, data->symbol->token, declarationList, NULL);
-               variableTypeLocal = getDeclarationDataType(IKS_LOCAL, data->symbol->token, declarationList, lastFunction->symbol->token);
+               variableTypeGlobal = getDeclarationDataType(IKS_GLOBAL_VAR, data->child[0]->symbol->token, declarationList, NULL);
+               variableTypeLocal = getDeclarationDataType(IKS_LOCAL, data->child[0]->symbol->token, declarationList, lastFunction->symbol->token);
                dataType = (variableTypeLocal != -1) ? variableTypeLocal : variableTypeGlobal;
             }
             // Simple value attribution
