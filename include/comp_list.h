@@ -12,6 +12,8 @@ typedef struct _list
 	int tipoVar;
 	char *nomeVar;
    int tipoGlobal;
+   int label;
+   int size;
 	struct _list *next;
 } comp_list_t;
 
@@ -31,9 +33,11 @@ comp_list_t* initList();
  * @param *nomeVar name of variable
  * @param *node the list
  * @param tipoGlobal global type
+ * @param label Label of the function or size of the vector
+ * @param size Size of the vector/variable
  * @return Dictionary item created (Key/Value).
  */
-comp_list_t* addItem(int tipoVar, char *nomeVar, comp_list_t* node, int tipoGlobal);
+comp_list_t* addItem(int tipoVar, char *nomeVar, comp_list_t* node, int tipoGlobal, int label, int size);
 
 /**
  * Add new item in a list.
