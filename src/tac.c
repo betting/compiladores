@@ -238,12 +238,12 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
 			//code = concatTAC(code,nodo->code);
 			if(nodo->child[3] == NULL)
 			{
-					printf("\nENTROU NO CTE");
+//					printf("\nENTROU NO CTE");
 					code = combineCTE(nodo,CTE_IF);
 			}
 			else
 			{
-					printf("\nENTROU NO CTE - 2  ");
+//					printf("\nENTROU NO CTE - 2  ");
 					InsertLabel(nodo->child[3]);
 					code = CodeGenerate(nodo->child[1], code, ILOC_JUMPI, NULL, NULL);
 					code = combineCTE(nodo,CTE_IF_ELSE);
@@ -597,11 +597,11 @@ TAC* combineCTE(comp_tree_t* nodo, int caseCTE)
 	switch(caseCTE)
 	{	//if simples
 		case CTE_IF:
-				printf("\n\nAUX DO CTE:");
-				printCode(aux);
+//				printf("\n\nAUX DO CTE:");
+//				printCode(aux);
             if(aux_nodo->child[2] != NULL)
             {
-			   printf("\n!=NULL\n");
+//			   printf("\n!=NULL\n");
                nodo->code = aux_nodo->child[2]->code;
             }
 
@@ -613,12 +613,12 @@ TAC* combineCTE(comp_tree_t* nodo, int caseCTE)
 //            	printCode(nodo->code);
 
 				concatTAC(nodo->code,aux);
-            	printCode(nodo->code);
-            	nodo->code = nodo->code->next;
-            	printCode(nodo->code);
-            	printCode(aux);			
+//            	printCode(nodo->code);
+//            	nodo->code = nodo->code->next;
+//            	printCode(nodo->code);
+//            	printCode(aux);			
 				concatTAC(nodo->code,aux_nodo->child[0]->code);
-            	printf("\n\nNODO->CODE NO CTE");
+//            	printf("\n\nNODO->CODE NO CTE");
 //            	printCode(nodo->code);
 				return nodo->code;
 			break;
