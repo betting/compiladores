@@ -301,3 +301,18 @@ comp_list_t* getLocalDeclarations(char *functionName, comp_list_t* declarationLi
    return auxList;
 }
 
+int getSize(char* token, comp_list_t* declarationList)
+{
+   while (declarationList != NULL)
+   {
+      if ((strcmp(declarationList->nomeVar, token) == 0)
+            && (declarationList->tipoGlobal == IKS_FUNCTION))
+      {
+         return declarationList->size;
+      }
+      declarationList = declarationList->next;
+   }
+
+   return -1;
+}
+

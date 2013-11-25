@@ -215,6 +215,7 @@ def_funcao:
          insertChild($$, $3);
          pointer = sPush(pointer, $$);
 //         code = CodeGenerate($$, code, ILOC_NOP, NULL, NULL);
+         code = CodeGenerateFuncDeclaration($$, code, declarationList);
       }
   ;
 
@@ -307,7 +308,8 @@ seq_comando:
          insertChild($$, $3);
          insertChild($$, $6);
          pointer = sPush(pointer, $$);
-         code = CodeGenerate($$, code, ILOC_NOP, NULL, NULL);
+//         code = CodeGenerate($$, code, ILOC_NOP, NULL, NULL);
+         code = CodeGenerateFuncCall($$, code, declarationList);
       }
   | TK_PR_INPUT expressao ';' comandos
       {
@@ -330,7 +332,8 @@ seq_comando:
          insertChild($$, $4);
          pointer = sPush(pointer, $$);
          
-         code = CodeGenerate($$, code, ILOC_NOP, NULL, NULL);
+//         code = CodeGenerate($$, code, ILOC_NOP, NULL, NULL);
+         code = CodeGenerateReturn($$, code, declarationList);
       }
   | decl_var ';' comandos
       { }
@@ -430,7 +433,8 @@ chamada_funcao:
          insertChild($$, $1);
          insertChild($$, $3);
          pointer = sPush(pointer, $$);
-         code = CodeGenerate($$, code, ILOC_NOP, NULL, NULL);
+//         code = CodeGenerate($$, code, ILOC_NOP, NULL, NULL);
+         code = CodeGenerateFuncCall($$, code, declarationList);
       }
   ;
 
@@ -506,7 +510,8 @@ retorna:
          insertChild($$, $2);
          pointer = sPush(pointer, $$);
          
-         code = CodeGenerate($$, code, ILOC_NOP, NULL, NULL);
+//         code = CodeGenerate($$, code, ILOC_NOP, NULL, NULL);
+         code = CodeGenerateReturn($$, code, declarationList);
       }
   | TK_PR_RETURN expressao ';'
       { 
@@ -514,7 +519,8 @@ retorna:
          insertChild($$, $2);
          pointer = sPush(pointer, $$);
          
-         code = CodeGenerate($$, code, ILOC_NOP, NULL, NULL);
+//         code = CodeGenerate($$, code, ILOC_NOP, NULL, NULL);
+         code = CodeGenerateReturn($$, code, declarationList);
       }
   ;
 
@@ -836,7 +842,8 @@ vetor:
 nome_vetor:
     TK_IDENTIFICADOR
       {
-         $$ = createNode(IKS_AST_IDENTIFICADOR, $1);
+         $$ = createNode(IKS_AST_VETOR_INDEXADO, 0);
+//         $$ = createNode(IKS_AST_IDENTIFICADOR, $1);
          pointer = sPush(pointer, $$);
 
          code = CodeGenerate($$, code, ILOC_LOADAI, declarationList, actualFunction);

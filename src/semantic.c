@@ -167,8 +167,8 @@ int insertDeclarations(comp_dict_item_t* dictNode, int escopo)
 			if((searchToken(listFunctions, dictNode->token) == NULL)
             && (searchToken(declarationList, dictNode->token) == NULL)) 
 			{
-				listFunctions = addItem(dictNode->type, dictNode->token, listFunctions, IKS_FUNCTION, EMPTY, EMPTY);
-				declarationList = addItem(dictNode->type, dictNode->token, declarationList, IKS_FUNCTION, EMPTY, EMPTY);
+				listFunctions = addItem(dictNode->type, dictNode->token, listFunctions, IKS_FUNCTION, EMPTY, sizeDeclarations(dictNode->type));
+				declarationList = addItem(dictNode->type, dictNode->token, declarationList, IKS_FUNCTION, EMPTY, sizeDeclarations(dictNode->type));
 			}
 			else
 			{
@@ -563,8 +563,8 @@ STACK* sPop(STACK* pointer, comp_list_t* function, comp_list_t* local, int func_
             }
             else if (data->child[0]->type == IKS_AST_IDENTIFICADOR)
             {
-               variableTypeGlobal = getDeclarationDataType(IKS_GLOBAL_VAR, data->symbol->token, declarationList, NULL);
-               variableTypeLocal = getDeclarationDataType(IKS_LOCAL, data->symbol->token, declarationList, lastFunction->symbol->token);
+               variableTypeGlobal = getDeclarationDataType(IKS_GLOBAL_VAR, data->child[0]->symbol->token, declarationList, NULL);
+               variableTypeLocal = getDeclarationDataType(IKS_LOCAL, data->child[0]->symbol->token, declarationList, lastFunction->symbol->token);
                dataType = (variableTypeLocal != -1) ? variableTypeLocal : variableTypeGlobal;
             }
             // Simple value attribution
