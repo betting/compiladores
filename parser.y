@@ -836,7 +836,8 @@ vetor:
 nome_vetor:
     TK_IDENTIFICADOR
       {
-         $$ = createNode(IKS_AST_IDENTIFICADOR, $1);
+         $$ = createNode(IKS_AST_VETOR_INDEXADO, 0);
+//         $$ = createNode(IKS_AST_IDENTIFICADOR, $1);
          pointer = sPush(pointer, $$);
 
          code = CodeGenerate($$, code, ILOC_LOADAI, declarationList, actualFunction);
