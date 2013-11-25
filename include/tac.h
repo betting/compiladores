@@ -48,4 +48,7 @@ TAC* insertTacEvaluated(comp_tree_t* nodo, TAC* code);
 comp_tree_t* getLastSibling(comp_tree_t* nodo);
 int countSiblings(comp_tree_t* nodo);
 TAC* Address(comp_tree_t* nodo);
+TAC* CodeGenerateFuncDeclaration(comp_tree_t* novo, TAC* code, comp_list_t* declarations);
+TAC* CodeGenerateFuncCall(comp_tree_t* nodo, TAC* code, comp_list_t* declarations);
+TAC* CodeGenerateReturn(comp_tree_t* nodo, TAC* code, comp_list_t* declarations);
 #endif

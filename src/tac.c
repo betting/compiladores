@@ -18,12 +18,14 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
          nodo->code = initTac();
          nodo->code->code = ILOC_NOP;
          code = insertTAC(nodo);
+//         code = insertTacEvaluated(nodo, code);
 
          //printCode(nodo->code);
          //printLabel(code);
          //printf("\nnop: %d\n", ILOC_NOP);
 
          return nodo->code;
+//         return code;
          break;
 
       case ILOC_ADD:
@@ -136,6 +138,7 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
          break;
 
       case ILOC_LOADAI:
+         // Handling common variable (Global and Local)
          if (nodo->type == IKS_AST_IDENTIFICADOR)
          {
             variableTypeGlobal = getDeclarationDataType(IKS_GLOBAL_VAR, nodo->symbol->token, declarations, NULL);
@@ -159,6 +162,14 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
             
             code = insertTAC(nodo);
             //insertTAC(nodo);
+         }
+         // Handling a vector (Global only)
+         else if (nodo->type == IKS_AST_VETOR_INDEXADO)
+         {
+//            aux_tac = CodeGenerate(nodo, code, ILOC_NOP, NULL, NULL);
+//            aux_tac = aux_tac->next;
+//            code = Address(node);         
+            
          }
 
 //         printLabel(code);
@@ -203,6 +214,7 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
          // Manipulating the first block (Then)
          InsertLabel(nodo->child[1]);
 
+//         code = insertTAC(nodo->child[1]);
          // Adding code in the sibling
          if (nodo->child[2] == NULL)
          {
@@ -516,6 +528,7 @@ TAC* insertTacEvaluated(comp_tree_t* nodo, TAC* code)
          concatTAC(nodo->code, aux->code);
       }
    }*/
+   nodo->child[2]->code = code;
    return code;
 //   return nodo->child[2]->code;
 }
@@ -896,5 +909,24 @@ TAC* Address(comp_tree_t* nodo)
 
 	//tratar o resultado e devolver pro nodo
 	return nodo->code;
+
+}
+
+TAC* CodeGenerateFuncDeclaration(comp_tree_t* novo, TAC* code, comp_list_t* declarations)
+{
+
+}
+
+TAC* CodeGenerateFuncCall(comp_tree_t* nodo, TAC* code, comp_list_t* declarations)
+{
+   nodo->code = CodeGenerate(nodo, code, ILOC_NOP, NULL, NULL);
+   nodo->code->code = ILOC_NOP;
+//   code = insertTAC(nodo);
+   InsertLabel(nodo);
+   return code; 
+}
+
+TAC* CodeGenerateReturn(comp_tree_t* nodo, TAC* code, comp_list_t* declarations)
+{
 
 }
