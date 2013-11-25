@@ -145,11 +145,11 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
             if (variableTypeGlobal == -1)
             {
                variableTypeLocal = getDeclarationDataType(IKS_LOCAL, nodo->symbol->token, declarations, actualFunction);
-               varType = IKS_LOCAL;
+               varType = FP;
             }
             else
             {
-               varType = IKS_GLOBAL_VAR;
+               varType = BSS;
             }
 
             nodo->code = initTac();
@@ -758,7 +758,7 @@ void printAssembly(TAC* code)
             break;
          case ILOC_LOADAI:
             printLabel(code);
-            printf("loadai %s, %d => r%d\n", (code->r1 == IKS_GLOBAL_VAR)?"bss":"fp", code->constant, code->r3);
+            printf("loadai %s, %d => r%d\n", (code->r1 == BSS)?"bss":"fp", code->constant, code->r3);
             break;
          case ILOC_LOADAO:
             printLabel(code);
@@ -914,7 +914,6 @@ TAC* Address(comp_tree_t* nodo)
 
 TAC* CodeGenerateFuncDeclaration(comp_tree_t* novo, TAC* code, comp_list_t* declarations)
 {
-
 }
 
 TAC* CodeGenerateFuncCall(comp_tree_t* nodo, TAC* code, comp_list_t* declarations)
@@ -922,7 +921,60 @@ TAC* CodeGenerateFuncCall(comp_tree_t* nodo, TAC* code, comp_list_t* declaration
    nodo->code = CodeGenerate(nodo, code, ILOC_NOP, NULL, NULL);
    nodo->code->code = ILOC_NOP;
 //   code = insertTAC(nodo);
+   int newLabel = getLabelReg(label);
    InsertLabel(nodo);
+
+   TAC* aux_tac;
+
+    // Updating FP (sub size)
+    aux_tac = Operator2(nodo, ILOC_SUBI);
+//    aux_tac->constant = size;
+    aux_tac->r3 = FP;
+    concatTAC(code, aux_tac);
+
+    // Copying SP to FP
+    aux_tac = Operator2(nodo, ILOC_I2I);
+    aux_tac->r3 = FP;
+    aux_tac->label = newLabel;
+    concatTAC(code, aux_tac);
+
+    // Jumping to function to be executed (Label)
+    aux_tac = Operator2(nodo, ILOC_JUMPI);
+//    aux_tac->l1 = getSize(???, declarationList); (Function name/size ???)
+    concatTAC(code, aux_tac);
+
+    // Saving return point on SP
+    int newReg = getLabelReg(reg);
+    aux_tac = Operator2(nodo, ILOC_STOREAI);
+    aux_tac->constant = -4;
+    aux_tac->r1 = newReg;
+    concatTAC(code, aux_tac);
+
+    // Loading actual label on register
+    aux_tac = Operator2(nodo, ILOC_LOADI);
+    aux_tac->constant = newLabel;
+    aux_tac->r3 = newReg;
+    concatTAC(code, aux_tac);
+
+    // Moving pointer (SP)
+    newReg = getLabelReg(reg);
+    aux_tac = Operator2(nodo, ILOC_ADD);
+    aux_tac->r2 = newReg;
+    aux_tac->r3 = SP;
+    concatTAC(code, aux_tac);
+
+    // Loading size to register
+    aux_tac = Operator2(nodo, ILOC_LOADI);
+//    aux_tac->constant = size;
+    aux_tac->r3 = newReg;
+    concatTAC(code, aux_tac);
+
+    // Updating FP with SP
+    aux_tac = Operator2(nodo, ILOC_I2I);
+    aux_tac->r3 = SP;
+    concatTAC(code, aux_tac);
+//    aux_tac->next = ; actual pointer
+
    return code; 
 }
 

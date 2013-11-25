@@ -13,6 +13,9 @@
 #define CTE_IF_ELSE 2
 #define CTE_WHILE 3
 
+#define FP 1
+#define BSS 2
+#define SP 3 
 
 typedef struct tac
 {

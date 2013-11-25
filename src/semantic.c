@@ -167,8 +167,8 @@ int insertDeclarations(comp_dict_item_t* dictNode, int escopo)
 			if((searchToken(listFunctions, dictNode->token) == NULL)
             && (searchToken(declarationList, dictNode->token) == NULL)) 
 			{
-				listFunctions = addItem(dictNode->type, dictNode->token, listFunctions, IKS_FUNCTION, EMPTY, EMPTY);
-				declarationList = addItem(dictNode->type, dictNode->token, declarationList, IKS_FUNCTION, EMPTY, EMPTY);
+				listFunctions = addItem(dictNode->type, dictNode->token, listFunctions, IKS_FUNCTION, EMPTY, sizeDeclarations(dictNode->type));
+				declarationList = addItem(dictNode->type, dictNode->token, declarationList, IKS_FUNCTION, EMPTY, sizeDeclarations(dictNode->type));
 			}
 			else
 			{
