@@ -213,16 +213,17 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
 			InsertLabel(nodo->child[2]);
 
          // Updating parent node with children nodes.
-			nodo->code->l1 = label - 1;
+			nodo->code->l1 = label-1;
 			nodo->code->l2 = label; 
+			if(label>=1) printf("\n\nLABEL: %d", label);
 			nodo->code->next = NULL;
 			nodo->code->code = ILOC_CBR;
 /*
 			printf("\n\nCODE ANTES DE ENTRAR NO CTE");
-			printCode(nodo->code);
-			printf("cbr r%d => l%d, l%d\n", nodo->code->r3, nodo->code->l1, nodo->code->l2);
-*/
-/*
+			printCode(nodo->code);*/
+//			printf("cbr r%d => l%d, l%d\n", nodo->code->r3, nodo->code->l1, nodo->code->l2);
+
+			code = concatTAC(code,nodo->code);
 			if(nodo->child[3] == NULL)
 			{
 					printf("\nENTROU NO CTE");
@@ -235,7 +236,7 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
 					code = CodeGenerate(nodo->child[1], code, ILOC_JUMPI, NULL, NULL);
 					code = combineCTE(nodo,CTE_IF_ELSE);
 			}
-*/
+
 //			printf("\nPassou o IF FINAL\n");
 //			printf("cbr r%d => l%d, l%d\n", nodo->code->r3, nodo->code->l1, nodo->code->l2);
 //			printf("\nNODO_>CODE");
@@ -244,7 +245,7 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
 //			printCode(code);
 			
 			
-			return nodo->code;
+			return code;
 			
          break;
 /*
@@ -590,16 +591,6 @@ TAC* combineCTE(comp_tree_t* nodo, int caseCTE)
 		case CTE_IF:
 				printf("\n\nAUX DO CTE:");
 				printCode(aux);
-//				printf("\n\naux_nodo->child->sibling->sibling->code:");
-				printf("\n===========aux_nodo->child[0]->code============ ");
-				printCode(aux_nodo->child[0]->code);
-				printf("\n===========aux_nodo->child[0]->code============ ");
-				printf("\n===========aux_nodo->child[1]->code============ ");
-				printCode(aux_nodo->child[1]->code);
-				printf("\n===========aux_nodo->child[1]->code============ ");
-				printf("\n===========aux_nodo->child[2]->code============ ");
-				printCode(aux_nodo->child[2]->code);
-				printf("\n===========aux_nodo->child[2]->code============ ");
             if(aux_nodo->child[2] != NULL)
             {
 			   printf("\n!=NULL\n");
