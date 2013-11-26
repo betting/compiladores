@@ -898,9 +898,129 @@ TAC* Address(comp_tree_t* nodo)
 
 }
 
-TAC* CodeGenerateFuncDeclaration(comp_tree_t* novo, TAC* code, comp_list_t* declarations)
+TAC* CodeGenerateFuncDeclaration(comp_tree_t* nodo, TAC* code, comp_list_t* declarations)
 {
+	TAC* CodeAtual = code;
+	TAC* CodeAnt;
 	
+	while(CodeAtual != NULL)
+	{
+		comp_list_t* functionList;
+		//====> functionList = getLocalDeclarations(,declarations,LOCAL);
+		if(functionList != NULL)
+		{
+			//pega o tamanho da função;
+			int size = 0;
+			
+			//fazer o while
+			//====>size = size + getSize(functionList->token);
+			comp_list_t* localList;
+			
+			//main
+			if(CodeAtual->label == "main")
+			{
+				//faz o jump pra L1
+				/*==============================
+				 * FRED, to com dúvida com esse ILOC_NOP
+				 * 
+				 */
+				
+				TAC* newTAC = CodeGenerate(nodo, code, ILOC_NOP, NULL, NULL);
+				newTAC->l1 = 1;
+				newTAC->code = ILOC_JUMPI;
+				CodeAnt->next = newTAC;
+				CodeAnt = newTAC;
+
+				//carrega o tamanho pro SP
+				newTAC = CodeGenerate(nodo, code, ILOC_NOP, NULL, NULL);
+				newTAC->r1 = SP;
+				newTAC->constant = size;
+				newTAC->code = ILOC_LOADI;
+				CodeAnt->next = newTAC;
+				CodeAnt = newTAC;
+
+				//inicializa o FP
+				newTAC = CodeGenerate(nodo, code, ILOC_NOP, NULL, NULL);
+				newTAC->r1 = FP;
+				newTAC->constant = 0;
+				newTAC->code = ILOC_LOADI;
+				newTAC->label = 0;
+				CodeAnt->next = newTAC;
+				newTAC->next = CodeAtual;
+			}
+			else
+			{
+				//demais chamadas de função
+					TAC* newTAC;
+					comp_list_t* functionLabel = searchToken(functionList, localList->nomeVar);//
+					label = getLabelReg(label);
+
+					// subI fp, lvSize -> fp
+					newTAC = CodeGenerate(nodo, code, ILOC_NOP, NULL, NULL);
+					newTAC->constant = size;
+					newTAC->r3 = FP;
+					newTAC->code = ILOC_SUBI;
+					CodeAnt->next = newTAC;
+					CodeAnt = newTAC;
+
+					// i2i sp -> fp
+					newTAC = CodeGenerate(nodo, code, ILOC_NOP, NULL, NULL);
+					newTAC->r3 = FP;
+					newTAC->code = ILOC_I2I;
+					newTAC->label = label;
+					CodeAnt->next = newTAC;
+					CodeAnt = newTAC;
+
+					// jumpI -> L1
+					newTAC = CodeGenerate(nodo, code, ILOC_NOP, NULL, NULL);
+					newTAC->l1 = functionLabel->size; //
+					newTAC->code = ILOC_JUMPI;
+					CodeAnt->next = newTAC;
+					CodeAnt = newTAC;
+
+					// store labels -> sp - 4
+					reg = getLabelReg(reg);
+					newTAC = CodeGenerate(nodo, code, ILOC_NOP, NULL, NULL);
+					newTAC->constant = -4;
+					newTAC->r1 = reg;
+					newTAC->code = ILOC_STOREAI;
+					CodeAnt->next = newTAC;
+					CodeAnt = newTAC;
+
+					// loadI labels -> r
+					newTAC = CodeGenerate(nodo, code, ILOC_NOP, NULL, NULL);
+					newTAC->constant = label;
+					newTAC->r3 = reg;
+					newTAC->code = ILOC_LOADI;
+					CodeAnt->next = newTAC;
+					CodeAnt = newTAC;
+
+					// add sp, lvSize -> sp
+					reg = getLabelReg(reg);
+					newTAC = CodeGenerate(nodo, code, ILOC_NOP, NULL, NULL);
+					newTAC->r2 = reg;
+					newTAC->r3 = SP;
+					newTAC->code = ILOC_ADD;
+					CodeAnt->next = newTAC;
+					CodeAnt = newTAC;
+
+					// loadI lvSize -> r
+					newTAC = CodeGenerate(nodo, code, ILOC_NOP, NULL, NULL);;
+					newTAC->constant = size;
+					newTAC->r3 = reg;
+					newTAC->code = ILOC_LOADI;
+					CodeAnt->next = newTAC;
+					CodeAnt = newTAC;
+
+					// i2i sp -> fp
+					newTAC = CodeGenerate(nodo, code, ILOC_NOP, NULL, NULL);;
+					newTAC->r3 = SP;
+					newTAC->code = ILOC_I2I;
+					CodeAnt->next = newTAC;
+					newTAC->next = CodeAtual;
+			}
+		}
+	}
 }
 
 TAC* CodeGenerateFuncCall(comp_tree_t* nodo, TAC* code, comp_list_t* declarations)
