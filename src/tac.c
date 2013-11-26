@@ -904,6 +904,18 @@ TAC* CodeGenerateFuncDeclaration(comp_tree_t* novo, TAC* code, comp_list_t* decl
 
 TAC* CodeGenerateFuncCall(comp_tree_t* nodo, TAC* code, comp_list_t* declarations)
 {
+
+/*
+   1. Cria uma novo registro de ativação
+   2. Calcula o vinculo estático
+   3. Passa os parâmetros (organizando-os na pilha)
+   4. Passa o endereço de retorno para o chamado
+   5. Transfere controle para o chamado
+   6. Salva o estado de execução atual (registradores)
+   7. Salva o antigo FP na pilha (como vínculo dinâmico)
+   8. Aloca variáveis locais
+*/
+   
    nodo->code = CodeGenerate(nodo, code, ILOC_NOP, NULL, NULL);
    nodo->code->code = ILOC_NOP;
 //   code = insertTAC(nodo);
@@ -966,5 +978,11 @@ TAC* CodeGenerateFuncCall(comp_tree_t* nodo, TAC* code, comp_list_t* declaration
 
 TAC* CodeGenerateReturn(comp_tree_t* nodo, TAC* code, comp_list_t* declarations)
 {
-
+/*
+   1. Prepara os parâmetros de retorno
+   2. Disponibiliza o valor de retorno para o chamador
+   3. Atualiza o FP e o SP
+   4. Atualiza o estado de execução do chamador
+   5. Transfere o controle
+*/
 }
