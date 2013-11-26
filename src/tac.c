@@ -900,6 +900,7 @@ TAC* Address(comp_tree_t* nodo)
 
 TAC* CodeGenerateFuncDeclaration(comp_tree_t* novo, TAC* code, comp_list_t* declarations)
 {
+	
 }
 
 TAC* CodeGenerateFuncCall(comp_tree_t* nodo, TAC* code, comp_list_t* declarations)
@@ -985,4 +986,30 @@ TAC* CodeGenerateReturn(comp_tree_t* nodo, TAC* code, comp_list_t* declarations)
    4. Atualiza o estado de execução do chamador
    5. Transfere o controle
 */
+   TAC* aux_tac;
+   TAC* call;
+	// 1. Prepara os parâmetros de retorno
+
+
+    // 2. Disponibiliza o valor de retorno para o chamador
+    
+    // Loading actual label on register
+    aux_tac = Operator2(nodo, ILOC_LOADI);
+    aux_tac->constant = label; //ultimo label
+    aux_tac->r3 = reg; //ultimo valor do registrador
+    SP = aux_tac->r3; //
+    concatTAC(code, aux_tac);
+    
+    
+    //(retorno está no SP)
+    aux_tac = Operator2(nodo, ILOC_STOREAI);
+    //aux_tac->constant = -4;
+    aux_tac->r1 = reg;
+    concatTAC(code, aux_tac);
+
+    // 3. Atualizando FP e o SP
+    aux_tac = Operator2(nodo, ILOC_I2I);
+    aux_tac->r3 = SP;
+    concatTAC(code, aux_tac);
+//    aux_tac->next = ; actual pointer
 }
