@@ -121,4 +121,6 @@ int getDeclarationDataType(int declarationType, char* token, comp_list_t* declar
 comp_list_t* getLocalDeclarations(char *functionName, comp_list_t* declarationList, int declarationType);
 
 int getSize(char* token, comp_list_t* declarationList);
+comp_list_t* setSizeFunction(char* token, int size, comp_list_t* declarationList);
+comp_list_t* setLabelFunction(char* token, int label, comp_list_t* declarationList);
 #endif

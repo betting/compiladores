@@ -316,3 +316,31 @@ int getSize(char* token, comp_list_t* declarationList)
    return -1;
 }
 
+comp_list_t* setSizeFunction(char* token, int size, comp_list_t* declarationList)
+{
+   while (declarationList != NULL)
+   {
+      if ((strcmp(declarationList->nomeVar, token) == 0)
+            && (declarationList->tipoGlobal == IKS_FUNCTION))
+      {
+         declarationList->size = size;
+         return declarationList;
+      }
+      declarationList = declarationList->next;
+   }
+}
+
+
+comp_list_t* setLabelFunction(char* token, int label, comp_list_t* declarationList)
+{
+   while (declarationList != NULL)
+   {
+      if ((strcmp(declarationList->nomeVar, token) == 0)
+            && (declarationList->tipoGlobal == IKS_FUNCTION))
+      {
+         declarationList->label = label;
+         return declarationList;
+      }
+      declarationList = declarationList->next;
+   }
+}

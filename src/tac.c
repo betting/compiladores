@@ -997,7 +997,6 @@ TAC* CodeGenerateReturn(comp_tree_t* nodo, TAC* code, comp_list_t* declarations)
     aux_tac = Operator2(nodo, ILOC_LOADI);
     aux_tac->constant = label; //ultimo label
     aux_tac->r3 = reg; //ultimo valor do registrador
-    SP = aux_tac->r3; //
     concatTAC(code, aux_tac);
     
     
