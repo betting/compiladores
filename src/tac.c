@@ -867,9 +867,21 @@ TAC* Address(comp_tree_t* nodo)
 
 }
 
-TAC* CodeGenerateFuncDeclaration(comp_tree_t* novo, TAC* code, comp_list_t* declarations)
+TAC* CodeGenerateFuncDeclaration(comp_tree_t* nodo, TAC* code, comp_list_t* declarations)
 {
-	
+   nodo->code = CodeGenerate(nodo, code, ILOC_NOP, NULL, NULL);
+   nodo->code->code = ILOC_FUNCTION;
+
+   if (nodo->symbol != NULL)
+   {
+      nodo->code->labelName = (char*)calloc(strlen(nodo->symbol->token)+1,sizeof(char));
+      strcpy(nodo->code->labelName, nodo->symbol->token);
+   }
+
+   TAC* aux = code;
+   aux = concatTAC(aux, nodo->code);
+
+   return aux;
 }
 
 TAC* CodeGenerateFuncCall(comp_tree_t* nodo, TAC* code, comp_list_t* declarations)
@@ -987,7 +999,6 @@ TAC* initCode(TAC* code, comp_tree_t* nodo)
    // Getting the first function declared in the AST
    comp_tree_t* programa = nodo->child[0];
 
-
    // Jumping to main function
    TAC *assembly = initTac();
    assembly->code = ILOC_JUMPI;
@@ -999,23 +1010,13 @@ TAC* initCode(TAC* code, comp_tree_t* nodo)
    while (programa != NULL)
    {
       TAC *aux_code = programa->child[0]->code;
-//      aux_code = concatTAC(aux_code, programa->code);
       aux_code = invertTacList(aux_code);
-      
       assembly = concatTAC(assembly, aux_code);
+
       programa = programa->child[1];
    }
-   
-//   TAC *aux_code = insertTAC(nodo);
-//   code = concatTAC(code, aux_code);
-
-//   code = invertTacList(code);
-
-
-
-
-
    code = assembly;
 
+   // Display the Assembly code
    printAssembly(code);
 }
