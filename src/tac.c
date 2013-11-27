@@ -760,7 +760,7 @@ void printAssembly(TAC* code)
             }
             break;
          case ILOC_JUMP:
-            printLabel(code);
+            printf("\tjump => %s\n", code->labelName);
             break;
          case ILOC_CBR:
             printLabel(code);
@@ -1009,9 +1009,18 @@ TAC* initCode(TAC* code, comp_tree_t* nodo)
    // Navigating thru the functions
    while (programa != NULL)
    {
-      TAC *aux_code = programa->child[0]->code;
-      aux_code = invertTacList(aux_code);
-      assembly = concatTAC(assembly, aux_code);
+      if (programa->child[0] != NULL)
+      {
+         TAC *aux_code = programa->child[0]->code;
+         aux_code = invertTacList(aux_code);
+         assembly = concatTAC(assembly, aux_code);
+
+         TAC *jmp_fp = initTac();
+         jmp_fp->code = ILOC_JUMP;
+         jmp_fp->labelName = (char *)malloc(sizeof(char));
+         strcpy(jmp_fp->labelName, "fp");
+         assembly = concatTAC(assembly, jmp_fp);
+      }
 
       programa = programa->child[1];
    }
