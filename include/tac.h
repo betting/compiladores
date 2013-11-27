@@ -56,6 +56,6 @@ TAC* Address(comp_tree_t* nodo);
 TAC* CodeGenerateFuncDeclaration(comp_tree_t* novo, TAC* code, comp_list_t* declarations);
 TAC* CodeGenerateFuncCall(comp_tree_t* nodo, TAC* code, comp_list_t* declarations);
 TAC* CodeGenerateReturn(comp_tree_t* nodo, TAC* code, comp_list_t* declarations);
-TAC* initCode(TAC* code, comp_tree_t* nodo);
-TAC *evaluateFinalTac(TAC *code);
+TAC* initCode(TAC* code, comp_tree_t* nodo, comp_list_t * declarations);
+TAC *evaluateFinalTac(TAC *code, comp_list_t * declarations);
 #endif

@@ -1092,7 +1092,7 @@ TAC* CodeGenerateReturn(comp_tree_t* nodo, TAC* code, comp_list_t* declarations)
 //    aux_tac->next = ; actual pointer
 }
 
-TAC* initCode(TAC* code, comp_tree_t* nodo)
+TAC* initCode(TAC* code, comp_tree_t* nodo, comp_list_t * declarations)
 {
    // Getting the first function declared in the AST
    comp_tree_t* programa = nodo->child[0];
@@ -1140,57 +1140,66 @@ TAC* initCode(TAC* code, comp_tree_t* nodo)
    }
    code = assembly;
 
-//   code = evaluateFinalTac(code);
+   code = evaluateFinalTac(code, declarations);
 
    // Display the Assembly code
    printAssembly(code);
 }
 
-TAC *evaluateFinalTac(TAC *code)
+TAC *evaluateFinalTac(TAC *code, comp_list_t* declarations)
 {
-/*
-   comp_list_t* listLocalDeclaration = getLocalDeclarations(nodo->code->labelName, declarations, IKS_LOCAL); 
-   comp_list_t* listParametersDeclaration = getLocalDeclarations(nodo->code->labelName, declarations, IKS_FUNC_PARAM); 
+   int auxReg = 0;
+   int count = 0;
+
+   TAC * aux_code = code;
+   while (aux_code != NULL)
+   {
+      if (aux_code->code == ILOC_FUNCTION)
+      {
+         comp_list_t* listLocalDeclaration = getLocalDeclarations(code->labelName, declarations, IKS_LOCAL); 
+         comp_list_t* listParametersDeclaration = getLocalDeclarations(code->labelName, declarations, IKS_FUNC_PARAM); 
    
-   int localContextSize = 16;
-   while (listLocalDeclaration != NULL)
-   {
-      localContextSize = localContextSize + sizeDeclarations(listLocalDeclaration->tipoVar);
-      listLocalDeclaration = listLocalDeclaration->next;
-   }
-   while (listParametersDeclaration != NULL)
-   {
-      localContextSize = localContextSize + sizeDeclarations(listParametersDeclaration->tipoVar);
-      listParametersDeclaration = listParametersDeclaration->next;
-   }
+         int localContextSize = 12;
+         while (listLocalDeclaration != NULL)
+         {
+            localContextSize = localContextSize + sizeDeclarations(listLocalDeclaration->tipoVar);
+            listLocalDeclaration = listLocalDeclaration->next;
+         }
+         while (listParametersDeclaration != NULL)
+         {
+            localContextSize = localContextSize + sizeDeclarations(listParametersDeclaration->tipoVar);
+            listParametersDeclaration = listParametersDeclaration->next;
+         }
 
-   int frameSize = 4;
+         TAC* aux;
+         // Stack configuration for "main" function
+         if (strcmp(code->labelName, "main") == 0)
+         {
+            aux = initTac();
+            aux->constant = localContextSize;
+            aux->r3 = SP;
+            aux->code = ILOC_LOADI;
 
-   TAC* aux;
-   // Stack configuration for "main" function
-   if (strcmp(nodo->code->labelName, "main") == 0)
-   {
-      aux = initTac();
-      aux->constant = localContextSize;
-      aux->r3 = SP;
-      aux->code = ILOC_LOADI;
+            aux->next = initTac();
+            aux->next->constant = 0;
+            aux->next->r3 = FP;
+            aux->next->code = ILOC_LOADI;
+            aux->next->label = 0;
+      
+            aux->next->next = code;
+      
+            code = aux;
 
-      aux->next = initTac();
-      aux->next->constant = 0;
-      aux->next->r3 = FP;
-      aux->next->code = ILOC_LOADI;
-      aux->next->label = 0;
+         }
+         // Initial stack allocation for other functions
+         else
+         {
 
-      aux->next->next = nodo->code;
+         }
+      }
 
-      nodo->code = aux;
+      aux_code = aux_code->next;
+   }  
 
-   }
-   // Initial stack allocation for other functions
-   else
-   {
-
-   }
-*/
    return code;
 }

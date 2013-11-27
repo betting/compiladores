@@ -125,7 +125,7 @@ p: s
 //         printStack(pointer);
          pointer = sPop(pointer, listFunctions, declarationList,0);
 //         code = CodeGenerate($$, code, ILOC_NOP, NULL, NULL);
-         code = initCode(code, $$);
+         code = initCode(code, $$, declarationList);
 //         code = invertTacList(code);
 //         printAssembly(code);
       }
