@@ -623,23 +623,23 @@ void printAssembly(TAC* code)
       {
          case ILOC_NOP:
             printLabel(code);
-            printf("nop\n");
+            printf("\tnop\n");
             break;
          case ILOC_ADD:
             printLabel(code);
-            printf("add r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
+            printf("\tadd r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
             break;
          case ILOC_SUB:
             printLabel(code);
-            printf("sub r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
+            printf("\tsub r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
             break;
          case ILOC_MULT:
             printLabel(code);
-            printf("mult r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
+            printf("\tmult r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
             break;
          case ILOC_DIV:
             printLabel(code);
-            printf("div r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
+            printf("\tdiv r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
             break;
          case ILOC_ADDI:
             printLabel(code);
@@ -673,14 +673,14 @@ void printAssembly(TAC* code)
             break;
          case ILOC_AND:
             printLabel(code);
-            printf("and r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
+            printf("\tand r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
             break;
          case ILOC_ANDI:
             printLabel(code);
             break;
          case ILOC_OR:
             printLabel(code);
-            printf("or r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
+            printf("\tor r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
             break;
          case ILOC_ORI:
             printLabel(code);
@@ -693,14 +693,14 @@ void printAssembly(TAC* code)
             break;
          case ILOC_LOADI:
             printLabel(code);
-            printf("loadi %d => r%d\n", code->constant, code->r3);
+            printf("\tloadi %d => r%d\n", code->constant, code->r3);
             break;
          case ILOC_LOAD:
             printLabel(code);
             break;
          case ILOC_LOADAI:
             printLabel(code);
-            printf("loadai %s, %d => r%d\n", (code->r1 == BSS)?"bss":"fp", code->constant, code->r3);
+            printf("\tloadai %s, %d => r%d\n", (code->r1 == BSS)?"bss":"fp", code->constant, code->r3);
             break;
          case ILOC_LOADAO:
             printLabel(code);
@@ -716,7 +716,7 @@ void printAssembly(TAC* code)
             break;
          case ILOC_STORE:
             printLabel(code);
-            printf("store r%d => r%d\n",code->r1,code->r3);
+            printf("\tstore r%d => r%d\n",code->r1,code->r3);
             break;
          case ILOC_STOREAI:
             printLabel(code);
@@ -746,14 +746,17 @@ void printAssembly(TAC* code)
             printLabel(code);
             break;
          case ILOC_JUMPI:
-            printLabel(code);
+            if (code->constant != 99999)
+            {
+               printLabel(code);
+            }
             if (code->labelName != NULL)
             {
-   			   printf("jumpI => %s\n", code->labelName);
+   			   printf("\tjumpI => %s\n", code->labelName);
             }
             else
             {
-      			printf("jumpI => l%d\n", code->label);
+      			printf("\tjumpI => l%d\n", code->label);
             }
             break;
          case ILOC_JUMP:
@@ -761,31 +764,31 @@ void printAssembly(TAC* code)
             break;
          case ILOC_CBR:
             printLabel(code);
-   			printf("cbr r%d => l%d, l%d\n", code->r3, code->l1, code->l2);
+   			printf("\tcbr r%d => l%d, l%d\n", code->r3, code->l1, code->l2);
             break;
          case ILOC_CMP_LT:
             printLabel(code);
-            printf("cmp_lt r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
+            printf("\tcmp_lt r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
             break;
          case ILOC_CMP_LE:
             printLabel(code);
-            printf("cmp_le r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
+            printf("\tcmp_le r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
             break;
          case ILOC_CMP_EQ:
             printLabel(code);
-            printf("cmp_eq r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
+            printf("\tcmp_eq r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
             break;
          case ILOC_CMP_GE:
             printLabel(code);
-            printf("cmp_ge r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
+            printf("\tcmp_ge r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
             break;
          case ILOC_CMP_GT:
             printLabel(code);
-            printf("cmp_gt r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
+            printf("\tcmp_gt r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
             break;
          case ILOC_CMP_NE:
             printLabel(code);
-            printf("cmp_ne r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
+            printf("\tcmp_ne r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
             break;
          case ILOC_FUNCTION:
             printLabel(code);
@@ -1134,6 +1137,7 @@ TAC* initCode(TAC* code, comp_tree_t* nodo)
    // Jumping to main function
    TAC *assembly = initTac();
    assembly->code = ILOC_JUMPI;
+   assembly->constant = 99999;
    assembly->labelName = (char*)malloc(5*sizeof(char));
    strcpy(assembly->labelName, "main");
 
