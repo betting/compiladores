@@ -1,3 +1,5 @@
+#include <stdlib.h>
+#include <string.h>
 #include "tac.h"
 
 int varType;
@@ -17,14 +19,15 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
       case ILOC_NOP:
          nodo->code = initTac();
          nodo->code->code = ILOC_NOP;
-         code = insertTAC(nodo);
+         //code = insertTAC(nodo);
 //         code = insertTacEvaluated(nodo, code);
 
          //printCode(nodo->code);
          //printLabel(code);
          //printf("\nnop: %d\n", ILOC_NOP);
 
-         return code;
+//         return code;
+         return nodo->code;
 
          break;
 
@@ -127,7 +130,7 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
          nodo->code->r3 = reg;
          nodo->code->constant = atoi(nodo->symbol->token);
          nodo->code->code = ILOC_LOADI;
-         code = insertTAC(nodo);
+//         code = insertTAC(nodo);
 
 //         printLabel(code);
 //         printf("loadI %d => r%d\n",code->constant,code->r3);
@@ -158,9 +161,9 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
             nodo->code->r3 = reg;
             nodo->code->constant = sizeDeclarations(((variableTypeGlobal != -1) ? variableTypeGlobal : variableTypeLocal));
             nodo->code->code = ILOC_LOADAI;
-            code = Address(nodo);
+//            code = Address(nodo);
             
-            code = insertTAC(nodo);
+//            code = insertTAC(nodo);
             //insertTAC(nodo);
          }
          // Handling a vector (Global only)
@@ -185,7 +188,7 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
          nodo->code->code = ILOC_STORE;
          if (nodo->child[2] == NULL)
          {
-            code = insertTAC(nodo);
+               code = insertTAC(nodo);
          }
          else
          {
@@ -403,116 +406,65 @@ TAC* initTac()
 
 TAC* insertTAC(comp_tree_t* nodo)
 {
+   TAC * aux = nodo->code;
+
    if (nodo->child[3] != NULL)
    {
-      concatTAC(nodo->code, nodo->child[3]->code);
+      aux = concatTAC(aux, nodo->child[3]->code);
    }
 
    if (nodo->child[2] != NULL)
    {
-      concatTAC(nodo->code, nodo->child[2]->code);
+      aux = concatTAC(aux, nodo->child[2]->code);
    }
 
    if (nodo->child[1] != NULL)
    {
-      concatTAC(nodo->code, nodo->child[1]->code);
+      aux = concatTAC(aux, nodo->child[1]->code);
    }
 
    if (nodo->child[0] != NULL)
    {
-      concatTAC(nodo->code, nodo->child[0]->code);
+      aux = concatTAC(aux, nodo->child[0]->code);
    }
 
-   /*
-   int null = FALSE;
-   int childExists_1 = FALSE;
-   if(nodo->child != NULL)
-   {
-      childExists_1 = TRUE;
-   }
-   else
-   {
-      null = TRUE;
-   }
-
-   int childExists_2 = FALSE;
-   if (null == FALSE)
-   {
-      if (nodo->child->sibling != NULL)
-      {
-         childExists_2 = TRUE;
-      }
-      else
-      {
-         null = TRUE;
-      }
-   }
-
-   int childExists_3 = FALSE;
-   if (null == FALSE)
-   {
-      if (nodo->child->sibling->sibling != NULL)
-      {
-         childExists_3 = TRUE;
-      }
-      else
-      {
-         null = TRUE;
-      }
-   }
-
-   
-   if (childExists_3 == TRUE)
-   {
-      concatTAC(nodo->code, nodo->child->sibling->sibling->code);
-   }
-
-   if (childExists_2 == TRUE)
-   {
-      concatTAC(nodo->code, nodo->child->sibling->code);
-   }
-
-   if (childExists_1 == TRUE)
-   {
-      concatTAC(nodo->code, nodo->child->code);
-   }
-   */
-   
    return nodo->code;
    
 }
 
 
-TAC* concatTAC(TAC* parent,TAC* child)
+TAC* concatTAC(TAC* parent, TAC* child)
 {
-   if ((parent != NULL) 
-      && (child != NULL))
+   if ((parent != NULL) && (child != NULL))
    {
-//    int exists = FALSE;
-      while(parent->next != NULL)
+      TAC * aux = parent;
+      while(aux->next != NULL)
       {
-//       if (child != aux_tac->next)
-//       {
-   	   parent = parent->next;
-//       }
-//       else
-//       {
-//          exists = TRUE;
-//       }
+   	   aux = aux->next;
       }
-//    if (exists == FALSE)
-//    {
-      parent->next = child;
+      aux->next = child;
    }
    return parent;
 }
 
 TAC* insertTacEvaluated(comp_tree_t* nodo, TAC* code)
 {
+   nodo->code = concatTAC(nodo->code, nodo->child[1]->code);
+   nodo->code = concatTAC(nodo->code, nodo->child[0]->code);
+
+   TAC* aux = nodo->code;
+   if (nodo->child[2] != NULL)
+   {
+      nodo->code = nodo->child[2]->code;
+      nodo->code = concatTAC(nodo->code, aux); 
+   }
+   return nodo->code;
+/*
       concatTAC(nodo->code, nodo->child[1]->code);
       concatTAC(nodo->code, nodo->child[0]->code);
 //      concatTAC(nodo->child[2]->code, nodo->code);
       concatTAC(code, nodo->code);
+*/
 /*   
 //   concatTAC(nodo->code, nodo->child->code);
    comp_tree_t* aux = getLastSibling(nodo->child);
@@ -524,8 +476,8 @@ TAC* insertTacEvaluated(comp_tree_t* nodo, TAC* code)
          concatTAC(nodo->code, aux->code);
       }
    }*/
-   nodo->child[2]->code = code;
-   return code;
+//   nodo->child[2]->code = code;
+//   return code;
 //   return nodo->child[2]->code;
 }
 
@@ -577,7 +529,11 @@ void InsertLabel(comp_tree_t* nodo)
 
 void printLabel(TAC* code)
 {
-   if(code->label != 0) 
+   if (code->labelName != NULL)
+   {
+      printf("%s:\n", code->labelName);
+   }
+   else if(code->label != 0) 
    {
       printf("l%d:\n",code->label);
    }
@@ -791,7 +747,14 @@ void printAssembly(TAC* code)
             break;
          case ILOC_JUMPI:
             printLabel(code);
-   			printf("jumpI => l%d\n", code->label);
+            if (code->labelName != NULL)
+            {
+   			   printf("jumpI => %s\n", code->labelName);
+            }
+            else
+            {
+      			printf("jumpI => l%d\n", code->label);
+            }
             break;
          case ILOC_JUMP:
             printLabel(code);
@@ -823,6 +786,9 @@ void printAssembly(TAC* code)
          case ILOC_CMP_NE:
             printLabel(code);
             printf("cmp_ne r%d, r%d => r%d\n",code->r1,code->r2,code->r3);
+            break;
+         case ILOC_FUNCTION:
+            printLabel(code);
             break;
       }
       code = code->next;
@@ -900,6 +866,30 @@ TAC* Address(comp_tree_t* nodo)
 
 TAC* CodeGenerateFuncDeclaration(comp_tree_t* nodo, TAC* code, comp_list_t* declarations)
 {
+
+   nodo->code = CodeGenerate(nodo, code, ILOC_NOP, NULL, NULL);
+   nodo->code->code = ILOC_FUNCTION;
+//   if(nodo->child[0] != NULL)
+//   {
+//      if(nodo->child[0]->symbol != NULL)
+      if (nodo->symbol != NULL)
+      {
+         nodo->code->labelName = (char*)calloc(strlen(nodo->symbol->token)+1,sizeof(char));
+//         nodo->code->labelName = (char*)calloc(strlen(nodo->child[0]->symbol->token)+1,sizeof(char));
+//         strcpy(nodo->code->labelName, nodo->child[0]->symbol->token);
+         strcpy(nodo->code->labelName, nodo->symbol->token);
+      }
+//   }
+
+   TAC* aux = code;
+   aux = concatTAC(aux, nodo->code);
+//   aux = concatTAC(nodo->code, aux);
+//   code = insertTAC(nodo);
+
+   return aux;
+//   return nodo->code;
+
+   /*
 	TAC* CodeAtual = code;
 	TAC* CodeAnt;
 	
@@ -917,14 +907,15 @@ TAC* CodeGenerateFuncDeclaration(comp_tree_t* nodo, TAC* code, comp_list_t* decl
 			comp_list_t* localList;
 			
 			//main
-			if(CodeAtual->label == "main")
+         if (strcmp(CodeAtual->labelName, "main") == 0)
 			{
 				//faz o jump pra L1
+*/            
 				/*==============================
 				 * FRED, to com dúvida com esse ILOC_NOP
 				 * 
 				 */
-				
+/*				
 				TAC* newTAC = CodeGenerate(nodo, code, ILOC_NOP, NULL, NULL);
 				newTAC->l1 = 1;
 				newTAC->code = ILOC_JUMPI;
@@ -1021,6 +1012,7 @@ TAC* CodeGenerateFuncDeclaration(comp_tree_t* nodo, TAC* code, comp_list_t* decl
 			}
 		}
 	}
+*/   
 }
 
 TAC* CodeGenerateFuncCall(comp_tree_t* nodo, TAC* code, comp_list_t* declarations)
@@ -1131,4 +1123,41 @@ TAC* CodeGenerateReturn(comp_tree_t* nodo, TAC* code, comp_list_t* declarations)
     aux_tac->r3 = SP;
     concatTAC(code, aux_tac);
 //    aux_tac->next = ; actual pointer
+}
+
+TAC* initCode(TAC* code, comp_tree_t* nodo)
+{
+   // Getting the first function declared in the AST
+   comp_tree_t* programa = nodo->child[0];
+
+
+   // Jumping to main function
+   TAC *assembly = initTac();
+   assembly->code = ILOC_JUMPI;
+   assembly->labelName = (char*)malloc(5*sizeof(char));
+   strcpy(assembly->labelName, "main");
+
+   // Navigating thru the functions
+   while (programa != NULL)
+   {
+      TAC *aux_code = programa->child[0]->code;
+//      aux_code = concatTAC(aux_code, programa->code);
+      aux_code = invertTacList(aux_code);
+      
+      assembly = concatTAC(assembly, aux_code);
+      programa = programa->child[1];
+   }
+   
+//   TAC *aux_code = insertTAC(nodo);
+//   code = concatTAC(code, aux_code);
+
+//   code = invertTacList(code);
+
+
+
+
+
+   code = assembly;
+
+   printAssembly(code);
 }

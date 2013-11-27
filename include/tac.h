@@ -27,6 +27,7 @@ typedef struct tac
    int label;
    int constant;
    int code;
+   char *labelName;
    struct tac* next;
 } TAC;
 
@@ -54,4 +55,5 @@ TAC* Address(comp_tree_t* nodo);
 TAC* CodeGenerateFuncDeclaration(comp_tree_t* novo, TAC* code, comp_list_t* declarations);
 TAC* CodeGenerateFuncCall(comp_tree_t* nodo, TAC* code, comp_list_t* declarations);
 TAC* CodeGenerateReturn(comp_tree_t* nodo, TAC* code, comp_list_t* declarations);
+TAC* initCode(TAC* code, comp_tree_t* nodo);
 #endif
