@@ -56,5 +56,6 @@
 #define ILOC_CBR_WHILE		99
 #define ILOC_CBR_DO			999
 
+#define ILOC_FUNCTION   1000
 
 #endif
