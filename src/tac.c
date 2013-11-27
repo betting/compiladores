@@ -159,7 +159,8 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
             reg = getLabelReg(reg);
             nodo->code->r1 = varType;
             nodo->code->r3 = reg;
-            nodo->code->constant = sizeDeclarations(((variableTypeGlobal != -1) ? variableTypeGlobal : variableTypeLocal));
+            //nodo->code->constant = sizeDeclarations(((variableTypeGlobal != -1) ? variableTypeGlobal : variableTypeLocal));
+            nodo->code->constant = 0;
             nodo->code->code = ILOC_LOADAI;
 //            code = Address(nodo);
             
@@ -616,6 +617,8 @@ void printCode(TAC* code)
 
 void printAssembly(TAC* code)
 {
+   char* valorStr1= (char *)malloc(sizeof(char));
+   char* valorStr2= (char *)malloc(sizeof(char));
    while(code != NULL)
    {
 	  //printCode(code);
@@ -693,14 +696,60 @@ void printAssembly(TAC* code)
             break;
          case ILOC_LOADI:
             printLabel(code);
-            printf("\tloadi %d => r%d\n", code->constant, code->r3);
+            switch (code->r3)
+            {
+               case BSS:
+                  strcpy(valorStr2, "bss");
+               break;
+               case FP:
+                  strcpy(valorStr2, "fp");
+               break;
+               case SP:
+                  strcpy(valorStr2, "sp");
+               break;
+               default:
+                  sprintf(valorStr2, "r%d", code->r3);
+               break;
+            }
+            printf("\tloadi %d => %s\n", code->constant, valorStr2);
             break;
          case ILOC_LOAD:
             printLabel(code);
             break;
          case ILOC_LOADAI:
             printLabel(code);
-            printf("\tloadai %s, %d => r%d\n", (code->r1 == BSS)?"bss":"fp", code->constant, code->r3);
+
+            switch (code->r1)
+            {
+               case BSS:
+                  strcpy(valorStr1, "bss");
+               break;
+               case FP:
+                  strcpy(valorStr1, "fp");
+               break;
+               case SP:
+                  strcpy(valorStr1, "sp");
+               break;
+               default:
+                  sprintf(valorStr1, "%d", code->r1);
+               break;
+            }
+            switch (code->r3)
+            {
+               case BSS:
+                  strcpy(valorStr2, "bss");
+               break;
+               case FP:
+                  strcpy(valorStr2, "fp");
+               break;
+               case SP:
+                  strcpy(valorStr2, "sp");
+               break;
+               default:
+                  sprintf(valorStr2, "%d", code->r3);
+               break;
+            }
+            printf("\tloadai %s, %d => r%s\n", valorStr1, code->constant, valorStr2);
             break;
          case ILOC_LOADAO:
             printLabel(code);
@@ -877,11 +926,59 @@ TAC* CodeGenerateFuncDeclaration(comp_tree_t* nodo, TAC* code, comp_list_t* decl
       nodo->code->labelName = (char*)calloc(strlen(nodo->symbol->token)+1,sizeof(char));
       strcpy(nodo->code->labelName, nodo->symbol->token);
    }
+/*
+   comp_list_t* listLocalDeclaration = getLocalDeclarations(nodo->code->labelName, declarations, IKS_LOCAL); 
+   comp_list_t* listParametersDeclaration = getLocalDeclarations(nodo->code->labelName, declarations, IKS_FUNC_PARAM); 
+   
+   int localContextSize = 16;
+   while (listLocalDeclaration != NULL)
+   {
+      localContextSize = localContextSize + sizeDeclarations(listLocalDeclaration->tipoVar);
+      listLocalDeclaration = listLocalDeclaration->next;
+   }
+   while (listParametersDeclaration != NULL)
+   {
+      localContextSize = localContextSize + sizeDeclarations(listParametersDeclaration->tipoVar);
+      listParametersDeclaration = listParametersDeclaration->next;
+   }
 
-   TAC* aux = code;
-   aux = concatTAC(aux, nodo->code);
+   int frameSize = 4;
+*/
+   TAC* aux;
+   // Stack configuration for "main" function
+   if (strcmp(nodo->code->labelName, "main") == 0)
+   {
+      aux = initTac();
+      //aux->constant = localContextSize;
+      aux->constant = 0;
+      aux->r3 = SP;
+      aux->code = ILOC_LOADI;
 
-   return aux;
+      aux->next = initTac();
+      aux->next->constant = 0;
+      aux->next->r3 = FP;
+      aux->next->code = ILOC_LOADI;
+      aux->next->label = 0;
+
+      aux->next->next = nodo->code;
+
+      nodo->code = aux;
+
+   }
+   // Initial stack allocation for other functions
+   else
+   {
+
+   }
+
+   if (code != NULL)
+   {
+      TAC* aux_tmp = code;
+      aux_tmp = concatTAC(aux_tmp, nodo->code);
+      nodo->code = aux_tmp;
+   }
+
+   return nodo->code;
 }
 
 TAC* CodeGenerateFuncCall(comp_tree_t* nodo, TAC* code, comp_list_t* declarations)
@@ -898,6 +995,7 @@ TAC* CodeGenerateFuncCall(comp_tree_t* nodo, TAC* code, comp_list_t* declaration
    8. Aloca variáveis locais
 */
    
+
    nodo->code = CodeGenerate(nodo, code, ILOC_NOP, NULL, NULL);
    nodo->code->code = ILOC_NOP;
 //   code = insertTAC(nodo);
@@ -1021,11 +1119,78 @@ TAC* initCode(TAC* code, comp_tree_t* nodo)
          strcpy(jmp_fp->labelName, "fp");
          assembly = concatTAC(assembly, jmp_fp);
       }
+      else if (programa->code != NULL)
+      {
+         TAC *aux_code = programa->code;
+         aux_code = invertTacList(aux_code);
+         assembly = concatTAC(assembly, aux_code);
+/*
+         TAC *jmp_fp = initTac();
+         jmp_fp->code = ILOC_JUMP;
+         jmp_fp->labelName = (char *)malloc(sizeof(char));
+         strcpy(jmp_fp->labelName, "fp");
+         assembly = concatTAC(assembly, jmp_fp);
+*/
+//         printf("\tnop\n");
+         
+      }
+
 
       programa = programa->child[1];
    }
    code = assembly;
 
+//   code = evaluateFinalTac(code);
+
    // Display the Assembly code
    printAssembly(code);
+}
+
+TAC *evaluateFinalTac(TAC *code)
+{
+/*
+   comp_list_t* listLocalDeclaration = getLocalDeclarations(nodo->code->labelName, declarations, IKS_LOCAL); 
+   comp_list_t* listParametersDeclaration = getLocalDeclarations(nodo->code->labelName, declarations, IKS_FUNC_PARAM); 
+   
+   int localContextSize = 16;
+   while (listLocalDeclaration != NULL)
+   {
+      localContextSize = localContextSize + sizeDeclarations(listLocalDeclaration->tipoVar);
+      listLocalDeclaration = listLocalDeclaration->next;
+   }
+   while (listParametersDeclaration != NULL)
+   {
+      localContextSize = localContextSize + sizeDeclarations(listParametersDeclaration->tipoVar);
+      listParametersDeclaration = listParametersDeclaration->next;
+   }
+
+   int frameSize = 4;
+
+   TAC* aux;
+   // Stack configuration for "main" function
+   if (strcmp(nodo->code->labelName, "main") == 0)
+   {
+      aux = initTac();
+      aux->constant = localContextSize;
+      aux->r3 = SP;
+      aux->code = ILOC_LOADI;
+
+      aux->next = initTac();
+      aux->next->constant = 0;
+      aux->next->r3 = FP;
+      aux->next->code = ILOC_LOADI;
+      aux->next->label = 0;
+
+      aux->next->next = nodo->code;
+
+      nodo->code = aux;
+
+   }
+   // Initial stack allocation for other functions
+   else
+   {
+
+   }
+*/
+   return code;
 }

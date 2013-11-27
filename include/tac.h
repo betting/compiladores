@@ -5,6 +5,7 @@
 #include "comp_list.h"
 #include "iloc.h"
 #include "labelreg.h"
+#include "semantic.h"
 
 #ifndef tac_H
 #define tac_H
@@ -13,9 +14,9 @@
 #define CTE_IF_ELSE 2
 #define CTE_WHILE 3
 
-#define FP 1
-#define BSS 2
-#define SP 3 
+#define FP 100000
+#define BSS 200000
+#define SP 300000
 
 typedef struct tac
 {
@@ -56,4 +57,5 @@ TAC* CodeGenerateFuncDeclaration(comp_tree_t* novo, TAC* code, comp_list_t* decl
 TAC* CodeGenerateFuncCall(comp_tree_t* nodo, TAC* code, comp_list_t* declarations);
 TAC* CodeGenerateReturn(comp_tree_t* nodo, TAC* code, comp_list_t* declarations);
 TAC* initCode(TAC* code, comp_tree_t* nodo);
+TAC *evaluateFinalTac(TAC *code);
 #endif
