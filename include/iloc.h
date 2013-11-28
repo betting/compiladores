@@ -57,5 +57,5 @@
 #define ILOC_CBR_DO			999
 
 #define ILOC_FUNCTION   1000
-
+#define ILOC_HALT       9999
 #endif

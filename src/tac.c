@@ -842,6 +842,10 @@ void printAssembly(TAC* code)
          case ILOC_FUNCTION:
             printLabel(code);
             break;
+         case ILOC_HALT:
+            printf("end:\n");
+            printf("\thalt\n");
+            break;
       }
       code = code->next;
    }
@@ -1070,25 +1074,24 @@ TAC* CodeGenerateReturn(comp_tree_t* nodo, TAC* code, comp_list_t* declarations)
 	// 1. Prepara os parâmetros de retorno
 
 
-    // 2. Disponibiliza o valor de retorno para o chamador
+   // 2. Disponibiliza o valor de retorno para o chamador
     
-    // Loading actual label on register
-    aux_tac = Operator2(nodo, ILOC_LOADI);
-    aux_tac->constant = label; //ultimo label
-    aux_tac->r3 = reg; //ultimo valor do registrador
-    concatTAC(code, aux_tac);
-    
-    
-    //(retorno está no SP)
-    aux_tac = Operator2(nodo, ILOC_STOREAI);
-    //aux_tac->constant = -4;
-    aux_tac->r1 = reg;
-    concatTAC(code, aux_tac);
+   //(retorno está no FP)
+   aux_tac = initTac();
+   aux_tac->code = ILOC_STORE;
+   aux_tac->r1 = nodo->child[0]->code->r1;
+   aux_tac->r3 = FP;
+   call = aux_tac;
 
-    // 3. Atualizando FP e o SP
-    aux_tac = Operator2(nodo, ILOC_I2I);
-    aux_tac->r3 = SP;
-    concatTAC(code, aux_tac);
+   // 3. Atualizando FP e o SP
+   aux_tac = initTac();
+   aux_tac->code = ILOC_I2I;
+   aux_tac->r1 = FP;
+   aux_tac->r3 = SP;
+   call = concatTAC(call, aux_tac);
+
+   nodo->code = call;
+   return call;
 //    aux_tac->next = ; actual pointer
 }
 
@@ -1105,19 +1108,35 @@ TAC* initCode(TAC* code, comp_tree_t* nodo, comp_list_t * declarations)
    strcpy(assembly->labelName, "main");
 
    // Navigating thru the functions
+   int mainFound = FALSE;
    while (programa != NULL)
    {
       if (programa->child[0] != NULL)
       {
          TAC *aux_code = programa->child[0]->code;
          aux_code = invertTacList(aux_code);
-         assembly = concatTAC(assembly, aux_code);
+         mainFound = (strcmp(aux_code->labelName, "main") == 0);
 
-         TAC *jmp_fp = initTac();
-         jmp_fp->code = ILOC_JUMP;
-         jmp_fp->labelName = (char *)malloc(sizeof(char));
-         strcpy(jmp_fp->labelName, "fp");
-         assembly = concatTAC(assembly, jmp_fp);
+         assembly = concatTAC(assembly, aux_code);
+         
+         if (mainFound == TRUE)
+         {
+            TAC *jmp_end = initTac();
+            jmp_end->code = ILOC_JUMP;
+            jmp_end->labelName = (char *)malloc(sizeof(char));
+            strcpy(jmp_end->labelName, "end");
+            assembly = concatTAC(assembly, jmp_end);
+         }
+         else
+         {
+            TAC *jmp_fp = initTac();
+            jmp_fp->code = ILOC_JUMP;
+            jmp_fp->labelName = (char *)malloc(sizeof(char));
+            strcpy(jmp_fp->labelName, "fp");
+            assembly = concatTAC(assembly, jmp_fp);
+         }
+
+         
       }
       else if (programa->code != NULL)
       {
@@ -1138,9 +1157,16 @@ TAC* initCode(TAC* code, comp_tree_t* nodo, comp_list_t * declarations)
 
       programa = programa->child[1];
    }
+
+   TAC *end = initTac();
+   end->code = ILOC_HALT;
+   end->labelName = (char *)malloc(sizeof(char));
+   strcpy(end->labelName, "end");
+   assembly = concatTAC(assembly, end);
+
    code = assembly;
 
-   code = evaluateFinalTac(code, declarations);
+//   code = evaluateFinalTac(code, declarations);
 
    // Display the Assembly code
    printAssembly(code);
