@@ -32,6 +32,22 @@ typedef struct tac
    struct tac* next;
 } TAC;
 
+typedef struct _ra
+{
+   int localVarPosition;
+   int localVarQuantity;
+   int localVarSize;
+   int paramPosition;
+   int paramQuantity;
+   int paramSize;
+   int returnPosition;
+   int returnSize;
+   int staticLinkPosition;
+   int staticLinkSize;
+   int dynamicLinkPosition;
+   int dynamicLinkSize;
+} RA;
+
 TAC *code;
 
 //registradores e labels
@@ -58,4 +74,5 @@ TAC* CodeGenerateFuncCall(comp_tree_t* nodo, TAC* code, comp_list_t* declaration
 TAC* CodeGenerateReturn(comp_tree_t* nodo, TAC* code, comp_list_t* declarations);
 TAC* initCode(TAC* code, comp_tree_t* nodo, comp_list_t * declarations);
 TAC *evaluateFinalTac(TAC *code, comp_list_t * declarations);
+RA * calculateFrameSize(char* functionName, comp_tree_t* nodo, comp_list_t* declarations);
 #endif

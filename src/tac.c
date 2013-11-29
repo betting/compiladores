@@ -184,7 +184,17 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
 
       case ILOC_STORE:
          nodo->code = initTac();
-         nodo->code->r1 = nodo->child[1]->code->r3;
+
+         // Simple attribution
+         if (nodo->child[1]->code != NULL)
+         {
+            nodo->code->r1 = nodo->child[1]->code->r3;
+         }
+         // Getting value from a function return
+         else
+         {
+            nodo->code->r1 = nodo->child[1]->child[0]->code->next->r3;
+         }
          nodo->code->r3 = nodo->child[0]->code->r3;
          nodo->code->code = ILOC_STORE;
          if (nodo->child[2] == NULL)
@@ -373,17 +383,12 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
 
 TAC* Operator2(comp_tree_t* nodo, int operatorCode)
 { 
-   //printf("======== INIT OPERATOR 2");
    nodo->code = initTac();
-   //printf("======== END OPERATOR 2");
-   //printCode(nodo->code);
    nodo->code->r1 = nodo->child[0]->code->r3;
    nodo->code->r2 = nodo->child[1]->code->r3;
    nodo->code->code = operatorCode;
    reg = getLabelReg(reg);
-   //printf("======== END OPERATOR 2");
    nodo->code->r3 = reg;
-   //printCode(nodo->code);
    
    return nodo->code;
    
@@ -460,55 +465,14 @@ TAC* insertTacEvaluated(comp_tree_t* nodo, TAC* code)
       nodo->code = concatTAC(nodo->code, aux); 
    }
    return nodo->code;
-/*
-      concatTAC(nodo->code, nodo->child[1]->code);
-      concatTAC(nodo->code, nodo->child[0]->code);
-//      concatTAC(nodo->child[2]->code, nodo->code);
-      concatTAC(code, nodo->code);
-*/
-/*   
-//   concatTAC(nodo->code, nodo->child->code);
-   comp_tree_t* aux = getLastSibling(nodo->child);
-   while (aux->child != NULL)
-   {
-      aux = getLastSibling(aux->child);
-      if (countSiblings(aux) > 1)
-      {
-         concatTAC(nodo->code, aux->code);
-      }
-   }*/
-//   nodo->child[2]->code = code;
-//   return code;
-//   return nodo->child[2]->code;
 }
 
 comp_tree_t* getLastSibling(comp_tree_t* nodo)
 {
-   /*
-   while (nodo->sibling != NULL)
-   {
-      nodo = nodo->sibling;
-   }
-
-   return nodo;
-//   return (nodo->sibling != NULL) ? nodo : NULL;
-*/
 }
 
 int countSiblings(comp_tree_t* nodo)
-{ /*
-   int count = 0;
-   nodo = nodo->child;
-   if (nodo != NULL)
-   {
-      while (nodo->sibling != NULL)
-      {
-         count++;
-         nodo = nodo->sibling;
-      }
-   }
-   return count;
-   */
+{
 }
 
 void InsertLabel(comp_tree_t* nodo)
@@ -542,48 +506,28 @@ void printLabel(TAC* code)
 
 TAC* combineCTE(comp_tree_t* nodo, int caseCTE)
 {
-
 	TAC* aux;
 	comp_tree_t* aux_nodo;
 	aux_nodo = nodo;
 	aux = nodo->code;
 	
-	//printf("\nCASE CTE: %d",caseCTE);
-
-	
 	switch(caseCTE)
 	{	//if simples
 		case CTE_IF:
-//				printf("\n\nAUX DO CTE:");
-//				printCode(aux);
             if(aux_nodo->child[2] != NULL)
             {
-//			   printf("\n!=NULL\n");
                nodo->code = aux_nodo->child[2]->code;
             }
 
-//             	printf("\n\nPÓS-IF");
-//            	printCode(nodo->code);
-            	           
 				concatTAC(nodo->code,aux_nodo->child[1]->code);
-//				printf("\n\nPÓS-CONCATTAC 1");
-//            	printCode(nodo->code);
-
 				concatTAC(nodo->code,aux);
-//            	printCode(nodo->code);
-//            	nodo->code = nodo->code->next;
-//            	printCode(nodo->code);
-//            	printCode(aux);			
 				concatTAC(nodo->code,aux_nodo->child[0]->code);
-//            	printf("\n\nNODO->CODE NO CTE");
-//            	printCode(nodo->code);
 				return nodo->code;
 			break;
 		//if-else
 		case CTE_IF_ELSE:
 				nodo->code = aux_nodo->child[3]->code;
 				concatTAC(nodo->code,aux_nodo->child[2]->code);
-//				concatTAC(nodo->code,aux_nodo->child->sibling->code);
 				concatTAC(nodo->code,aux_nodo->child[1]->code);
 
 				concatTAC(nodo->code,aux);
@@ -649,6 +593,37 @@ void printAssembly(TAC* code)
             break;
          case ILOC_SUBI:
             printLabel(code);
+            switch (code->r1)
+            {
+               case BSS:
+                  strcpy(valorStr1, "bss");
+               break;
+               case FP:
+                  strcpy(valorStr1, "fp");
+               break;
+               case SP:
+                  strcpy(valorStr1, "sp");
+               break;
+               default:
+                  sprintf(valorStr1, "%d", code->r1);
+               break;
+            }
+            switch (code->r3)
+            {
+               case BSS:
+                  strcpy(valorStr2, "bss");
+               break;
+               case FP:
+                  strcpy(valorStr2, "fp");
+               break;
+               case SP:
+                  strcpy(valorStr2, "sp");
+               break;
+               default:
+                  sprintf(valorStr2, "%d", code->r3);
+               break;
+            }
+            printf("\tsubi %s, %d => r%s\n", valorStr1, code->constant, valorStr2);
             break;
          case ILOC_RSUBI:
             printLabel(code);
@@ -998,65 +973,91 @@ TAC* CodeGenerateFuncCall(comp_tree_t* nodo, TAC* code, comp_list_t* declaration
    7. Salva o antigo FP na pilha (como vínculo dinâmico)
    8. Aloca variáveis locais
 */
+
+   TAC* finalTac;
+   int fp = 0;
+
+   RA* arData = calculateFrameSize(nodo->child[0]->symbol->token, nodo, declarations);
+
+   int frameSize = arData->localVarSize + arData->paramSize + arData->returnSize + arData->staticLinkSize + arData->dynamicLinkSize;
    
+   //labels = LabelGenerate(labels);
+   //registers = RegisterGenerate(registers);
 
-   nodo->code = CodeGenerate(nodo, code, ILOC_NOP, NULL, NULL);
-   nodo->code->code = ILOC_NOP;
-//   code = insertTAC(nodo);
-   int newLabel = getLabelReg(label);
-   InsertLabel(nodo);
+   TAC* newCode;
+   // sub fp, r -> fp
+   newCode = initTac();
+   newCode->r1 = SP;
+   newCode->constant = frameSize;
+   newCode->r3 = SP;
+   newCode->code = ILOC_SUBI;
+   finalTac = newCode;
 
-   TAC* aux_tac;
+   // If the function called expects parametersi, then
+   // they will be pushed in the stack.
+   if (arData->paramSize > 0)
+   {
+      int i;
+      for (i = 0; i < arData->paramQuantity; i++)
+      {
+         newCode = initTac();
+         newCode->r1 = FP;
+         newCode->r2 = FP;
+         newCode->constant = i * 4;
+         newCode->code = ILOC_STOREAI;
+         finalTac = concatTAC(finalTac, newCode);
+         fp = fp + newCode->constant;
+      }
+   } 
 
-    // Updating FP (sub size)
-    aux_tac = Operator2(nodo, ILOC_SUBI);
-//    aux_tac->constant = size;
-    aux_tac->r3 = FP;
-    concatTAC(code, aux_tac);
+   // Allocating static link space in the stack
+   fp = fp + arData->staticLinkSize;
 
-    // Copying SP to FP
-    aux_tac = Operator2(nodo, ILOC_I2I);
-    aux_tac->r3 = FP;
-    aux_tac->label = newLabel;
-    concatTAC(code, aux_tac);
+   // Allocating dynamic link space in the stack
+   fp = fp + arData->dynamicLinkSize;
+         
+   // Save the return address in the stack (after JMP)
+   newCode = initTac();
+   newCode->r1 = FP;
+   newCode->r2 = FP;
+   newCode->constant = fp + 12;
+   newCode->code = ILOC_STOREAI;
+   finalTac = concatTAC(finalTac, newCode);
+//   fp = fp + newCode->constant;
 
-    // Jumping to function to be executed (Label)
-    aux_tac = Operator2(nodo, ILOC_JUMPI);
-//    aux_tac->l1 = getSize(???, declarationList); (Function name/size ???)
-    concatTAC(code, aux_tac);
+   // Updating SP
+   newCode = initTac();
+   newCode->r1 = SP;
+   newCode->r2 = FP;
+   newCode->code = ILOC_I2I;
+   finalTac = concatTAC(finalTac, newCode);
 
-    // Saving return point on SP
-    int newReg = getLabelReg(reg);
-    aux_tac = Operator2(nodo, ILOC_STOREAI);
-    aux_tac->constant = -4;
-    aux_tac->r1 = newReg;
-    concatTAC(code, aux_tac);
+   // Calling the function
+   newCode = initTac();
+   newCode->labelName = nodo->child[0]->symbol->token;
+   newCode->code = ILOC_JUMPI;
+   finalTac = concatTAC(finalTac, newCode);
 
-    // Loading actual label on register
-    aux_tac = Operator2(nodo, ILOC_LOADI);
-    aux_tac->constant = newLabel;
-    aux_tac->r3 = newReg;
-    concatTAC(code, aux_tac);
+   // Loading the return content
+   newCode = initTac();
+   newCode->r1 = FP;
+   newCode->constant = fp + 16;
+   reg = getLabelReg(reg);
+   newCode->r3 = reg;
+   newCode->code = ILOC_LOADAI;
+   finalTac = concatTAC(finalTac, newCode);
+   
+   // Updating back the SP
+   newCode = initTac();
+   newCode->r1 = FP;
+   newCode->r2 = SP;
+   newCode->code = ILOC_I2I;
+   finalTac = concatTAC(finalTac, newCode);
 
-    // Moving pointer (SP)
-    newReg = getLabelReg(reg);
-    aux_tac = Operator2(nodo, ILOC_ADD);
-    aux_tac->r2 = newReg;
-    aux_tac->r3 = SP;
-    concatTAC(code, aux_tac);
-
-    // Loading size to register
-    aux_tac = Operator2(nodo, ILOC_LOADI);
-//    aux_tac->constant = size;
-    aux_tac->r3 = newReg;
-    concatTAC(code, aux_tac);
-
-    // Updating FP with SP
-    aux_tac = Operator2(nodo, ILOC_I2I);
-    aux_tac->r3 = SP;
-    concatTAC(code, aux_tac);
-//    aux_tac->next = ; actual pointer
-
+   // Reordering the list.
+   finalTac = invertTacList(finalTac);
+   nodo->child[0]->code = finalTac;
+   
    return code; 
 }
 
@@ -1069,13 +1070,15 @@ TAC* CodeGenerateReturn(comp_tree_t* nodo, TAC* code, comp_list_t* declarations)
    4. Atualiza o estado de execução do chamador
    5. Transfere o controle
 */
-   TAC* aux_tac;
+   TAC* aux_tac = code;
    TAC* call;
+
+
 	// 1. Prepara os parâmetros de retorno
 
 
    // 2. Disponibiliza o valor de retorno para o chamador
-    
+/*    
    //(retorno está no FP)
    aux_tac = initTac();
    aux_tac->code = ILOC_STORE;
@@ -1093,12 +1096,15 @@ TAC* CodeGenerateReturn(comp_tree_t* nodo, TAC* code, comp_list_t* declarations)
    nodo->code = call;
    return call;
 //    aux_tac->next = ; actual pointer
+*/
+   return nodo->code;
 }
 
 TAC* initCode(TAC* code, comp_tree_t* nodo, comp_list_t * declarations)
 {
    // Getting the first function declared in the AST
    comp_tree_t* programa = nodo->child[0];
+
 
    // Jumping to main function
    TAC *assembly = initTac();
@@ -1113,9 +1119,17 @@ TAC* initCode(TAC* code, comp_tree_t* nodo, comp_list_t * declarations)
    {
       if (programa->child[0] != NULL)
       {
-         TAC *aux_code = programa->child[0]->code;
+         TAC *aux_code = (programa->child[0]->code != NULL) ? programa->child[0]->code : programa->child[0]->child[0]->code;
+
          aux_code = invertTacList(aux_code);
-         mainFound = (strcmp(aux_code->labelName, "main") == 0);
+         if (aux_code->labelName != NULL)
+         {
+            mainFound = (strcmp(aux_code->labelName, "main") == 0);
+         }
+         else
+         {
+            mainFound = FALSE;
+         }
 
          assembly = concatTAC(assembly, aux_code);
          
@@ -1143,6 +1157,7 @@ TAC* initCode(TAC* code, comp_tree_t* nodo, comp_list_t * declarations)
          TAC *aux_code = programa->code;
          aux_code = invertTacList(aux_code);
          assembly = concatTAC(assembly, aux_code);
+
 /*
          TAC *jmp_fp = initTac();
          jmp_fp->code = ILOC_JUMP;
@@ -1228,4 +1243,61 @@ TAC *evaluateFinalTac(TAC *code, comp_list_t* declarations)
    }  
 
    return code;
+}
+
+RA * calculateFrameSize(char* functionName, comp_tree_t* nodo, comp_list_t* declarations)
+{
+   RA *frame = (RA *)malloc(sizeof(RA));
+
+   // Getting the first function declared in the AST
+//   comp_tree_t* programa = nodo->child[0];
+
+   // Navigating thru the functions
+//   while (programa != NULL)
+//   {
+//      if (strcmp(programa->code->labelName, functionName))
+//      {
+         // Getting function details
+         comp_list_t* listLocalDeclaration = getLocalDeclarations(functionName, declarations, IKS_LOCAL); 
+         comp_list_t* listParametersDeclaration = getLocalDeclarations(functionName, declarations, IKS_FUNC_PARAM); 
+   
+
+         // Local variables
+         int localContextSize = 0;
+         int count = 0;
+         while (listLocalDeclaration != NULL)
+         {
+            localContextSize = localContextSize + sizeDeclarations(listLocalDeclaration->tipoVar);
+            count++;
+            listLocalDeclaration = listLocalDeclaration->next;
+         }
+         frame->localVarSize = localContextSize;
+         frame->localVarQuantity = count;
+         frame->localVarPosition = 4 * count;
+
+         // Parameters
+         localContextSize = 0;
+         count = 0;
+         while (listParametersDeclaration != NULL)
+         {
+            localContextSize = localContextSize + sizeDeclarations(listParametersDeclaration->tipoVar);
+            count++;
+            listParametersDeclaration = listParametersDeclaration->next;
+         }
+         frame->paramSize = localContextSize;
+         frame->paramQuantity = count;
+         frame->paramPosition = 4 * count;
+
+         // Return
+         frame->returnSize = 4;
+
+         // Static Link
+         frame->staticLinkSize = 4;
+
+         // Dynamic Link
+         frame->dynamicLinkSize = 4;
+//      }
+//   }
+
+   return frame;
 }
