@@ -1213,7 +1213,7 @@ char* getRegisterName(int regValue)
          strcpy(valorStr, "sp");
          break;
       default:
-         sprintf(valorStr, "r%d", code->r3);
+         sprintf(valorStr, "r%d", regValue);
          break;
    }
 
