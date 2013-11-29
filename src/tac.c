@@ -931,7 +931,7 @@ TAC* CodeGenerateFuncCall(comp_tree_t* nodo, TAC* code, comp_list_t* declaration
       for (i = 0; i < arData->paramQuantity; i++)
       {
          newCode = initTac();
-         newCode->r1 = FP;
+         newCode->r1 = -1;
          newCode->r2 = FP;
          newCode->constant = i * 4;
          newCode->code = ILOC_STOREAI;
