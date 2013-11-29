@@ -75,4 +75,5 @@ TAC* CodeGenerateReturn(comp_tree_t* nodo, TAC* code, comp_list_t* declarations)
 TAC* initCode(TAC* code, comp_tree_t* nodo, comp_list_t * declarations);
 TAC *evaluateFinalTac(TAC *code, comp_list_t * declarations);
 RA * calculateFrameSize(char* functionName, comp_tree_t* nodo, comp_list_t* declarations);
+char* getRegisterName(int regValue);
 #endif

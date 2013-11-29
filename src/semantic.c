@@ -707,8 +707,8 @@ int validateParam(comp_list_t* paramList, comp_tree_t* paramFoundInCall)
       // Checking if they are compatibles
       if (paramList->tipoVar != paramType)
       {
-         printf("Tipo invalido na chamada de funcao. (Argumento: %s).\n", paramList->nomeVar);
-         exit(IKS_ERROR_WRONG_TYPE_ARGS);
+//         printf("Tipo invalido na chamada de funcao. (Argumento: %s).\n", paramList->nomeVar);
+//         exit(IKS_ERROR_WRONG_TYPE_ARGS);
       }
 
       // Getting next parameter

@@ -593,37 +593,7 @@ void printAssembly(TAC* code)
             break;
          case ILOC_SUBI:
             printLabel(code);
-            switch (code->r1)
-            {
-               case BSS:
-                  strcpy(valorStr1, "bss");
-               break;
-               case FP:
-                  strcpy(valorStr1, "fp");
-               break;
-               case SP:
-                  strcpy(valorStr1, "sp");
-               break;
-               default:
-                  sprintf(valorStr1, "%d", code->r1);
-               break;
-            }
-            switch (code->r3)
-            {
-               case BSS:
-                  strcpy(valorStr2, "bss");
-               break;
-               case FP:
-                  strcpy(valorStr2, "fp");
-               break;
-               case SP:
-                  strcpy(valorStr2, "sp");
-               break;
-               default:
-                  sprintf(valorStr2, "%d", code->r3);
-               break;
-            }
-            printf("\tsubi %s, %d => r%s\n", valorStr1, code->constant, valorStr2);
+            printf("\tsubi %s, %d => %s\n", getRegisterName(code->r1), code->constant, getRegisterName(code->r3));
             break;
          case ILOC_RSUBI:
             printLabel(code);
@@ -671,60 +641,14 @@ void printAssembly(TAC* code)
             break;
          case ILOC_LOADI:
             printLabel(code);
-            switch (code->r3)
-            {
-               case BSS:
-                  strcpy(valorStr2, "bss");
-               break;
-               case FP:
-                  strcpy(valorStr2, "fp");
-               break;
-               case SP:
-                  strcpy(valorStr2, "sp");
-               break;
-               default:
-                  sprintf(valorStr2, "r%d", code->r3);
-               break;
-            }
-            printf("\tloadi %d => %s\n", code->constant, valorStr2);
+            printf("\tloadi %d => %s\n", code->constant, getRegisterName(code->r3));
             break;
          case ILOC_LOAD:
             printLabel(code);
             break;
          case ILOC_LOADAI:
             printLabel(code);
-
-            switch (code->r1)
-            {
-               case BSS:
-                  strcpy(valorStr1, "bss");
-               break;
-               case FP:
-                  strcpy(valorStr1, "fp");
-               break;
-               case SP:
-                  strcpy(valorStr1, "sp");
-               break;
-               default:
-                  sprintf(valorStr1, "%d", code->r1);
-               break;
-            }
-            switch (code->r3)
-            {
-               case BSS:
-                  strcpy(valorStr2, "bss");
-               break;
-               case FP:
-                  strcpy(valorStr2, "fp");
-               break;
-               case SP:
-                  strcpy(valorStr2, "sp");
-               break;
-               default:
-                  sprintf(valorStr2, "%d", code->r3);
-               break;
-            }
-            printf("\tloadai %s, %d => r%s\n", valorStr1, code->constant, valorStr2);
+            printf("\tloadai %s, %d => %s\n", getRegisterName(code->r1), code->constant, getRegisterName(code->r3));
             break;
          case ILOC_LOADAO:
             printLabel(code);
@@ -744,6 +668,7 @@ void printAssembly(TAC* code)
             break;
          case ILOC_STOREAI:
             printLabel(code);
+            printf("\tstoreai %s => %s, %d\n", getRegisterName(code->r1), getRegisterName(code->r2), code->constant);
             break;
          case ILOC_STOREAO:
             printLabel(code);
@@ -758,6 +683,7 @@ void printAssembly(TAC* code)
             printLabel(code);
             break;
          case ILOC_I2I:
+            printf("\ti2i %s => %s\n", getRegisterName(code->r1), getRegisterName(code->r2));
             printLabel(code);
             break;
          case ILOC_C2C:
@@ -772,7 +698,7 @@ void printAssembly(TAC* code)
          case ILOC_JUMPI:
             if (code->constant != 99999)
             {
-               printLabel(code);
+//               printLabel(code);
             }
             if (code->labelName != NULL)
             {
@@ -1056,9 +982,9 @@ TAC* CodeGenerateFuncCall(comp_tree_t* nodo, TAC* code, comp_list_t* declaration
 
    // Reordering the list.
    finalTac = invertTacList(finalTac);
-   nodo->child[0]->code = finalTac;
+   nodo->code = finalTac;
    
-   return code; 
+   return nodo->code; 
 }
 
 TAC* CodeGenerateReturn(comp_tree_t* nodo, TAC* code, comp_list_t* declarations)
@@ -1300,4 +1226,26 @@ RA * calculateFrameSize(char* functionName, comp_tree_t* nodo, comp_list_t* decl
 //   }
 
    return frame;
+}
+
+char* getRegisterName(int regValue)
+{
+   char *valorStr = (char *)malloc(sizeof(char));
+   switch (regValue)
+   {
+      case BSS:
+         strcpy(valorStr, "bss");
+         break;
+      case FP:
+         strcpy(valorStr, "fp");
+         break;
+      case SP:
+         strcpy(valorStr, "sp");
+         break;
+      default:
+         sprintf(valorStr, "r%d", code->r3);
+         break;
+   }
+
+   return valorStr;
 }
