@@ -160,7 +160,7 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
             nodo->code->r1 = varType;
             nodo->code->r3 = reg;
             //nodo->code->constant = sizeDeclarations(((variableTypeGlobal != -1) ? variableTypeGlobal : variableTypeLocal));
-            nodo->code->constant = 0;
+            nodo->code->constant = -1;
             nodo->code->code = ILOC_LOADAI;
 //            code = Address(nodo);
             
@@ -850,12 +850,16 @@ TAC* CodeGenerateFuncDeclaration(comp_tree_t* nodo, TAC* code, comp_list_t* decl
    int frameSize = 4;
 */
    TAC* aux;
+   RA* frame;
+   int frameSize;
    // Stack configuration for "main" function
    if (strcmp(nodo->code->labelName, "main") == 0)
    {
+      frame = calculateFrameSize("main", nodo, declarations);
+      frameSize = frame->localVarSize + frame->paramSize + frame->returnSize + frame->staticLinkSize + frame->dynamicLinkSize;
       aux = initTac();
       //aux->constant = localContextSize;
-      aux->constant = 0;
+      aux->constant = frameSize;
       aux->r3 = SP;
       aux->code = ILOC_LOADI;
 
@@ -1057,6 +1061,8 @@ TAC* initCode(TAC* code, comp_tree_t* nodo, comp_list_t * declarations)
             mainFound = FALSE;
          }
 
+         aux_code = evaluateFinalTac(aux_code, declarations);
+
          assembly = concatTAC(assembly, aux_code);
          
          if (mainFound == TRUE)
@@ -1115,54 +1121,18 @@ TAC* initCode(TAC* code, comp_tree_t* nodo, comp_list_t * declarations)
 
 TAC *evaluateFinalTac(TAC *code, comp_list_t* declarations)
 {
-   int auxReg = 0;
-   int count = 0;
+   TAC* aux_code = code;
 
-   TAC * aux_code = code;
+   int fpPos = 0;
    while (aux_code != NULL)
    {
-      if (aux_code->code == ILOC_FUNCTION)
+      if ((aux_code->code == ILOC_LOADAI) 
+            && (aux_code->r1 == FP)
+            && (aux_code->constant == -1))
       {
-         comp_list_t* listLocalDeclaration = getLocalDeclarations(code->labelName, declarations, IKS_LOCAL); 
-         comp_list_t* listParametersDeclaration = getLocalDeclarations(code->labelName, declarations, IKS_FUNC_PARAM); 
-   
-         int localContextSize = 12;
-         while (listLocalDeclaration != NULL)
-         {
-            localContextSize = localContextSize + sizeDeclarations(listLocalDeclaration->tipoVar);
-            listLocalDeclaration = listLocalDeclaration->next;
-         }
-         while (listParametersDeclaration != NULL)
-         {
-            localContextSize = localContextSize + sizeDeclarations(listParametersDeclaration->tipoVar);
-            listParametersDeclaration = listParametersDeclaration->next;
-         }
+         aux_code->constant = fpPos;
+         fpPos = fpPos + 4;
 
-         TAC* aux;
-         // Stack configuration for "main" function
-         if (strcmp(code->labelName, "main") == 0)
-         {
-            aux = initTac();
-            aux->constant = localContextSize;
-            aux->r3 = SP;
-            aux->code = ILOC_LOADI;
-
-            aux->next = initTac();
-            aux->next->constant = 0;
-            aux->next->r3 = FP;
-            aux->next->code = ILOC_LOADI;
-            aux->next->label = 0;
-      
-            aux->next->next = code;
-      
-            code = aux;
-
-         }
-         // Initial stack allocation for other functions
-         else
-         {
-
-         }
       }
 
       aux_code = aux_code->next;
