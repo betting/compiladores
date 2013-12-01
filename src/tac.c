@@ -710,7 +710,8 @@ void printAssembly(TAC* code)
             }
             break;
          case ILOC_JUMP:
-            printf("\tjump => %s\n", code->labelName);
+            printf("\tjump => %s\n", getRegisterName(code->r1));
+//            printf("\tjump => %s\n", code->labelName);
             break;
          case ILOC_CBR:
             printLabel(code);
@@ -846,9 +847,8 @@ TAC* CodeGenerateFuncDeclaration(comp_tree_t* nodo, TAC* code, comp_list_t* decl
       localContextSize = localContextSize + sizeDeclarations(listParametersDeclaration->tipoVar);
       listParametersDeclaration = listParametersDeclaration->next;
    }
-
-   int frameSize = 4;
 */
+
    TAC* aux;
    RA* frame;
    int frameSize;
@@ -877,7 +877,22 @@ TAC* CodeGenerateFuncDeclaration(comp_tree_t* nodo, TAC* code, comp_list_t* decl
    // Initial stack allocation for other functions
    else
    {
+      frame = calculateFrameSize(nodo->code->labelName, nodo, declarations);
+      frameSize = frame->localVarSize + frame->paramSize + frame->returnSize + frame->staticLinkSize + frame->dynamicLinkSize;
 
+      int returnPos = frame->localVarSize + frame->paramSize;
+
+      TAC* returnTac = nodo->child[0]->code;
+      int tacFound = FALSE;
+      while ((tacFound != TRUE) || (returnTac != NULL))
+      {
+         if (returnTac->constant == -1)
+         {
+            returnTac->constant = returnPos;
+            tacFound = TRUE;
+         }
+         returnTac = returnTac->next;
+      }
    }
 
    if (code != NULL)
@@ -911,9 +926,6 @@ TAC* CodeGenerateFuncCall(comp_tree_t* nodo, TAC* code, comp_list_t* declaration
 
    int frameSize = arData->localVarSize + arData->paramSize + arData->returnSize + arData->staticLinkSize + arData->dynamicLinkSize;
    
-   //labels = LabelGenerate(labels);
-   //registers = RegisterGenerate(registers);
-
    TAC* newCode;
    // sub fp, r -> fp
    newCode = initTac();
@@ -1012,18 +1024,33 @@ TAC* CodeGenerateReturn(comp_tree_t* nodo, TAC* code, comp_list_t* declarations)
    //registers = RegisterGenerate(registers);
 
    TAC* newCode;
-   // sub fp, r -> fp
+
+   // Getting return (number)
+   if (nodo->child[0]->symbol != NULL)
+   {
+     
+      reg = getLabelReg(reg);
+      newCode = initTac();
+      newCode->constant = atoi(nodo->child[0]->symbol->token);
+      newCode->r3 = reg;
+      newCode->code = ILOC_LOADI;
+      newCode->label = 0;
+      finalTac = newCode;
+
+   }
+   // Getting retun value from a variable
+   else
+   {
+
+   }
+
+   // Save the return address in the stack (after JMP)
    newCode = initTac();
-   newCode->r1 = SP;
-   newCode->constant = frameSize;
-   newCode->r3 = SP;
-   newCode->code = ILOC_SUBI;
-   finalTac = newCode;
-   
-	
-
-	// 1. Prepara os parâmetros de retorno
-
+   newCode->r1 = reg;
+   newCode->r2 = FP;
+   newCode->constant = -1;
+   newCode->code = ILOC_STOREAI;
+   finalTac = concatTAC(finalTac, newCode);
 
    // 2. Disponibiliza o valor de retorno para o chamador
 /*    
@@ -1033,18 +1060,25 @@ TAC* CodeGenerateReturn(comp_tree_t* nodo, TAC* code, comp_list_t* declarations)
    aux_tac->r1 = nodo->child[0]->code->r1;
    aux_tac->r3 = FP;
    call = aux_tac;
-
-   // 3. Atualizando FP e o SP
-   aux_tac = initTac();
-   aux_tac->code = ILOC_I2I;
-   aux_tac->r1 = FP;
-   aux_tac->r3 = SP;
-   call = concatTAC(call, aux_tac);
-
-   nodo->code = call;
-   return call;
-//    aux_tac->next = ; actual pointer
 */
+   // 3. Atualizando FP e o SP
+   newCode = initTac();
+   newCode->code = ILOC_I2I;
+   newCode->r1 = FP;
+   newCode->r3 = SP;
+   finalTac = concatTAC(finalTac, newCode);
+
+   // Jumping back to the caller function
+
+
+   newCode = initTac();
+   newCode->r1 = reg;
+   newCode->code = ILOC_JUMP;
+   finalTac = concatTAC(finalTac, newCode);
+
+   // Reordering the list
+   finalTac = invertTacList(finalTac);
+   nodo->code = finalTac;
    return nodo->code;
 }
 
@@ -1086,7 +1120,7 @@ TAC* initCode(TAC* code, comp_tree_t* nodo, comp_list_t * declarations)
          if (mainFound == TRUE)
          {
             TAC *jmp_end = initTac();
-            jmp_end->code = ILOC_JUMP;
+            jmp_end->code = ILOC_JUMPI;
             jmp_end->labelName = (char *)malloc(sizeof(char));
             strcpy(jmp_end->labelName, "end");
             assembly = concatTAC(assembly, jmp_end);
@@ -1094,7 +1128,7 @@ TAC* initCode(TAC* code, comp_tree_t* nodo, comp_list_t * declarations)
          else
          {
             TAC *jmp_fp = initTac();
-            jmp_fp->code = ILOC_JUMP;
+            jmp_fp->code = ILOC_JUMPI;
             jmp_fp->labelName = (char *)malloc(sizeof(char));
             strcpy(jmp_fp->labelName, "fp");
             assembly = concatTAC(assembly, jmp_fp);
@@ -1198,42 +1232,7 @@ RA * calculateFrameSize(char* functionName, comp_tree_t* nodo, comp_list_t* decl
             count++;
             listParametersDeclaration = listParametersDeclaration->next;
          }
-/*         
-<<<<<<< HEAD
-		 printf("\nFuncao: ");
-		
-		 
-         TAC* aux;
-         // Stack configuration for "main" function
-         if (strcmp(code->labelName, "main") == 0)
-         {
-            aux = initTac();
-            aux->constant = localContextSize;
-            aux->r3 = SP;
-            aux->code = ILOC_LOADI;
 
-            aux->next = initTac();
-            aux->next->constant = 0;
-            aux->next->r3 = FP;
-            aux->next->code = ILOC_LOADI;
-            aux->next->label = 0;
-      
-            aux->next->next = code;
-      
-            code = aux;
-
-         }
-         // Initial stack allocation for other functions
-         else
-         {
-			//printf("Funcao: %s",code->labelName);
-			
-			//aux->next->next = code;
-			
-         }
-      }
-=======
-*/ 
          frame->paramSize = localContextSize;
          frame->paramQuantity = count;
          frame->paramPosition = 4 * count;
@@ -1248,7 +1247,6 @@ RA * calculateFrameSize(char* functionName, comp_tree_t* nodo, comp_list_t* decl
          frame->dynamicLinkSize = 4;
 //      }
 //   }
-//>>>>>>> a0d42878b864c5741bfdae44028dfdfae8cf4c70
 
    return frame;
 }
