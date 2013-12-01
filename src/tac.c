@@ -1170,7 +1170,9 @@ TAC *evaluateFinalTac(TAC *code, comp_list_t* declarations)
             localContextSize = localContextSize + sizeDeclarations(listParametersDeclaration->tipoVar);
             listParametersDeclaration = listParametersDeclaration->next;
          }
-
+		 printf("\nFuncao: ");
+		
+		 
          TAC* aux;
          // Stack configuration for "main" function
          if (strcmp(code->labelName, "main") == 0)
@@ -1194,7 +1196,10 @@ TAC *evaluateFinalTac(TAC *code, comp_list_t* declarations)
          // Initial stack allocation for other functions
          else
          {
-
+			//printf("Funcao: %s",code->labelName);
+			
+			//aux->next->next = code;
+			
          }
       }
 
