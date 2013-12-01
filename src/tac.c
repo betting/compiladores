@@ -1000,9 +1000,27 @@ TAC* CodeGenerateReturn(comp_tree_t* nodo, TAC* code, comp_list_t* declarations)
    4. Atualiza o estado de execução do chamador
    5. Transfere o controle
 */
-   TAC* aux_tac = code;
-   TAC* call;
+   
+   TAC* finalTac;
+   int fp = 0;
 
+   RA* arData = calculateFrameSize(nodo->child[0]->symbol->token, nodo, declarations);
+
+   int frameSize = arData->localVarSize + arData->paramSize + arData->returnSize + arData->staticLinkSize + arData->dynamicLinkSize;
+   
+   //labels = LabelGenerate(labels);
+   //registers = RegisterGenerate(registers);
+
+   TAC* newCode;
+   // sub fp, r -> fp
+   newCode = initTac();
+   newCode->r1 = SP;
+   newCode->constant = frameSize;
+   newCode->r3 = SP;
+   newCode->code = ILOC_SUBI;
+   finalTac = newCode;
+   
+	
 
 	// 1. Prepara os parâmetros de retorno
 
