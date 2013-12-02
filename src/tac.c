@@ -888,13 +888,16 @@ TAC* CodeGenerateFuncDeclaration(comp_tree_t* nodo, TAC* code, comp_list_t* decl
       frameSize = frame->localVarSize + frame->paramSize + frame->returnSize + frame->staticLinkSize + frame->dynamicLinkSize;
 
       int returnPos = frame->localVarSize + frame->paramSize;
+      int retValue = frame->localVarSize + frame->paramSize;
 
       TAC* returnTac = nodo->child[0]->code;
       int tacFound = FALSE;
       while ((tacFound != TRUE) || (returnTac != NULL))
       {
          if (returnTac->constant == -1)
-         {
+         {  
+            returnPos = (returnPos > 0) ? returnPos - 4 : 0;
+            retValue = retValue - 4;
             returnTac->constant = returnPos;
             tacFound = TRUE;
          }
