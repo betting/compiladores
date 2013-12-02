@@ -994,8 +994,8 @@ TAC* CodeGenerateFuncCall(comp_tree_t* nodo, TAC* code, comp_list_t* declaration
 
    // Loading the return content
    newCode = initTac();
-   newCode->r1 = FP;
-   newCode->constant = fp + 16;
+   newCode->r1 = SP;
+   newCode->constant = -8;
    reg = getLabelReg(reg);
    newCode->r3 = reg;
    newCode->code = ILOC_LOADAI;
@@ -1003,9 +1003,10 @@ TAC* CodeGenerateFuncCall(comp_tree_t* nodo, TAC* code, comp_list_t* declaration
    
    // Updating back the SP
    newCode = initTac();
-   newCode->r1 = FP;
-   newCode->r2 = SP;
-   newCode->code = ILOC_I2I;
+   newCode->r1 = SP;
+   newCode->constant = -frameSize;
+   newCode->r3 = SP;
+   newCode->code = ILOC_LOADAI;
    finalTac = concatTAC(finalTac, newCode);
 
    // Reordering the list.
