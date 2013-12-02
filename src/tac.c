@@ -590,6 +590,7 @@ void printAssembly(TAC* code)
             break;
          case ILOC_ADDI:
             printLabel(code);
+            printf("\taddi %s, %d => %s\n", getRegisterName(code->r1), code->constant, getRegisterName(code->r3));
             break;
          case ILOC_SUBI:
             printLabel(code);
@@ -645,6 +646,7 @@ void printAssembly(TAC* code)
             break;
          case ILOC_LOAD:
             printLabel(code);
+            printf("\tload %s => %s\n", getRegisterName(code->r1), getRegisterName(code->r2));
             break;
          case ILOC_LOADAI:
             printLabel(code);
@@ -664,7 +666,7 @@ void printAssembly(TAC* code)
             break;
          case ILOC_STORE:
             printLabel(code);
-            printf("\tstore r%d => r%d\n",code->r1,code->r3);
+            printf("\tstore %s => %s\n",getRegisterName(code->r1),getRegisterName(code->r3));
             break;
          case ILOC_STOREAI:
             printLabel(code);
@@ -927,13 +929,21 @@ TAC* CodeGenerateFuncCall(comp_tree_t* nodo, TAC* code, comp_list_t* declaration
    int frameSize = arData->localVarSize + arData->paramSize + arData->returnSize + arData->staticLinkSize + arData->dynamicLinkSize;
    
    TAC* newCode;
-   // sub fp, r -> fp
+   // Allocating space for the stack frame
    newCode = initTac();
    newCode->r1 = SP;
+
+   reg = getLabelReg(reg);
+   newCode->r2 = reg;
+   newCode->code = ILOC_LOAD;
+   finalTac = newCode;
+
+   newCode = initTac();
+   newCode->r1 = reg;
    newCode->constant = frameSize;
    newCode->r3 = SP;
-   newCode->code = ILOC_SUBI;
-   finalTac = newCode;
+   newCode->code = ILOC_ADDI;
+   finalTac = concatTAC(finalTac, newCode);
 
    // If the function called expects parametersi, then
    // they will be pushed in the stack.
@@ -961,15 +971,17 @@ TAC* CodeGenerateFuncCall(comp_tree_t* nodo, TAC* code, comp_list_t* declaration
    // Save the return address in the stack (after JMP)
    newCode = initTac();
    newCode->r1 = FP;
-   newCode->r2 = FP;
-   newCode->constant = fp + 12;
-   newCode->code = ILOC_STOREAI;
+//   newCode->r2 = FP;
+//   newCode->constant = fp + 12;
+   newCode->r3 = SP;
+//   newCode->code = ILOC_STOREAI;
+   newCode->code = ILOC_STORE;
    finalTac = concatTAC(finalTac, newCode);
 //   fp = fp + newCode->constant;
 
    // Updating SP
    newCode = initTac();
-   newCode->r1 = SP;
+   newCode->r1 = reg;
    newCode->r2 = FP;
    newCode->code = ILOC_I2I;
    finalTac = concatTAC(finalTac, newCode);
@@ -1026,7 +1038,7 @@ TAC* CodeGenerateReturn(comp_tree_t* nodo, TAC* code, comp_list_t* declarations)
    TAC* newCode;
 
    // Getting return (number)
-   if (nodo->child[0]->symbol != NULL)
+   if (nodo->child[0]->symbol->type != IKS_SIMBOLO_IDENTIFICADOR)
    {
      
       reg = getLabelReg(reg);
@@ -1037,20 +1049,26 @@ TAC* CodeGenerateReturn(comp_tree_t* nodo, TAC* code, comp_list_t* declarations)
       newCode->label = 0;
       finalTac = newCode;
 
+      // Save the return address in the stack (after JMP)
+      newCode = initTac();
+      newCode->r1 = reg;
+      newCode->r2 = FP;
+      newCode->constant = -1;
+      newCode->code = ILOC_STOREAI;
+      finalTac = concatTAC(finalTac, newCode);
    }
    // Getting retun value from a variable
    else
    {
-
+      // Save the return address in the stack (after JMP)
+      newCode = initTac();
+      newCode->r1 = -1;
+      newCode->r2 = FP;
+      newCode->constant = -1;
+      newCode->code = ILOC_STOREAI;
+      finalTac = newCode;
    }
 
-   // Save the return address in the stack (after JMP)
-   newCode = initTac();
-   newCode->r1 = reg;
-   newCode->r2 = FP;
-   newCode->constant = -1;
-   newCode->code = ILOC_STOREAI;
-   finalTac = concatTAC(finalTac, newCode);
 
    // 2. Disponibiliza o valor de retorno para o chamador
 /*    
