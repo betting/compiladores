@@ -1049,7 +1049,7 @@ TAC* CodeGenerateReturn(comp_tree_t* nodo, TAC* code, comp_list_t* declarations)
       newCode->label = 0;
       finalTac = newCode;
 
-      // Save the return address in the stack (after JMP)
+      // Save the return address in the stack
       newCode = initTac();
       newCode->r1 = reg;
       newCode->r2 = FP;
@@ -1060,7 +1060,7 @@ TAC* CodeGenerateReturn(comp_tree_t* nodo, TAC* code, comp_list_t* declarations)
    // Getting retun value from a variable
    else
    {
-      // Save the return address in the stack (after JMP)
+      // Save the return address in the stack
       newCode = initTac();
       newCode->r1 = -1;
       newCode->r2 = FP;
@@ -1069,26 +1069,24 @@ TAC* CodeGenerateReturn(comp_tree_t* nodo, TAC* code, comp_list_t* declarations)
       finalTac = newCode;
    }
 
-
-   // 2. Disponibiliza o valor de retorno para o chamador
-/*    
-   //(retorno está no FP)
-   aux_tac = initTac();
-   aux_tac->code = ILOC_STORE;
-   aux_tac->r1 = nodo->child[0]->code->r1;
-   aux_tac->r3 = FP;
-   call = aux_tac;
-*/
-   // 3. Atualizando FP e o SP
+   // 3. Atualizando FP
    newCode = initTac();
-   newCode->code = ILOC_I2I;
+   newCode->code = ILOC_LOADAI;
    newCode->r1 = FP;
-   newCode->r3 = SP;
+   newCode->constant = arData->localVarSize + arData->paramSize + arData->returnSize;
+   newCode->r3 = FP;
+   finalTac = concatTAC(finalTac, newCode);
+
+   newCode = initTac();
+   newCode->code = ILOC_ADDI;
+   newCode->r1 = FP;
+   newCode->constant = 4;
+
+   reg = getLabelReg(reg);
+   newCode->r3 = reg;
    finalTac = concatTAC(finalTac, newCode);
 
    // Jumping back to the caller function
-
-
    newCode = initTac();
    newCode->r1 = reg;
    newCode->code = ILOC_JUMP;
@@ -1145,11 +1143,13 @@ TAC* initCode(TAC* code, comp_tree_t* nodo, comp_list_t * declarations)
          }
          else
          {
+            /*
             TAC *jmp_fp = initTac();
             jmp_fp->code = ILOC_JUMPI;
             jmp_fp->labelName = (char *)malloc(sizeof(char));
             strcpy(jmp_fp->labelName, "fp");
             assembly = concatTAC(assembly, jmp_fp);
+            */
          }
 
          
