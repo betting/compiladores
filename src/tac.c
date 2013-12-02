@@ -189,6 +189,11 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
          if (nodo->child[1]->code != NULL)
          {
             nodo->code->r1 = nodo->child[1]->code->r3;
+
+            if (nodo->child[1]->code->next != NULL)
+            {
+               nodo->code->r1 = nodo->child[1]->code->next->r3;
+            }
          }
          // Getting value from a function return
          else
