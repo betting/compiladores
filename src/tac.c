@@ -19,22 +19,14 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
       case ILOC_NOP:
          nodo->code = initTac();
          nodo->code->code = ILOC_NOP;
-         //code = insertTAC(nodo);
-//         code = insertTacEvaluated(nodo, code);
 
-         //printCode(nodo->code);
-         //printLabel(code);
          //printf("\nnop: %d\n", ILOC_NOP);
-
 //         return code;
          return nodo->code;
 
          break;
 
       case ILOC_ADD:
-         //printf("\nADD: %d\n", ILOC_ADD);
-         //printCode(code);
-      
          code = Operator2(nodo, ILOC_ADD);
          code = insertTAC(nodo);
 
@@ -159,13 +151,8 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
             reg = getLabelReg(reg);
             nodo->code->r1 = varType;
             nodo->code->r3 = reg;
-            //nodo->code->constant = sizeDeclarations(((variableTypeGlobal != -1) ? variableTypeGlobal : variableTypeLocal));
             nodo->code->constant = -1;
             nodo->code->code = ILOC_LOADAI;
-//            code = Address(nodo);
-            
-//            code = insertTAC(nodo);
-            //insertTAC(nodo);
          }
          // Handling a vector (Global only)
          else if (nodo->type == IKS_AST_VETOR_INDEXADO)
@@ -240,29 +227,23 @@ TAC* CodeGenerate(comp_tree_t* nodo,TAC* code, int iloc_code, comp_list_t* decla
             nodo->child[2] = createNewNode(0);
             code = CodeGenerate(nodo->child[2], code, ILOC_NOP, NULL, NULL);
          }
-//			printf("\nnodo->child->sibling->sibling nulo antes do insert \n ");
 			InsertLabel(nodo->child[2]);
 
          // Updating parent node with children nodes.
 			nodo->code->l1 = label-1;
 			nodo->code->l2 = label; 
-//			if(label>=1) printf("\n\nLABEL: %d", label);
 			nodo->code->next = NULL;
 			nodo->code->code = ILOC_CBR;
 
-//			printf("\n\nCODE ANTES DE ENTRAR NO CTE");
-//			printCode(nodo->code);
 //			printf("cbr r%d => l%d, l%d\n", nodo->code->r3, nodo->code->l1, nodo->code->l2);
 
 			//code = concatTAC(code,nodo->code);
 			if(nodo->child[3] == NULL)
 			{
-//					printf("\nENTROU NO CTE");
 					code = combineCTE(nodo,CTE_IF);
 			}
 			else
 			{
-//					printf("\nENTROU NO CTE - 2  ");
 					InsertLabel(nodo->child[3]);
 					code = CodeGenerate(nodo->child[1], code, ILOC_JUMPI, NULL, NULL);
 					code = combineCTE(nodo,CTE_IF_ELSE);
@@ -482,7 +463,6 @@ int countSiblings(comp_tree_t* nodo)
 
 void InsertLabel(comp_tree_t* nodo)
 {
-   
    TAC* aux;
    aux = nodo->code;
    
@@ -491,9 +471,7 @@ void InsertLabel(comp_tree_t* nodo)
       aux = aux->next;
    }
    label = getLabelReg(label);
-//   printf("\nLABEL %d",label);
    aux->label = label;
-   
 }
 
 
@@ -806,22 +784,6 @@ TAC* Address(comp_tree_t* nodo)
 	 aux = nodo;
 	 if(lista_auxiliar!=NULL)
 	 {
-		 /*while(lista_auxiliar->symbol->text=="nop")
-		 {
-			 printf("\nNOP encontrado");
-			 lista_auxiliar=lista_auxiliar->next;
-			 count++;
-		 }
-		 printf("\nQTD NOPS: %d", count);
-		 lista_auxiliar = list;
-		 
-		 //procura valor nulo
-		 while(lista_auxiliar->next != NULL)
-			lista_auxiliar = lista_auxiliar->next;
-		 
-		 list = removeItem(searchToken(lista,lista_auxiliar->text));
-		 lista_auxiliar = list;
-		 */
 	 }
 
 	//tratar o resultado e devolver pro nodo
@@ -839,22 +801,6 @@ TAC* CodeGenerateFuncDeclaration(comp_tree_t* nodo, TAC* code, comp_list_t* decl
       nodo->code->labelName = (char*)calloc(strlen(nodo->symbol->token)+1,sizeof(char));
       strcpy(nodo->code->labelName, nodo->symbol->token);
    }
-/*
-   comp_list_t* listLocalDeclaration = getLocalDeclarations(nodo->code->labelName, declarations, IKS_LOCAL); 
-   comp_list_t* listParametersDeclaration = getLocalDeclarations(nodo->code->labelName, declarations, IKS_FUNC_PARAM); 
-   
-   int localContextSize = 16;
-   while (listLocalDeclaration != NULL)
-   {
-      localContextSize = localContextSize + sizeDeclarations(listLocalDeclaration->tipoVar);
-      listLocalDeclaration = listLocalDeclaration->next;
-   }
-   while (listParametersDeclaration != NULL)
-   {
-      localContextSize = localContextSize + sizeDeclarations(listParametersDeclaration->tipoVar);
-      listParametersDeclaration = listParametersDeclaration->next;
-   }
-*/
 
    TAC* aux;
    RA* frame;
@@ -963,7 +909,7 @@ TAC* CodeGenerateFuncCall(comp_tree_t* nodo, TAC* code, comp_list_t* declaration
          newCode = initTac();
          newCode->r1 = -1;
          newCode->r2 = FP;
-         newCode->constant = i * 4;
+         newCode->constant = (i * 4) + 4;
          newCode->code = ILOC_STOREAI;
          finalTac = concatTAC(finalTac, newCode);
          fp = fp + newCode->constant;
@@ -979,13 +925,9 @@ TAC* CodeGenerateFuncCall(comp_tree_t* nodo, TAC* code, comp_list_t* declaration
    // Save the return address in the stack (after JMP)
    newCode = initTac();
    newCode->r1 = FP;
-//   newCode->r2 = FP;
-//   newCode->constant = fp + 12;
    newCode->r3 = SP;
-//   newCode->code = ILOC_STOREAI;
    newCode->code = ILOC_STORE;
    finalTac = concatTAC(finalTac, newCode);
-//   fp = fp + newCode->constant;
 
    // Updating SP
    newCode = initTac();
@@ -1040,16 +982,12 @@ TAC* CodeGenerateReturn(comp_tree_t* nodo, TAC* code, comp_list_t* declarations)
    RA* arData = calculateFrameSize(nodo->child[0]->symbol->token, nodo, declarations);
 
    int frameSize = arData->localVarSize + arData->paramSize + arData->returnSize + arData->staticLinkSize + arData->dynamicLinkSize;
-   
-   //labels = LabelGenerate(labels);
-   //registers = RegisterGenerate(registers);
 
    TAC* newCode;
 
    // Getting return (number)
    if (nodo->child[0]->symbol->type != IKS_SIMBOLO_IDENTIFICADOR)
    {
-     
       reg = getLabelReg(reg);
       newCode = initTac();
       newCode->constant = atoi(nodo->child[0]->symbol->token);
@@ -1150,34 +1088,12 @@ TAC* initCode(TAC* code, comp_tree_t* nodo, comp_list_t * declarations)
             strcpy(jmp_end->labelName, "end");
             assembly = concatTAC(assembly, jmp_end);
          }
-         else
-         {
-            /*
-            TAC *jmp_fp = initTac();
-            jmp_fp->code = ILOC_JUMPI;
-            jmp_fp->labelName = (char *)malloc(sizeof(char));
-            strcpy(jmp_fp->labelName, "fp");
-            assembly = concatTAC(assembly, jmp_fp);
-            */
-         }
-
-         
       }
       else if (programa->code != NULL)
       {
          TAC *aux_code = programa->code;
          aux_code = invertTacList(aux_code);
          assembly = concatTAC(assembly, aux_code);
-
-/*
-         TAC *jmp_fp = initTac();
-         jmp_fp->code = ILOC_JUMP;
-         jmp_fp->labelName = (char *)malloc(sizeof(char));
-         strcpy(jmp_fp->labelName, "fp");
-         assembly = concatTAC(assembly, jmp_fp);
-*/
-//         printf("\tnop\n");
-         
       }
 
 
@@ -1191,8 +1107,6 @@ TAC* initCode(TAC* code, comp_tree_t* nodo, comp_list_t * declarations)
    assembly = concatTAC(assembly, end);
 
    code = assembly;
-
-//   code = evaluateFinalTac(code, declarations);
 
    // Display the Assembly code
    printAssembly(code);
