@@ -1068,9 +1068,9 @@ TAC* CodeGenerateReturn(comp_tree_t* nodo, TAC* code, comp_list_t* declarations)
    {
       // Save the return address in the stack
       newCode = initTac();
-      newCode->r1 = -1;
+      newCode->r1 = reg-2;
       newCode->r2 = FP;
-      newCode->constant = -1;
+      newCode->constant = arData->localVarSize + arData->paramSize + arData->returnSize;
       newCode->code = ILOC_STOREAI;
       finalTac = newCode;
    }
